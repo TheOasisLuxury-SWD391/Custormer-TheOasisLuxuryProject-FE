@@ -25,32 +25,29 @@ export default function SignInForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl
-        label="Email"
-        htmlFor="email"
+        label="Username"
+        htmlFor="username"
         error={
-          errors.email && (
+          errors.username && (
             <>
-              {errors.email?.type === 'required' && (
+              {errors.username?.type === 'required' && (
                 <span>This field is required!</span>
               )}
-              {errors.email?.type === 'pattern' && (
-                <span>Please enter a valid email address!</span>
+                  {errors.username?.type === 'pattern' && (
+                <span>Please enter a valid username!</span>
               )}
             </>
           )
         }
       >
         <Controller
-          name="email"
+          name="username"
           defaultValue=""
           control={control}
-          rules={{
-            required: true,
-            pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-          }}
+          rules={{ required: true  }}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
-              type="email"
+              type="text"
               onChange={onChange}
               onBlur={onBlur}
               value={value}

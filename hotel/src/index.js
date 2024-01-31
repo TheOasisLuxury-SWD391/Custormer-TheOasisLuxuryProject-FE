@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import theme from 'themes/default.theme';
 import GlobalStyles from 'themes/global.style';
 import AuthProvider from 'context/AuthProvider';
+import { AuthProvider1 } from 'context/AuthContext';
 import AppRoutes from './router';
 import 'antd/dist/reset.css';
 
@@ -14,7 +15,9 @@ const App = () => (
       <GlobalStyles />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <AuthProvider1>
+            <AppRoutes />
+          </AuthProvider1>
         </AuthProvider>
       </BrowserRouter>
     </React.Fragment>
