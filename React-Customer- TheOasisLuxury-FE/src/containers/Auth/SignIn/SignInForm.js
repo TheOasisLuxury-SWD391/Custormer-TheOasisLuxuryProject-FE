@@ -9,42 +9,41 @@ import { FORGET_PASSWORD_PAGE } from 'settings/constant';
 import { FieldWrapper, SwitchWrapper, Label } from '../Auth.style';
 
 export default function SignInForm() {
-  const { signIn, loggedIn } = useContext(AuthContext);
+  const { handleLogin, isLoggedIn } = useContext(AuthContext);
   const {
     control,
     formState: { errors },
     handleSubmit,
   } = useForm();
   const onSubmit = (data) => {
-    signIn(data);
+    handleLogin(data); 
   };
-  if (loggedIn) {
+  if (isLoggedIn) {
     return <Navigate to="/" replace={true} />;
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl
-        label="Username"
-        htmlFor="username"
+        label="Tên đăng nhập" // Đã được thay đổi từ Email sang Tên đăng nhập
+        htmlFor="user_name" // Đã thay đổi htmlFor và name
         error={
-          errors.username && (
+          errors.user_name && ( // Đã thay đổi từ errors.email sang errors.user_name
             <>
-              {errors.username?.type === 'required' && (
-                <span>This field is required!</span>
-              )}
-                  {errors.username?.type === 'pattern' && (
-                <span>Please enter a valid username!</span>
+              {errors.user_name?.type === 'required' && (
+                <span>Trường này là bắt buộc!</span>
               )}
             </>
           )
         }
       >
-        <Controller
-          name="username"
+         <Controller
+          name="user_name" // Đã thay đổi từ email sang user_name
           defaultValue=""
           control={control}
-          rules={{ required: true  }}
+          rules={{
+            required: true,
+          }}
           render={({ field: { onChange, onBlur, value } }) => (
             <Input
               type="text"
@@ -62,13 +61,13 @@ export default function SignInForm() {
           errors.password && (
             <>
               {errors.password?.type === 'required' && (
-                <span>This field is required!</span>
+                <span>Trường này là bắt buộc!</span>
               )}
               {errors.password?.type === 'minLength' && (
-                <span>Password must be at lest 6 characters!</span>
+                <span>Mật khẩu phải có ít nhất 6 ký tự!</span>
               )}
               {errors.password?.type === 'maxLength' && (
-                <span>Password must not be longer than 20 characters!</span>
+                <span>Mật khẩu không được dài quá 20 ký tự!</span>
               )}
             </>
           )
@@ -95,9 +94,9 @@ export default function SignInForm() {
               <Switch onChange={onChange} checked={value} />
             )}
           />
-          <Label>Remember Me</Label>
+          <Label>Nhớ mật khẩu</Label>
         </SwitchWrapper>
-        <Link to={FORGET_PASSWORD_PAGE}>Forget Password ?</Link>
+        <Link to={FORGET_PASSWORD_PAGE}>Quên mật khẩu ?</Link>
       </FieldWrapper>
       <Button
         className="signin-btn"
@@ -107,7 +106,7 @@ export default function SignInForm() {
         style={{ width: '100%' }}
       >
         <MdLockOpen />
-        Login
+        Đăng nhập
       </Button>
     </form>
   );
