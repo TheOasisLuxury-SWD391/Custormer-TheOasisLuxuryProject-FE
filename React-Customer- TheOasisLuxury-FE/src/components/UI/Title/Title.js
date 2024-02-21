@@ -3,28 +3,25 @@ import PropTypes from 'prop-types';
 import SectionTitleWrapper, { TitleWrapper, LinkWrapper } from './Title.style';
 
 const SectionTitle = ({ className, title, link, ...props }) => {
-  // Add all classs to an array
   const addAllClasses = ['section_title'];
-
-  // className prop checking
   if (className) {
     addAllClasses.push(className);
   }
 
+  // Wrap title in a React element if it's a string
+  const renderedTitle = typeof title === 'string' ? <h2>{title}</h2> : title;
+
   return (
     <SectionTitleWrapper className={addAllClasses.join(' ')} {...props}>
-      {title && <TitleWrapper className="title_wrapper">{title}</TitleWrapper>}
+      {title && <TitleWrapper className="title_wrapper">{renderedTitle}</TitleWrapper>}
       {link && <LinkWrapper className="link_wrapper">{link}</LinkWrapper>}
     </SectionTitleWrapper>
   );
 };
 
 SectionTitle.propTypes = {
-  /** ClassName of the SectionTitle. */
   className: PropTypes.string,
-  /** Add here Heading component from common components. */
-  title: PropTypes.element,
-  /** Add here TextLink component from common components. */
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   link: PropTypes.element,
 };
 
