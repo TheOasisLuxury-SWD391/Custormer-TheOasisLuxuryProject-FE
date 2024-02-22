@@ -13,9 +13,14 @@ import ReservationFormWrapper, {
 } from './Reservation.style.js';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
+import { useNavigate } from 'react-router-dom';
+
 // import InputIncDecWrapper from 'components/UI/InputIncDec/InputIncDec.style.js';
 
 const RenderReservationForm = (pricePerWeek) => {
+
+   // Khởi tạo useNavigate
+   const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
     startDate: null,
@@ -57,6 +62,14 @@ const RenderReservationForm = (pricePerWeek) => {
        Total Weeks: ${formState.totalWeeks}
        Total Price: $${totalPrice}`
     );
+    navigate("/booking-time-share-form", { 
+      state: { 
+        startDate: formState.startDate.format('YYYY-MM-DD'),
+        endDate: endDate,
+        totalWeeks: formState.totalWeeks,
+        totalPrice: totalPrice 
+      }
+    });
   };
 
   return (

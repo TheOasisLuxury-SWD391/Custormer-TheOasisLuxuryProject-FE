@@ -59,7 +59,9 @@ const SinglePage = () => {
   if (loading || !villaDetails) return <Loader />;
 
   const {
+    _id,
     villa_name,
+    status,
     address,
     area, // Assuming you want to display this somewhere
     url_image,
@@ -219,7 +221,7 @@ const SinglePage = () => {
                 bottomBoundary="#reviewSection"
               >
                 <Reservation 
-                price={stiff_price}
+                price={villaDetails.stiff_price}
                 />
               </Sticky>
             ) : (

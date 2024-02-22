@@ -19,7 +19,9 @@ import {
   AGENT_IMAGE_EDIT_PAGE,
   AGENT_PASSWORD_CHANGE_PAGE,
   AGENT_ACCOUNT_SETTINGS_PAGE,
+  BOOK_TIME_SHARE,
 } from './settings/constant';
+import BookingTimeShareForm from 'containers/SinglePage/Reservation/BookTimeShare';
 
 // protected route
 function RequireAuth({ children }) {
@@ -225,6 +227,14 @@ export default function AppRoutes() {
           />
         </Route>
         {/* end of Protected routes*/}
+        <Route
+              path={BOOK_TIME_SHARE}
+              element={
+                <React.Suspense fallback={<Loader />}>
+                  <BookingTimeShareForm />
+                </React.Suspense>
+              }
+          />
         <Route
           path="*"
           element={
