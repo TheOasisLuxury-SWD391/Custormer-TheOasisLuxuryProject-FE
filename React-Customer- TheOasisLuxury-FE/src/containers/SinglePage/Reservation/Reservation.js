@@ -6,13 +6,13 @@ import Text from 'components/UI/Text/Text';
 import TextLink from 'components/UI/TextLink/TextLink';
 import RenderReservationForm from './RenderReservationForm';
 
-const CardHeader = ({ priceStyle, pricePeriodStyle, linkStyle }) => {
+const CardHeader = ({ price, priceStyle, pricePeriodStyle, linkStyle }) => {
   return (
     <Fragment>
       <Heading
         content={
           <Fragment>
-            $162 <Text as="span" content="/ night" {...pricePeriodStyle} />
+            ${price} <Text as="span" content="/ Weeks" {...pricePeriodStyle} />
           </Fragment>
         }
         {...priceStyle}
@@ -22,12 +22,12 @@ const CardHeader = ({ priceStyle, pricePeriodStyle, linkStyle }) => {
   );
 };
 
-export default function Reservation() {
+export default function Reservation({ price }) {
   return (
     <Card
       className="reservation_sidebar"
-      header={<CardHeader />}
-      content={<RenderReservationForm />}
+      header={<CardHeader price={price} />} // Pass the price prop to CardHeader
+      content={<RenderReservationForm pricePerWeek={price} />}
       footer={
         <p>
           Special offers available. <TextLink to="/#1" content="See details" />

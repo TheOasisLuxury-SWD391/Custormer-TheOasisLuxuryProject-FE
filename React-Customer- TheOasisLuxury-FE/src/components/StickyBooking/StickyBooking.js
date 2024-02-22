@@ -10,6 +10,7 @@ import StickyBookingWrapper, {
   ActionBtn,
   HotelRating,
 } from './StickyBooking.style';
+import { Text } from 'containers/SinglePage/SinglePageView.style';
 
 const StickyBooking = ({ logo, title, price, rating, action, className }) => {
   const addAllClasses = ['sticky_booking'];
@@ -33,7 +34,7 @@ const StickyBooking = ({ logo, title, price, rating, action, className }) => {
               <>{title && <Title>{title}</Title>}</>
             ) : (
               <Price>
-                <span>${price}</span> / Night
+                <span>${price}</span> / Weeks
               </Price>
             )}
             {rating && <HotelRating>{rating}</HotelRating>}
@@ -46,7 +47,7 @@ const StickyBooking = ({ logo, title, price, rating, action, className }) => {
       <HotelAction className="hotel_action">
         {windowInnerWidth > 767 && (
           <Price>
-            <span>${price}</span> / Night
+            <span>${price}</span> / Weeks
           </Price>
         )}
         <ActionBtn>{action}</ActionBtn>

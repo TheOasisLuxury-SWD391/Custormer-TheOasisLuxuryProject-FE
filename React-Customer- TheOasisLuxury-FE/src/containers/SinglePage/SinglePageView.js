@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'library/hooks/useLocation';
 import Sticky from 'react-stickynode';
@@ -19,29 +19,76 @@ import useDataApi from 'library/hooks/useDataApi';
 import isEmpty from 'lodash/isEmpty';
 
 const SinglePage = () => {
-  let { slug } = useParams();
+  let { slug } = useParams(); // Assuming slug is the villa ID
   const { href } = useLocation();
+  const [villaDetails, setVillaDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isModalShowing, setIsModalShowing] = useState(false);
   const { width } = useWindowSize();
 
-  let url = '/data/hotel-single.json';
-  if (!slug) {
-    url += slug;
-  }
-  const { data, loading } = useDataApi(url);
-  if (isEmpty(data) || loading) return <Loader />;
+  useEffect(() => {
+    const fetchVillaDetails = async () => {
+      setLoading(true);
+      try {
+        // debugger
+        const token = localStorage.getItem('token'); // Assuming you're using token-based authentication
+        const response = await fetch(`http://localhost:5000/api/v1/villas/${slug}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Include the token in the request headers
+            // 'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          setVillaDetails(jsonResponse.result);
+        } else {
+          console.error('Failed to fetch villa details:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching villa details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchVillaDetails();
+    }
+  }, [slug]);
+
+  if (loading || !villaDetails) return <Loader />;
+
   const {
-    reviews,
-    rating,
-    ratingCount,
-    price,
-    title,
-    gallery,
-    location,
-    content,
-    amenities,
-    author,
-  } = data[0];
+    villa_name,
+    address,
+    area, // Assuming you want to display this somewhere
+    url_image,
+    fluctuates_price,
+    stiff_price,
+    // Add other villa details you need
+  } = villaDetails;
+
+  // let url = '/data/hotel-single.json';
+  // if (!slug) {
+  //   url += slug;
+  // }
+  // const { data, loading } = useDataApi(url);
+  // if (isEmpty(data) || loading) return <Loader />;
+  // const {
+  //   reviews,
+  //   rating,
+  //   ratingCount,
+  //   price,
+  //   title,
+  //   gallery,
+  //   location,
+  //   content,
+  //   amenities,
+  //   author,
+  // } = data[0];
+
+  // Transform data to fit existing component structure if necessary
+  const gallery = url_image.map(url => ({ url }));
 
   return (
     <SinglePageWrapper>
@@ -88,7 +135,7 @@ const SinglePage = () => {
         </Modal>
       </PostImage>
 
-      <TopBar title={title} shareURL={href} author={author} media={gallery} />
+      {/* <TopBar title={title} shareURL={href} author={author} media={gallery} />
 
       <Container>
         <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
@@ -132,6 +179,67 @@ const SinglePage = () => {
             />
           </Col>
           <Col xl={8} />
+        </Row>
+      </Container> */}
+
+      <TopBar
+        title={villa_name}
+        shareURL={href}
+        // author={author} // Assuming `author` comes from elsewhere or is static
+        media={gallery}
+      />
+
+      <Container>
+        <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
+          <Col xl={16}>
+            <Description
+              // content={content} // You might need to adjust this based on your API structure
+              title={villa_name}
+              location={{ formattedAddress: address }} // Adjust if your data structure is different
+            // rating={rating} // Assuming you have a rating value; otherwise, you might need to calculate or adjust
+            // ratingCount={ratingCount} // Same as above, adjust as necessary
+            />
+            {/* <Amenities amenities={amenities} /> // Adjust if your data structure is different */}
+            {/* <Location location={location} /> // Adjust according to your API structure */}
+          </Col>
+          {/* <Col xl={8}>
+            <Reservation
+              price={stiff_price}
+            // rating={rating} // Assuming these are part of your data or need adjustment
+            // ratingCount={ratingCount}
+            />
+          </Col> */}
+
+          <Col xl={8}>
+            {width > 1200 ? (
+              <Sticky
+                innerZ={999}
+                activeClass="isSticky"
+                top={202}
+                bottomBoundary="#reviewSection"
+              >
+                <Reservation 
+                price={stiff_price}
+                />
+              </Sticky>
+            ) : (
+              <BottomReservation
+                title={villa_name}
+                price={stiff_price}
+                // rating={rating}
+                // ratingCount={ratingCount}
+              />
+            )}
+          </Col>
+        </Row>
+        <Row gutter={30}>
+          <Col xl={16}>
+            {/* <Review
+            reviews={reviews} // Make sure `reviews` data structure matches your API or adjust as necessary
+            ratingCount={ratingCount}
+            rating={rating}
+            /> */}
+          </Col>
         </Row>
       </Container>
     </SinglePageWrapper>

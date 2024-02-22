@@ -41,7 +41,7 @@ const LogoIcon = () => (
 export default function Header() {
   let location = useLocation();
   const [{ searchVisibility }] = useContext(LayoutContext);
-  const { loggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const { width } = useWindowSize();
   const [state, setState] = useState(false);
   const sidebarHandler = () => {
@@ -71,7 +71,7 @@ export default function Header() {
             }
             navMenu={<MainMenu />}
             authMenu={<AuthMenu />}
-            isLogin={loggedIn}
+            isLogin={isLoggedIn}
             avatar={<Logo src={avatarImg} />}
             profileMenu={<ProfileMenu avatar={<Logo src={avatarImg} />} />}
             headerType={headerType}
@@ -98,7 +98,7 @@ export default function Header() {
               onClick={sidebarHandler}
             >
               <span />
-              <span />
+              <span />  
               <span />
             </Button>
             <Drawer
@@ -114,7 +114,7 @@ export default function Header() {
                   <IoIosClose />
                 </button>
               </CloseDrawer>
-              {loggedIn ? (
+              {isLoggedIn ? (
                 <AvatarWrapper>
                   <AvatarImage>
                     <Logo src={avatarImg} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import HtmlLabel from 'components/UI/HtmlLabel/HtmlLabel';
 import DatePickerRange from 'components/UI/DatePicker/ReactDates';
@@ -9,109 +9,95 @@ import ReservationFormWrapper, {
   FieldWrapper,
   RoomGuestWrapper,
   ItemWrapper,
+  InputIncDecWrapper
 } from './Reservation.style.js';
+import moment from 'moment';
+import { SingleDatePicker } from 'react-dates';
+// import InputIncDecWrapper from 'components/UI/InputIncDec/InputIncDec.style.js';
 
-const RenderReservationForm = () => {
+const RenderReservationForm = (pricePerWeek) => {
+
   const [formState, setFormState] = useState({
     startDate: null,
-    endDate: null,
-    room: 0,
-    guest: 0,
+    totalWeeks: 1, // Default to 1 week
   });
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [focused, setFocused] = useState(false);
 
-  const handleIncrement = (type) => {
+   useEffect(() => {
+    const newTotalPrice = calculateTotalPrice(); // Recalculate total price when totalWeeks changes
+    setTotalPrice(newTotalPrice);
+  }, [formState.totalWeeks, pricePerWeek]);
+
+  const handleWeeksChange = (e) => {
+    const weeks = parseInt(e.target.value, 10) || 1; // Ensure the value is a number and defaults to 1 if not
     setFormState({
       ...formState,
-      [type]: formState[type] + 1,
+      totalWeeks: weeks,
     });
   };
-  const handleDecrement = (type) => {
-    if (formState[type] <= 0) {
-      return false;
-    }
-    setFormState({
-      ...formState,
-      [type]: formState[type] - 1,
-    });
+
+  const calculateEndDate = () => {
+    if (!formState.startDate) return '';
+    return moment(formState.startDate).add(formState.totalWeeks * 7, 'days').format('YYYY-MM-DD');
   };
-  const handleIncDecOnChnage = (e, type) => {
-    let currentValue = e.target.value;
-    setFormState({
-      ...formState,
-      [type]: currentValue,
-    });
+
+  const calculateTotalPrice = () => {
+    return formState.totalWeeks * pricePerWeek.pricePerWeek; // Assuming pricePerWeek is an object with a pricePerWeek property
   };
-  const updateSearchDataFunc = (value) => {
-    setFormState({
-      ...formState,
-      startDate: value.setStartDate,
-      endDate: value.setEndDate,
-    });
-  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    const endDate = calculateEndDate();
+    const totalPrice = calculateTotalPrice(); // Calculate total price
     alert(
-      `Start Date: ${formState.startDate}\nEnd Date: ${formState.endDate}\nRooms: ${formState.room}\nGuests: ${formState.guest}`
+      `Start Date: ${formState.startDate && formState.startDate.format('YYYY-MM-DD')}
+       End Date: ${endDate}
+       Total Weeks: ${formState.totalWeeks}
+       Total Price: $${totalPrice}`
     );
   };
 
   return (
-    <ReservationFormWrapper className="form-container" onSubmit={handleSubmit}>
+    <ReservationFormWrapper onSubmit={handleSubmit}>
       <FieldWrapper>
-        <HtmlLabel htmlFor="dates" content="Dates" />
-        <DatePickerRange
-          startDateId="checkin-Id"
-          endDateId="checkout-id"
-          startDatePlaceholderText="Check In"
-          endDatePlaceholderText="Check Out"
-          updateSearchData={(value) => updateSearchDataFunc(value)}
+        <HtmlLabel htmlFor="startDate" content="Start Date" />
+        <SingleDatePicker
+          date={formState.startDate} // momentPropTypes.momentObj or null
+          onDateChange={(date) => setFormState({ ...formState, startDate: date })} // PropTypes.func.isRequired
+          focused={focused} // boolean
+          onFocusChange={({ focused }) => setFocused(focused)} // function
+          id="startDate" // PropTypes.string.isRequired,
           numberOfMonths={1}
-          small
         />
       </FieldWrapper>
       <FieldWrapper>
-        <HtmlLabel htmlFor="guests" content="Guests" />
-        <ViewWithPopup
-          key={200}
-          noView={true}
-          className={formState.room || formState.guest ? 'activated' : ''}
-          view={
-            <Button type="default">
-              <span>Room {formState.room > 0 && `: ${formState.room}`}</span>
-              <span>-</span>
-              <span>Guest{formState.guest > 0 && `: ${formState.guest}`}</span>
-            </Button>
-          }
-          popup={
-            <RoomGuestWrapper>
-              <ItemWrapper>
-                <strong>Room</strong>
-                <InputIncDec
-                  id="room"
-                  increment={() => handleIncrement('room')}
-                  decrement={() => handleDecrement('room')}
-                  onChange={(e) => handleIncDecOnChnage(e, 'room')}
-                  value={formState.room}
-                />
-              </ItemWrapper>
-
-              <ItemWrapper>
-                <strong>Guest</strong>
-                <InputIncDec
-                  id="guest"
-                  increment={() => handleIncrement('guest')}
-                  decrement={() => handleDecrement('guest')}
-                  onChange={(e) => handleIncDecOnChnage(e, 'guest')}
-                  value={formState.guest}
-                />
-              </ItemWrapper>
-            </RoomGuestWrapper>
-          }
-        />
+        <HtmlLabel htmlFor="totalWeeks" content="Total Time to Book: " />
+        <InputIncDecWrapper>
+          <input
+            type="number"
+            value={formState.totalWeeks}
+            onChange={handleWeeksChange}
+            min="1"
+            max="52" // Assuming a maximum of 52 weeks
+          />
+          <span> / weeks</span>
+        </InputIncDecWrapper>
       </FieldWrapper>
+      <FieldWrapper>
+        <HtmlLabel htmlFor="endDate" content="End Date: " />
+        <strong>{calculateEndDate()}</strong>
+      </FieldWrapper>
+
+      <FieldWrapper>
+        <HtmlLabel htmlFor="totalPrice" content="Total Price: " />
+        <strong>${totalPrice}</strong> {/* Use the totalPrice state to display the value */}
+      </FieldWrapper>
+
       <FormActionArea>
         <Button htmlType="submit" type="primary">
-          Book Hotel
+          Book Villa
         </Button>
       </FormActionArea>
     </ReservationFormWrapper>

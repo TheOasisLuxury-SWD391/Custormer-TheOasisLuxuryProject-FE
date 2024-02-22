@@ -180,4 +180,50 @@ export const FormActionArea = styled.div`
   }
 `;
 
+export const InputIncDecWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${themeGet('color.2', '#F7F7F7')}; /* Example background color */
+  padding: 10px 15px;
+  border-radius: 3px;
+  margin-bottom: 15px; /* Adjust based on your form layout */
+
+  input {
+    font-size: 15px;
+    font-weight: 400;
+    color: ${themeGet('text.0', '#2C2C2C')};
+    border: 1px solid ${themeGet('border.0', '#E6E6E6')};
+    background-color: ${themeGet('color.1', '#ffffff')};
+    border-radius: 3px;
+    text-align: center;
+    width: 60px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    &:focus {
+      outline: none;
+      border-color: ${themeGet('primary.0', '#008489')};
+    }
+  }
+
+  span {
+    font-size: 15px;
+    color: ${themeGet('text.0', '#2C2C2C')};
+  }
+
+  /* Style for increment and decrement buttons if they are part of the wrapper */
+  .inc-dec-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0 5px;
+    svg {
+      fill: ${themeGet('text.0', '#2C2C2C')};
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+`;
+
+
 export default ReservationFormWrapper;
