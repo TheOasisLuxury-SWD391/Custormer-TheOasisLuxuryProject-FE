@@ -15,6 +15,7 @@ import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import { useNavigate } from 'react-router-dom';
 
+
 // import InputIncDecWrapper from 'components/UI/InputIncDec/InputIncDec.style.js';
 
 const RenderReservationForm = (pricePerWeek) => {
@@ -62,7 +63,7 @@ const RenderReservationForm = (pricePerWeek) => {
        Total Weeks: ${formState.totalWeeks}
        Total Price: $${totalPrice}`
     );
-    navigate("/booking-time-share-form", { 
+    navigate("/villas/${slug}/booking-time-share-form", { 
       state: { 
         startDate: formState.startDate.format('YYYY-MM-DD'),
         endDate: endDate,

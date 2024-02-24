@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components';
 import theme from 'themes/default.theme';
 import GlobalStyles from 'themes/global.style';
 import AuthProvider from 'context/AuthProvider';
+import { VillaProvider } from 'context/VillaContext';
 import AppRoutes from './router';
 import 'antd/dist/reset.css';
 import './style/index.css';
@@ -15,7 +16,9 @@ const App = () => (
       <GlobalStyles />
       <BrowserRouter>
         <AuthProvider>
-          <AppRoutes />
+          <VillaProvider> {/* Wrap AppRoutes with VillaProvider */}
+            <AppRoutes />
+          </VillaProvider>
         </AuthProvider>
       </BrowserRouter>
     </React.Fragment>

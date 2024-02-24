@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'library/hooks/useLocation';
 import Sticky from 'react-stickynode';
@@ -17,46 +17,29 @@ import SinglePageWrapper, { PostImage } from './SinglePageView.style';
 import PostImageGallery from './ImageGallery/ImageGallery';
 import useDataApi from 'library/hooks/useDataApi';
 import isEmpty from 'lodash/isEmpty';
+import { VillaContext } from 'context/VillaContext';
 
 const SinglePage = () => {
   let { slug } = useParams(); // Assuming slug is the villa ID
+
   const { href } = useLocation();
-  const [villaDetails, setVillaDetails] = useState(null);
-  const [loading, setLoading] = useState(false);
+  // const [villaDetails, setVillaDetails] = useState(null);
+  // const [loading, setLoading] = useState(false);
   const [isModalShowing, setIsModalShowing] = useState(false);
   const { width } = useWindowSize();
+  const { villaDetails, fetchVillaDetails, loading } = useContext(VillaContext);
 
-  useEffect(() => {
-    const fetchVillaDetails = async () => {
-      setLoading(true);
-      try {
-        // debugger
-        const token = localStorage.getItem('token'); // Assuming you're using token-based authentication
-        const response = await fetch(`http://localhost:5000/api/v1/villas/${slug}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Include the token in the request headers
-            // 'Content-Type': 'application/json',
-          },
-        });
-        if (response.ok) {
-          const jsonResponse = await response.json();
-          setVillaDetails(jsonResponse.result);
-        } else {
-          console.error('Failed to fetch villa details:', response.statusText);
+ // Fetch villa details nếu chưa có
+    useEffect(() => {
+        if (slug && !villaDetails[slug]) {
+            fetchVillaDetails(slug);
         }
-      } catch (error) {
-        console.error('Error fetching villa details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    }, [slug, fetchVillaDetails, villaDetails]);
 
-    if (slug) {
-      fetchVillaDetails();
-    }
-  }, [slug]);
+  const details = villaDetails ? villaDetails[slug] : null;
 
-  if (loading || !villaDetails) return <Loader />;
+  if (loading) return <Loader />;
+  if (!details) return <div>No villa details found</div>;
 
   const {
     _id,
@@ -68,29 +51,11 @@ const SinglePage = () => {
     fluctuates_price,
     stiff_price,
     // Add other villa details you need
-  } = villaDetails;
-
-  // let url = '/data/hotel-single.json';
-  // if (!slug) {
-  //   url += slug;
-  // }
-  // const { data, loading } = useDataApi(url);
-  // if (isEmpty(data) || loading) return <Loader />;
-  // const {
-  //   reviews,
-  //   rating,
-  //   ratingCount,
-  //   price,
-  //   title,
-  //   gallery,
-  //   location,
-  //   content,
-  //   amenities,
-  //   author,
-  // } = data[0];
+  } = details;
 
   // Transform data to fit existing component structure if necessary
-  const gallery = url_image.map(url => ({ url }));
+  const gallery = url_image ? url_image.map(url => ({ url })) : [];
+
 
   return (
     <SinglePageWrapper>
@@ -195,7 +160,7 @@ const SinglePage = () => {
         <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
           <Col xl={16}>
             <Description
-              // content={content} // You might need to adjust this based on your API structure
+              content={area} // You might need to adjust this based on your API structure
               title={villa_name}
               location={{ formattedAddress: address }} // Adjust if your data structure is different
             // rating={rating} // Assuming you have a rating value; otherwise, you might need to calculate or adjust
@@ -221,7 +186,7 @@ const SinglePage = () => {
                 bottomBoundary="#reviewSection"
               >
                 <Reservation 
-                price={villaDetails.stiff_price}
+                price={stiff_price}
                 />
               </Sticky>
             ) : (
