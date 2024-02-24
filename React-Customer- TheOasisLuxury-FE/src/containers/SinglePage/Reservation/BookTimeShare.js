@@ -12,7 +12,6 @@ const { Option } = Select;
 
 const BookingTimeShareForm = () => {
     const { user } = useContext(AuthContext);
-    console.log('user', user);
     // Form state
 
     const location = useLocation();
@@ -37,7 +36,7 @@ const BookingTimeShareForm = () => {
         // Prepare the data to be sent in the POST request
         const postData = {
             // user_id: user.user_id, 
-            user_id: "65d60caa6be4f4569b2978ff",
+            user_id: "65d60caa6be4f4569b2978ff", // dattq user
             villa_time_share_id: "65d60c1418aae7db0ac56409", // Replace with actual villa time share ID
             price: 6000000, // Replace with actual price or calculate based on form inputs
             start_date: form.startDate?.format('YYYY-MM-DD'), // Format the date as required
@@ -85,6 +84,7 @@ const BookingTimeShareForm = () => {
                                 <Col span={16}>
                                     <div className="tour-details ">
                                         <Title level={4}>villa_name</Title>
+                                        <p><strong>Mã Order: </strong> NDSGN850-026-270424XE-D</p>
                                         <p><strong>Địa chỉ: </strong> address</p>
                                         <p><strong>Diện  tích: </strong> area</p>
                                         <p><strong>Ngày bắt đầu: </strong> {reservationState?.startDate || 'Default Start Date'}</p>

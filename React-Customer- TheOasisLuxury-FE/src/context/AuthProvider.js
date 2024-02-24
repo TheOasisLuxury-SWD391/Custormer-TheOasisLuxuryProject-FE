@@ -73,21 +73,35 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (registerData) => {
     try {
-      const response = await fetch('http://localhost:5000/register', {
+      // Bạn có thể cần điều chỉnh dữ liệu gửi đi cho phù hợp
+      const registerPayload = {
+        full_name: registerData.full_name,
+        birthday: registerData.birthday,
+        phone_number: registerData.phone_number,
+        user_name: registerData.user_name,
+        email: registerData.email,
+        password: registerData.password,
+        confirm_password: registerData.confirm_password,
+      };
+  
+      const response = await fetch('http://localhost:5000/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(registerData),
+        body: JSON.stringify(registerPayload),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        // Set token in local storage or state
-        setIsLoggedIn(true);
         console.log('Registration successful');
+        setIsLoggedIn(true);
+        // Lưu trữ token vào localStorage
+        localStorage.setItem('token', data.result.access_token);
+        localStorage.setItem('refresh_token', data.result.refresh_token);
+        navigate('/');
       } else {
         console.error('Registration failed');
       }
@@ -95,6 +109,7 @@ const AuthProvider = ({ children }) => {
       console.error('Error during registration:', error);
     }
   };
+  
 
 
   const logOut = () => {
