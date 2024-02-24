@@ -2,159 +2,162 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { MdLockOpen } from 'react-icons/md';
-import { Input, Switch, Button } from 'antd';
+import { Input, Switch, Button, DatePicker } from 'antd';
 import FormControl from 'components/UI/FormControl/FormControl';
 import { AuthContext } from 'context/AuthProvider';
 import { FieldWrapper, SwitchWrapper, Label } from '../Auth.style';
 
 const SignUpForm = () => {
-  const { signUp, loggedIn } = useContext(AuthContext);
-  const {
-    control,
-    watch,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    mode: 'onChange',
-  });
+  // const { signUp, loggedIn } = useContext(AuthContext);
+  // const {
+  //   control,
+  //   watch,
+  //   formState: { errors },
+  //   handleSubmit,
+  // } = useForm({
+  //   mode: 'onChange',
+  // });
+  const { handleRegister, isLoggedIn } = useContext(AuthContext); // Assuming handleRegister is your registration function
+  const { control, handleSubmit, watch, formState: { errors } } = useForm();
+
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
-  const onSubmit = (data) => {
-    signUp(data);
+
+  const onSubmit = data => {
+    // Adjust data structure if necessary before sending to handleRegister
+    const registerData = {
+      ...data,
+      birthday: data.birthday ? data.birthday.format('YYYY-MM-DD')  : null,
+      user_name: data.username, // Assuming the API expects user_name instead of username
+      confirm_password: data.confirmPassword,
+    };
+
+    console.log('registerData',registerData);
+
+    // Check if passwords match
+    if (registerData.password !== registerData.confirmPassword) {
+      alert('Passwords do not match');
+      return; // Prevent form submission
+    }
+
+
+    handleRegister(registerData); // Pass the adjusted data for registration
   };
-  if (loggedIn) {
-    return <Navigate to="/" replace={true} />;
-  }
+
+  // if (loggedIn) {
+  //   return <Navigate to="/" replace={true} />;
+  // }
+
+
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl
-        label="Username"
-        htmlFor="username"
-        error={
-          errors.username && (
-            <>
-              {errors.username?.type === 'required' && (
-                <span>This field is required!</span>
-              )}
-            </>
-          )
-        }
+        label="Full Name"
+        htmlFor="full_name"
       >
         <Controller
-          name="username"
-          defaultValue=""
+          name="full_name"
           control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input onChange={onChange} onBlur={onBlur} value={value} />
-          )}
+          defaultValue=""
+          rules={{ required: true }} // Add validation rules as needed
+          render={({ field }) => <Input {...field} />}
         />
       </FormControl>
+
       <FormControl
-        label="Email"
-        htmlFor="email"
-        error={
-          errors.email && (
-            <>
-              {errors.email?.type === 'required' && (
-                <span>This field is required!</span>
-              )}
-              {errors.email?.type === 'pattern' && (
-                <span>Please enter a valid email address!</span>
-              )}
-            </>
-          )
-        }
+        label="Birthday"
+        htmlFor="birthday"
       >
         <Controller
-          name="email"
-          defaultValue=""
+          name="birthday"
           control={control}
+          rules={{ required: true }} // Add validation rules as needed
+          render={({ field }) => <DatePicker {...field} />}
+        />
+      </FormControl>
+
+      <FormControl
+        label="Phone Number"
+        htmlFor="phone_number"
+      >
+        <Controller
+          name="phone_number"
+          control={control}
+          defaultValue=""
+          rules={{ required: true }} // Add validation rules as needed
+          render={({ field }) => <Input {...field} />}
+        />
+      </FormControl>
+
+      {/* Username Field */}
+      <FormControl label="Username" htmlFor="username">
+        <Controller
+          name="username"
+          control={control}
+          defaultValue=""
+          rules={{ required: true }}
+          render={({ field }) => <Input {...field} />}
+        />
+      </FormControl>
+
+      {/* Email Field */}
+      <FormControl label="Email" htmlFor="email">
+        <Controller
+          name="email"
+          control={control}
+          defaultValue=""
           rules={{
             required: true,
             pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
           }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              type="email"
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-            />
-          )}
+          render={({ field }) => <Input type="email" {...field} />}
         />
       </FormControl>
-      <FormControl
-        label="Password"
-        htmlFor="password"
-        error={
-          errors.password && (
-            <>
-              {errors.password?.type === 'required' && (
-                <span>This field is required!</span>
-              )}
-              {errors.password?.type === 'minLength' && (
-                <span>Password must be at lest 6 characters!</span>
-              )}
-              {errors.password?.type === 'maxLength' && (
-                <span>Password must not be longer than 20 characters!</span>
-              )}
-            </>
-          )
-        }
-      >
+
+      {/* Password Field */}
+      <FormControl label="Password" htmlFor="password">
         <Controller
           name="password"
-          defaultValue=""
           control={control}
+          defaultValue=""
           rules={{ required: true, minLength: 6, maxLength: 20 }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input.Password onChange={onChange} onBlur={onBlur} value={value} />
-          )}
+          render={({ field }) => <Input.Password {...field} />}
         />
       </FormControl>
-      <FormControl
-        label="Confirm password"
-        htmlFor="confirmPassword"
-        error={
-          confirmPassword &&
-          password !== confirmPassword && (
-            <span>Your password is not same!</span>
-          )
-        }
-      >
-        <Controller
+
+      {/* Confirm Password Field */}
+      <FormControl label="Confirm password" htmlFor="confirmPassword">
+        <Controller  
           name="confirmPassword"
-          defaultValue=""
           control={control}
-          rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input.Password onChange={onChange} onBlur={onBlur} value={value} />
-          )}
+          defaultValue=""
+          rules={{ required: true,
+            validate: value => value === password || "Passwords do not match" }}
+          render={({ field }) => <Input.Password {...field} />}
         />
+        {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
       </FormControl>
       <FieldWrapper>
         <SwitchWrapper>
           <Controller
-            control={control}
             name="rememberMe"
-            valueName="checked"
+            control={control}
             defaultValue={false}
-            render={({ field: { onChange, value } }) => (
-              <Switch onChange={onChange} checked={value} />
+            render={({ field }) => (
+              <Switch {...field} />
             )}
           />
           <Label>Remember Me</Label>
         </SwitchWrapper>
         <SwitchWrapper>
           <Controller
-            control={control}
             name="termsAndConditions"
-            valueName="checked"
+            control={control}
             defaultValue={false}
-            render={({ field: { onChange, value } }) => (
-              <Switch onChange={onChange} checked={value} />
+            render={({ field }) => (
+              <Switch {...field} />
             )}
           />
           <Label>I agree with terms and conditions</Label>
