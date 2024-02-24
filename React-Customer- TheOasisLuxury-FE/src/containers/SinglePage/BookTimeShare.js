@@ -13,20 +13,21 @@ const { Option } = Select;
 const BookingTimeShareForm = () => {
     const { user } = useContext(AuthContext);
     // Form state
-
     const location = useLocation();
     const reservationState = location.state; // This contains startDate, endDate, totalWeeks, totalPrice
+    console.log('reservationState',reservationState);
+
     const [form, setForm] = useState({
-        fullName: '',
+       fullName: '',
         email: '',
         phoneNumber: '',
         startDate: null,
+        endDate: null, // Added for capturing end date
         passengers: 1,
         destination: 'destination1',
-        adults: 1,
-        children: 0,
+        totalWeeks: reservationState?.totalWeeks,
         additionalRequests: '',
-        // Add other form fields as necessary
+        description: '', // Added for order description
     });
 
     // Function to handle form submission
@@ -35,11 +36,14 @@ const BookingTimeShareForm = () => {
 
         // Prepare the data to be sent in the POST request
         const postData = {
-            // user_id: user.user_id, 
-            user_id: user.user_id, // dattq user
-            villa_time_share_id: "65d60c1418aae7db0ac56409", // Replace with actual villa time share ID
-            price: 6000000, // Replace with actual price or calculate based on form inputs
-            start_date: form.startDate?.format('YYYY-MM-DD'), // Format the date as required
+            user_id: user.user_id,
+            villa_time_share_id: "65d60c1418aae7db0ac56409",
+            price: reservationState?.totalPrice,
+            start_date: reservationState?.startDate,
+            end_date: reservationState?.endDate, // Format the end date
+            description: form.description, // Description from form
+            order_name: "Order Time Share Ngôi nhà đầu tiên tên Villa",
+            status: "PENDING",
             // Include other data as necessary
         };
         console.log('postData', postData);
@@ -136,7 +140,7 @@ const BookingTimeShareForm = () => {
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="datePicker">
                                 Ngày sinh*
                             </label>
-                            <DatePicker onChange={(date) => setForm({ ...form, startDate: date })} />
+                            <DatePicker />
                         </div>
 
                         {/* Number of Passengers */}
@@ -184,7 +188,7 @@ const BookingTimeShareForm = () => {
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="additionalRequests">
                                 Ghi chú thêm
                             </label>
-                            <Input.TextArea rows={4} id="additionalRequests" placeholder="Vui lòng nhập nội dung lời nhắn bằng tiếng Anh hoặc tiếng Việt" />
+                            <Input.TextArea rows={4} id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Mô tả cho đơn hàng" />
                         </div>
 
                         {/* Submit Button */}

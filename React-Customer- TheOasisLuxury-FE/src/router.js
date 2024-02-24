@@ -21,7 +21,7 @@ import {
   AGENT_ACCOUNT_SETTINGS_PAGE,
   BOOK_TIME_SHARE,
 } from './settings/constant';
-import BookingTimeShareForm from 'containers/SinglePage/Reservation/BookTimeShare';
+import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 
 // protected route
 function RequireAuth({ children }) {
