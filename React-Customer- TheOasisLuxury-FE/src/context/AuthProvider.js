@@ -53,7 +53,9 @@ const AuthProvider = ({ children }) => {
         // children.setIsLoggedIn(true);
         setIsLoggedIn(true);
         const accessToken = data.result.access_token; // Trích xuất access_token
+        const userId = data.result.user_id;
         localStorage.setItem('token', accessToken); // Lưu token vào localStorage
+        setUser({ user_id: userId });
         console.log('Login successful');
         if (rememberMe) {
           // Save credentials to local storage

@@ -36,7 +36,7 @@ const BookingTimeShareForm = () => {
         // Prepare the data to be sent in the POST request
         const postData = {
             // user_id: user.user_id, 
-            user_id: "65d60caa6be4f4569b2978ff", // dattq user
+            user_id: user.user_id, // dattq user
             villa_time_share_id: "65d60c1418aae7db0ac56409", // Replace with actual villa time share ID
             price: 6000000, // Replace with actual price or calculate based on form inputs
             start_date: form.startDate?.format('YYYY-MM-DD'), // Format the date as required
