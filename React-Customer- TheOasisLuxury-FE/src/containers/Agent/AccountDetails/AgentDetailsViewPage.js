@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment , useState, useEffect } from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
 import {
@@ -36,22 +36,22 @@ const ProfileNavigation = (props) => {
   const { path, className } = props;
   const { loggedIn } = useContext(AuthContext);
 
-  const navigations = [
-    { label: <NavLink to={path}>Listing</NavLink>, key: 'listing' },
-    {
-      label: <NavLink to={AGENT_PROFILE_FAVORITE}>Favorite</NavLink>,
-      key: 'favorite',
-    },
-    {
-      label: <NavLink to={AGENT_PROFILE_CONTACT}>Contact</NavLink>,
-      key: 'contact',
-    },
-  ];
+  // const navigations = [
+  //   { label: <NavLink to={path}>Listing</NavLink>, key: 'listing' },
+  //   {
+  //     label: <NavLink to={AGENT_PROFILE_FAVORITE}>Favorite</NavLink>,
+  //     key: 'favorite',
+  //   },
+  //   {
+  //     label: <NavLink to={AGENT_PROFILE_CONTACT}>Contact</NavLink>,
+  //     key: 'contact',
+  //   },
+  // ];
 
   return (
     <NavigationArea>
       <Container fluid={true}>
-        <Menu className={className} items={navigations} />
+        {/* <Menu className={className} items={navigations} /> */}
         {loggedIn && (
           <Link className="add_card" to={ADD_HOTEL_PAGE}>
             <IoIosAdd /> Add Hotel
@@ -63,72 +63,99 @@ const ProfileNavigation = (props) => {
 };
 
 const AgentProfileInfo = () => {
-  const { data, loading } = useDataApi('/data/agent.json');
-  if (isEmpty(data) || loading) return <Loader />;
-  const {
-    first_name,
-    last_name,
-    content,
-    profile_pic,
-    cover_pic,
-    social_profile,
-  } = data[0];
-  const username = `${first_name} ${last_name}`;
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { isLoggedIn } = useContext(AuthContext); 
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId'); // Lấy user_id từ localStorage
+
+      if (!userId) {
+        console.error("User ID is not available in localStorage.");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:5000/api/v1/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Thêm token vào header
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('User data:', data);
+        setUser(data.result); // Lưu thông tin người dùng vào state
+        setLoading(false);
+      } else {
+        console.error("Failed to fetch user data:", response.status);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setLoading(false);
+    }
+  };
+  const ProfileInformation = () => {
+    return (
+      <Fragment>
+        <div className="profile-info mt-40">
+          <table>
+            <tbody>
+              <tr>
+                <td><strong>Fullname:</strong></td>
+                <td>{user ? user.full_name : 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Email:</strong></td>
+                <td>{user ? user.email : 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Birthday:</strong></td>
+                <td>{user ? user.birthday : 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Phone Number:</strong></td>
+                <td>{user ? user.phone_number : 'N/A'}</td>
+              </tr>
+              <tr>
+                <td><strong>Gender:</strong></td>
+                <td>{user ? user.gender : 'N/A'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Fragment>
+    );
+  };
+  
+
+  
 
   return (
     <Fragment>
-      <BannerSection>
-        <Image className="absolute" src={cover_pic.url} alt="Profile cover" />
-      </BannerSection>
-      <UserInfoArea>
-        <Container fluid={true}>
-          <ProfileImage>
-            {profile_pic ? (
-              <Image src={profile_pic.url} alt="Profile" />
-            ) : (
-              <ProfilePicLoader />
-            )}
-          </ProfileImage>
-          <ProfileInformationArea>
-            <ProfileInformation>
-              <Heading content={username} />
-              <Text content={content} />
-            </ProfileInformation>
-            <SocialAccount>
-              <Popover content="Twitter">
-                <a
-                  href={social_profile.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IoLogoTwitter className="twitter" />
-                </a>
-              </Popover>
-              <Popover content="Facebook">
-                <a
-                  href={social_profile.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IoLogoFacebook className="facebook" />
-                </a>
-              </Popover>
-              <Popover content="Instagram">
-                <a
-                  href={social_profile.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IoLogoInstagram className="instagram" />
-                </a>
-              </Popover>
-            </SocialAccount>
-          </ProfileInformationArea>
-        </Container>
-      </UserInfoArea>
+      {loading ? (
+        <Loader /> 
+      ) : (
+        <UserInfoArea>
+          <Container fluid={true}>
+            <AuthContext.Provider value={{ isLoggedIn }}>
+              <ProfileInformationArea>
+                <ProfileInformation user={user} />
+              </ProfileInformationArea>
+            </AuthContext.Provider>
+          </Container>
+        </UserInfoArea>
+      )}
     </Fragment>
   );
 };
+
 
 export default function AgentDetailsViewPage(props) {
   return (
@@ -137,7 +164,7 @@ export default function AgentDetailsViewPage(props) {
         <AgentProfileInfo />
         <ProfileNavigation path={AGENT_PROFILE_PAGE} {...props} />
         <Container fluid={true}>
-          <Outlet />
+          {/* <Outlet /> */}
         </Container>
       </AuthProvider>
     </AgentDetailsPage>

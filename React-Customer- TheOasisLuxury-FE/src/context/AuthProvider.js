@@ -57,6 +57,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem('token', accessToken); // Lưu token vào localStorage
         setUser({ user_id: userId });
         console.log('Login successful');
+        localStorage.setItem('userId', userId);
         if (rememberMe) {
           // Save credentials to local storage
           localStorage.setItem('savedUserName', loginData.user_name);
@@ -74,6 +75,33 @@ const AuthProvider = ({ children }) => {
       console.error('Error during login:', error);
     }
   };
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async (userId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const userId = localStorage.getItem('userId'); // Lấy user_id từ localStorage
+  
+      const response = await fetch(`http://localhost:5000/api/v1/users/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Thêm token vào header
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('User data:', data);
+        setUser(data.result); // Lưu thông tin người dùng vào state
+      } else {
+        console.error("Failed to fetch user data:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  
 
   const handleRegister = async (registerData) => {
     try {

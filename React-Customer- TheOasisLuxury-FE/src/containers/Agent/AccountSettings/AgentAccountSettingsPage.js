@@ -22,10 +22,10 @@ const navigations = [
     label: <NavLink to={AGENT_ACCOUNT_SETTINGS_PAGE}>Edit Profile</NavLink>,
     key: 'edit_profile',
   },
-  {
-    label: <NavLink to={AGENT_IMAGE_EDIT_PAGE}>Change Photos</NavLink>,
-    key: 'change_photos',
-  },
+  // {
+  //   label: <NavLink to={AGENT_IMAGE_EDIT_PAGE}>Change Photos</NavLink>,
+  //   key: 'change_photos',
+  // },
   {
     label: <NavLink to={AGENT_PASSWORD_CHANGE_PAGE}>Change Password</NavLink>,
     key: 'change_password',
