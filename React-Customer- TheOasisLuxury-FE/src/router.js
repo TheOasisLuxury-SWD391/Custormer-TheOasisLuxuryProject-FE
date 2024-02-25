@@ -21,9 +21,11 @@ import {
   AGENT_ACCOUNT_SETTINGS_PAGE,
   BOOK_TIME_SHARE,
   CONTRACT_TIME_SHARE,
+  PAYMENT_FORM,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 import ContractPage from 'containers/SinglePage/ContractPage';
+import PaymentForm from 'containers/SinglePage/PaymentPage';
 
 // protected route
 function RequireAuth({ children }) {
@@ -246,6 +248,15 @@ export default function AppRoutes() {
                 </React.Suspense>
               }
           />
+          <Route
+              path={PAYMENT_FORM}
+              element={
+                <React.Suspense fallback={<Loader />}>
+                  <PaymentForm/>
+                </React.Suspense>
+              }
+          />
+          
         <Route
           path="*"
           element={

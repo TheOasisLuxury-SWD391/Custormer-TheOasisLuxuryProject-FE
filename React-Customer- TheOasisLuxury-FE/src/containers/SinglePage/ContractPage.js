@@ -1,13 +1,26 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Form, Input, Button, DatePicker, Row, Col } from 'antd';
 import SignatureCanvas from 'react-signature-canvas';
 import Container from 'components/UI/Container/Container';
 import moment from 'moment';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { VillaContext } from 'context/VillaContext';
+
 
 const ContractPage = () => {
     const [form] = Form.useForm();
     const [signatureB, setSignatureB] = useState(null);
     const sigPadB = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation()
+    
+    const { orderId } = location.state;
+    
+    const { villaDetails } = useContext(VillaContext);
+    const idVilla = villaDetails && Object.keys(villaDetails)[0];
+    const details = villaDetails[idVilla];
+
+    // Lấy orderId từ state
 
     const clearSignatureB = () => sigPadB.current.clear();
 
@@ -16,6 +29,9 @@ const ContractPage = () => {
     const onFinish = (values) => {
         console.log('Received values of form: ', values);
         console.log('Signature Data URL B: ', signatureB);
+
+        const contractId = '84385738';
+        navigate(`/villas/${idVilla}/orders/${orderId}/contract/${contractId}/payment`);
     };
 
     // Thay thế các giá trị tĩnh bằng dữ liệu động

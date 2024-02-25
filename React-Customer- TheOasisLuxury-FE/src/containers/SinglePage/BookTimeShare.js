@@ -80,7 +80,8 @@ const BookingTimeShareForm = () => {
             const result = await response.json();
             console.log(result);
             const orderId = result.result._id; // result là phản hồi từ API
-            navigate(`/villas/${idVilla}/orders/${orderId}/contract`);
+            debugger
+            navigate(`/villas/${idVilla}/orders/${orderId}/contract`, { state: { orderId } });
         } catch (error) {
             console.error('Error during the fetch operation:', error);
         }
