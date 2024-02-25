@@ -203,6 +203,8 @@ export const ButtonGroup = styled.div`
 `;
 
 export const PostImage = styled.div`
+max-width: 1200px;
+  margin: 0 auto;
   height: 600px;
   position: relative;
 

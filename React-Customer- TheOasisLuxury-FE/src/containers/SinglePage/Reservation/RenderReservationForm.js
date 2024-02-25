@@ -63,7 +63,7 @@ const RenderReservationForm = (pricePerWeek) => {
        Total Weeks: ${formState.totalWeeks}
        Total Price: $${totalPrice}`
     );
-    navigate("/villas/${slug}/booking-time-share-form", { 
+    navigate("/villas/${slug}/order", { 
       state: { 
         startDate: formState.startDate.format('YYYY-MM-DD'),
         endDate: endDate,

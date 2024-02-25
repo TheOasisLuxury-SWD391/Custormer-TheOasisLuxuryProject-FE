@@ -10,10 +10,10 @@ import GridCard from '../GridCard/GridCard';
 const responsive = {
   desktop: {
     breakpoint: {
-      max: 3000,
-      min: 1024,
+      max: 1000,
+      min: 500,
     },
-    items: 1,
+    items: 5,
     paritialVisibilityGutter: 40,
   },
   mobile: {
@@ -46,6 +46,7 @@ const PostGrid = ({
 }) => {
   return (
     <GridCard
+    className='flex-auto p-1 m-2 w-64'
       isCarousel={true}
       favorite={
         <Favourite

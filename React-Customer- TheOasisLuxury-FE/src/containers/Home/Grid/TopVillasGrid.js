@@ -15,7 +15,7 @@ import { VillaContext } from 'context/VillaContext';
 const TopVillasGrid = () => {
   // const [villas, setVillas] = useState([]);
   const { width } = useWindowSize();
-  const { villas } = useContext(VillaContext); 
+  const { villas } = useContext(VillaContext);
 
   // Adjusting the limit based on screen width, similar to your existing logic
   let limit = 10;
@@ -33,27 +33,29 @@ const TopVillasGrid = () => {
 
   return (
     <Container fluid={true}>
-     <SectionTitle title={<Heading content="Top Villas" />} />
-     {villas.length === 0 ? (
-        <div>Loading...</div> // Show loading only if villas are empty
-      ) : (
-        displayedVillas.map((villa) => (
-          <PostGrid
-            key={villa._id}
-            title={villa.villa_name}
-            rating={4.5} // Assuming rating is not part of the villa data; adjust as necessary
-            location={{ formattedAddress: villa.address }} // Adjust according to your data structure
-            price={villa.stiff_price}
-            ratingCount={10} // Assuming rating count is not part of the villa data; adjust as necessary
-            gallery={villa.url_image.map((img) => ({
-              url: img, // Adjust according to your data structure
-              title: villa.villa_name, // Optional: adjust as necessary
-            }))}
-            slug={villa._id} // Assuming you want to use the ID as a slug; adjust as necessary
-            link="/villas" // Adjust the base path as necessary
-          />
-        ))
-      )}
+      <SectionTitle title={<Heading content="Top Villas" />} />
+      <div className='flex flex-wrap justify-start'>
+        {villas.length === 0 ? (
+          <div>Loading...</div> // Show loading only if villas are empty
+        ) : (
+          displayedVillas.map((villa) => (
+            <PostGrid
+              key={villa._id}
+              title={villa.villa_name}
+              rating={4.5} // Assuming rating is not part of the villa data; adjust as necessary
+              location={{ formattedAddress: villa.address }} // Adjust according to your data structure
+              price={villa.stiff_price}
+              ratingCount={10} // Assuming rating count is not part of the villa data; adjust as necessary
+              gallery={villa.url_image.map((img) => ({
+                url: img, // Adjust according to your data structure
+                title: villa.villa_name, // Optional: adjust as necessary
+              }))}
+              slug={villa._id} // Assuming you want to use the ID as a slug; adjust as necessary
+              link="/villas" // Adjust the base path as necessary
+            />
+          ))
+        )}
+      </div>
     </Container>
   );
 };

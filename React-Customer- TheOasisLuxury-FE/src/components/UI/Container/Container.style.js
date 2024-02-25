@@ -30,6 +30,7 @@ const ContainerWrapper = styled.div`
     css`
       width: 100% !important;
       max-width: 1920px !important;
+      // max-width: 1254px !important;
       @media (min-width: 1441px) {
         padding-left: 75px;
         padding-right: 75px;

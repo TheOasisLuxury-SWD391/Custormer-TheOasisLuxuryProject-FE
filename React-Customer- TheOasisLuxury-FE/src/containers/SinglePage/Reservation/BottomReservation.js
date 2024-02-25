@@ -34,7 +34,7 @@ const BottomReservation = ({ title, price, rating, ratingCount }) => {
         wrapClassName="reservation_modal"
         closable={false}
       >
-        <Reservation />
+        <Reservation price={price}/>
         <Button onClick={() => setVisible(false)} className="close">
           <IoIosClose />
         </Button>

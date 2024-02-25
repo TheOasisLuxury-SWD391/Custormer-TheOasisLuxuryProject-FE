@@ -59,6 +59,13 @@ const SinglePage = () => {
 
   return (
     <SinglePageWrapper>
+       <TopBar
+        title={villa_name}
+        shareURL={href}
+        // author={author} // Assuming `author` comes from elsewhere or is static
+        media={gallery}
+      />
+      
       <PostImage>
         <img
           className="absolute"
@@ -149,12 +156,7 @@ const SinglePage = () => {
         </Row>
       </Container> */}
 
-      <TopBar
-        title={villa_name}
-        shareURL={href}
-        // author={author} // Assuming `author` comes from elsewhere or is static
-        media={gallery}
-      />
+     
 
       <Container>
         <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>

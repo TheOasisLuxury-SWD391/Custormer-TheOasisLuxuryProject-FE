@@ -46,7 +46,7 @@ export const VillaProvider = ({ children }) => {
       });
       if (response.ok) {
         const jsonResponse = await response.json();
-        setVillaDetails(prevState => ({...prevState, [slug]: jsonResponse.result}));
+        setVillaDetails({[slug]: jsonResponse.result});
       } else {
         console.error('Failed to fetch villa details:', response.statusText);
       }

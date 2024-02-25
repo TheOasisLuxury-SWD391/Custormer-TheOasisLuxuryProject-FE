@@ -40,7 +40,7 @@ const GlobalStyle = createGlobalStyle`
   textarea,
   span,
   div {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
@@ -52,7 +52,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 

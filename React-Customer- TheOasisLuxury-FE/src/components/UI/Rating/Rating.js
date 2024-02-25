@@ -42,7 +42,7 @@ const Rating = (props) => {
     <>
       {type && type === 'bulk' ? (
         <>
-          <span>{ratingView}</span>
+          <span className='flex'>{ratingView}</span>
           <strong>
             {` ${listingCondition}`} {`${showRatingCount}`}
           </strong>

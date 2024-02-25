@@ -3,7 +3,8 @@ import { Input, Button, DatePicker, Select, InputNumber, Row, Col, Typography } 
 import Container from 'components/UI/Container/Container';
 import Card from 'components/UI/Card/Card';
 import { AuthContext } from 'context/AuthProvider.js';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { VillaContext } from 'context/VillaContext';
 
 
 const { Title, Text } = Typography;
@@ -12,13 +13,23 @@ const { Option } = Select;
 
 const BookingTimeShareForm = () => {
     const { user } = useContext(AuthContext);
+    const { villaDetails } = useContext(VillaContext);
+    // console.log('villaDetails',villaDetails);
+    const navigate = useNavigate(); // Initialize use
+    const idVilla = villaDetails && Object.keys(villaDetails)[0];
+    const details = villaDetails[idVilla];
+    console.log('details', details);
+
+
+
+
     // Form state
     const location = useLocation();
     const reservationState = location.state; // This contains startDate, endDate, totalWeeks, totalPrice
-    console.log('reservationState',reservationState);
+    console.log('reservationState', reservationState);
 
     const [form, setForm] = useState({
-       fullName: '',
+        fullName: '',
         email: '',
         phoneNumber: '',
         startDate: null,
@@ -27,7 +38,8 @@ const BookingTimeShareForm = () => {
         destination: 'destination1',
         totalWeeks: reservationState?.totalWeeks,
         additionalRequests: '',
-        description: '', // Added for order description
+        description: '',
+        total_week: reservationState?.totalWeeks, // Added for order description
     });
 
     // Function to handle form submission
@@ -42,8 +54,9 @@ const BookingTimeShareForm = () => {
             start_date: reservationState?.startDate,
             end_date: reservationState?.endDate, // Format the end date
             description: form.description, // Description from form
-            order_name: "Order Time Share Ngôi nhà đầu tiên tên Villa",
+            order_name: details.villa_name,
             status: "PENDING",
+            total_week: form.total_week,
             // Include other data as necessary
         };
         console.log('postData', postData);
@@ -60,12 +73,14 @@ const BookingTimeShareForm = () => {
             });
 
             if (!response.ok) {
+
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
             console.log(result);
-            // Handle the response as necessary, e.g., show a success message or redirect the user
+            const orderId = result.result._id; // result là phản hồi từ API
+            navigate(`/villas/${idVilla}/orders/${orderId}/contract`);
         } catch (error) {
             console.error('Error during the fetch operation:', error);
         }
@@ -81,20 +96,19 @@ const BookingTimeShareForm = () => {
                             <Row gutter={16}>
                                 <Col span={8}>
                                     <div className="tour-image-container">
-                                        {/* This will be the image container where you can place the image */}
-                                        <img src="{url_image}" alt="Tour Image" className="tour-image" />
+                                        <img src={details.url_image} alt="Tour Image" className="tour-image" />
                                     </div>
                                 </Col>
                                 <Col span={16}>
                                     <div className="tour-details ">
-                                        <Title level={4}>villa_name</Title>
-                                        <p><strong>Mã Order: </strong> NDSGN850-026-270424XE-D</p>
-                                        <p><strong>Địa chỉ: </strong> address</p>
-                                        <p><strong>Diện  tích: </strong> area</p>
-                                        <p><strong>Ngày bắt đầu: </strong> {reservationState?.startDate || 'Default Start Date'}</p>
-                                        <p><strong>Ngày kết thúc: </strong> {reservationState?.endDate || 'Default End Date'}</p>
-                                        <p><strong>Tổng thời gian: </strong> {reservationState?.totalWeeks || 'Default Weeks'} tuần</p>
-                                        <p><strong>Tổng tiền: </strong> ${reservationState?.totalPrice || 'Default Price'}</p>
+                                        <Title level={4}>{details.villa_name}</Title>
+                                        <p><strong>Địa chỉ: </strong> {details.address}</p>
+                                        <p><strong>Thuộc dự án: </strong> project name</p>
+                                        <p><strong>Thuộc phân khu: </strong> subdivision name</p>
+                                        <p><strong>Diện  tích: </strong> {details.area}</p>
+                                        <p><strong>Tổng số phòng: </strong> 10 (1 Phòng khách, 5 phòng ngủ, 4 wc)</p>
+                                        <p><strong>View:  </strong> View hướng biển</p>
+                                        <p><strong>Tiện ích bao gồm: </strong> hồ bơi, wifi,...</p>
                                     </div>
                                 </Col>
                             </Row>
@@ -135,53 +149,36 @@ const BookingTimeShareForm = () => {
                             <Input placeholder="Số điện thoại" id="phoneNumber" value={form.phoneNumber} onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })} />
                         </div>
 
-                        {/* Date Picker */}
+                        <div className='mb4'>
+                            <p><strong>Ngày bắt đầu: </strong> {reservationState?.startDate || 'Default Start Date'}</p>
+                            <p><strong>Ngày kết thúc: </strong> {reservationState?.endDate || 'Default End Date'}</p>
+                            {/* <p><strong>Tổng thời gian: </strong> <InputNumber min={1} value={form.total_week} onChange={(e) => setForm({ ...form, total_week: e.target.value })} id="total_week" /> tuần</p> */}
+                            
+                        </div>
+
+                        {/* Date Picker
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="datePicker">
                                 Ngày sinh*
                             </label>
                             <DatePicker />
-                        </div>
+                        </div> */}
 
-                        {/* Number of Passengers */}
+                        {/* Number of total_week */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="passengers">
-                                Số lượng hành khách
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="total_week">
+                                Tổng thời gian mua (đơn vị Tuần):
                             </label>
-                            <Select defaultValue="1" style={{ width: 120 }} id="passengers">
-                                <Option value="1">1</Option>
-                                <Option value="2">2</Option>
-                                <Option value="3">3</Option>
-                                <Option value="4">4</Option>
-                            </Select>
+                            <InputNumber min={1} value={form.total_week} onChange={(e) => setForm({ ...form, total_week: e.target.value })} id="total_week" />
                         </div>
 
-                        {/* Destination */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="destination">
-                                Điểm đến*
-                            </label>
-                            <Select defaultValue="destination1" style={{ width: '100%' }} id="destination">
-                                <Option value="destination1">Miền Tây: An Giang - Châu Đốc - Rạch Giá - Cà Mau - Bạc Liêu - Sóc Trăng (Bản giáo hưởng của Biển Rừng Phương Nam)</Option>
-                                {/* ... other options ... */}
-                            </Select>
-                        </div>
-
-                        {/* Number of Adults */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="adults">
-                                Người lớn (Từ 12 tuổi)*
-                            </label>
-                            <InputNumber min={1} defaultValue={1} id="adults" />
-                        </div>
-
-                        {/* Number of Children */}
+                        {/* Number of Children
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="children">
                                 Trẻ em (Từ 5 - 11 tuổi)
                             </label>
                             <InputNumber min={0} defaultValue={0} id="children" />
-                        </div>
+                        </div> */}
 
                         {/* Additional Requests */}
                         <div className="mb-4">
@@ -189,6 +186,9 @@ const BookingTimeShareForm = () => {
                                 Ghi chú thêm
                             </label>
                             <Input.TextArea rows={4} id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Mô tả cho đơn hàng" />
+                        </div>
+                        <div className='flex text-xl font-bold text-center text-cyan-700'>
+                        <p className='mr-4'>Tổng tiền: </p> <p>${reservationState?.totalPrice || 'Default Price'}</p> 
                         </div>
 
                         {/* Submit Button */}
@@ -203,7 +203,7 @@ const BookingTimeShareForm = () => {
                 <Col xl={8}>
                     <Card className="bg-white shadow-md rounded">
                         <div className="mb-4">
-                            <Title level={4}>Tóm tắt chuyến đi</Title>
+                            <Title level={4}>Chính sách mua Timeshare Villa</Title>
                         </div>
 
                         {/* ... other summary items ... */}
@@ -240,20 +240,10 @@ const BookingTimeShareForm = () => {
                             <Title level={4}>TỔNG TIỀN</Title>
                             <Title level={3} type="danger">7.590.000 đ</Title>
                         </div>
-
-                        {/* Submit Button */}
-                        <div className="flex items-center justify-between">
-                            <Button type="primary" size="large" block>
-                                ĐẶT NGAY
-                            </Button>
-                        </div>
                     </Card>
                 </Col>
             </Row>
         </Container>
-        // <div className="container mx-auto p-4">
-
-        // </div>
     );
 };
 

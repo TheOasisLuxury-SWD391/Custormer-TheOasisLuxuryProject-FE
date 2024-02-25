@@ -20,8 +20,10 @@ import {
   AGENT_PASSWORD_CHANGE_PAGE,
   AGENT_ACCOUNT_SETTINGS_PAGE,
   BOOK_TIME_SHARE,
+  CONTRACT_TIME_SHARE,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
+import ContractPage from 'containers/SinglePage/ContractPage';
 
 // protected route
 function RequireAuth({ children }) {
@@ -37,6 +39,7 @@ function RequireAuth({ children }) {
 // public routes
 const HomePage = React.lazy(() => import('containers/Home/Home'));
 const ListingPage = React.lazy(() => import('containers/Listing/Listing'));
+// const TopVillasGrid = React.lazy(() => import('containers/Home/Grid/TopVillasGrid'));
 const SinglePageView = React.lazy(() =>
   import('containers/SinglePage/SinglePageView')
 );
@@ -232,6 +235,14 @@ export default function AppRoutes() {
               element={
                 <React.Suspense fallback={<Loader />}>
                   <BookingTimeShareForm />
+                </React.Suspense>
+              }
+          />
+          <Route
+              path={CONTRACT_TIME_SHARE}
+              element={
+                <React.Suspense fallback={<Loader />}>
+                  <ContractPage />
                 </React.Suspense>
               }
           />

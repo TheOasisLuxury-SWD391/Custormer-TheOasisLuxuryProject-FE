@@ -63,7 +63,7 @@ const SideButtons = (props) => {
 const TopBar = (props) => {
   const { title, shareURL, author, media } = props;
   return (
-    <TobBarWrapper>
+    <TobBarWrapper  className='w-10/12 mx-auto'>
       <Sticky innerZ={9999} top={80} activeClass="isSticky">
         <ScrollBar
           menu={topBarMenu}

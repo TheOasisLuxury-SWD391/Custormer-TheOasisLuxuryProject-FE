@@ -249,7 +249,7 @@ export const FormAction = styled.div`
     border: 0;
     border-radius: 3px;
     min-width: 95px;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Open Sans', sans-serif;
     color: ${themeGet('color.1', '#ffffff')};
     background-color: ${themeGet('primary.0', '#008489')};
     display: inline-flex;

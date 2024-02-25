@@ -20,7 +20,8 @@ export const AGENT_PROFILE_DELETE = '/delete';
 export const PRICING_PLAN_PAGE = '/pricing-plan';
 export const PRIVACY_PAGE = '/privacy';
 export const ADD_HOTEL_PAGE = '/add-hotel';
-export const BOOK_TIME_SHARE = '/villas/:slug/booking-time-share-form';
+export const BOOK_TIME_SHARE = '/villas/:slug/order';
+export const CONTRACT_TIME_SHARE = '/villas/:idVilla/orders/:orderId/contract';
 
 // Login / Registration Page
 export const LOGIN_PAGE = '/sign-in';
