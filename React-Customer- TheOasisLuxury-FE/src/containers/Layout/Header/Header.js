@@ -62,10 +62,11 @@ export default function Header() {
               <>
                 {headerType === 'transparent' && <LogoIcon />}
                 <Logo
+                  className='min-w-80'
                   withLink
                   linkTo="/"
-                  src="/images/logo-alt.svg"
-                  title="TripFinder."
+                  src="/images/logo-TOA.svg"
+                  title="The Oasis Luxury"
                 />
               </>
             }
@@ -87,8 +88,8 @@ export default function Header() {
                 <Logo
                   withLink
                   linkTo="/"
-                  src="/images/logo-alt.svg"
-                  title="TripFinder."
+                  src="/images/logo-TOA.svg"
+                  title="The Oasis Luxury"
                 />
               </>
               <NavbarSearch />

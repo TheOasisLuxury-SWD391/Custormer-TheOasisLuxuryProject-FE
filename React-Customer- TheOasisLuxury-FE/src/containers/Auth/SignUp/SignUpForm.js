@@ -8,7 +8,7 @@ import { AuthContext } from 'context/AuthProvider';
 import { FieldWrapper, SwitchWrapper, Label } from '../Auth.style';
 
 const SignUpForm = () => {
-  // const { signUp, loggedIn } = useContext(AuthContext);
+  // const { signUp, isLoggedIn } = useContext(AuthContext);
   // const {
   //   control,
   //   watch,
@@ -44,7 +44,7 @@ const SignUpForm = () => {
     handleRegister(registerData); // Pass the adjusted data for registration
   };
 
-  // if (loggedIn) {
+  // if (isLoggedIn) {
   //   return <Navigate to="/" replace={true} />;
   // }
 

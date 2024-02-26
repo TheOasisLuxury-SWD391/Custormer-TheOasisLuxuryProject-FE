@@ -5,6 +5,7 @@ import Card from 'components/UI/Card/Card';
 import { AuthContext } from 'context/AuthProvider.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { VillaContext } from 'context/VillaContext';
+import Policy from './Policy/Policy';
 
 
 const { Title, Text } = Typography;
@@ -80,7 +81,6 @@ const BookingTimeShareForm = () => {
             const result = await response.json();
             console.log(result);
             const orderId = result.result._id; // result là phản hồi từ API
-            debugger
             navigate(`/villas/${idVilla}/orders/${orderId}/contract`, { state: { orderId } });
         } catch (error) {
             console.error('Error during the fetch operation:', error);
@@ -203,44 +203,7 @@ const BookingTimeShareForm = () => {
                 {/* Tổng quan và tổng tiền*/}
                 <Col xl={8}>
                     <Card className="bg-white shadow-md rounded">
-                        <div className="mb-4">
-                            <Title level={4}>Chính sách mua Timeshare Villa</Title>
-                        </div>
-
-                        {/* ... other summary items ... */}
-
-                        <div className="mb-4">
-                            <Text strong>Dịch vụ tùy chọn Xe suốt tuyến - Khách sạn tương đương 3* và 4*</Text>
-                        </div>
-
-                        <div className="mb-4">
-                            <Text strong>Tour trọn gói (9 khách)</Text>
-                            <Text block>Miền Tây: An Giang - Châu Đốc - Rach Giá - Cà Mau - Bac Lieu - Sóc Trăng (Bản giáo hưởng của Biển Rừng...)</Text>
-                        </div>
-
-                        {/* Date and Passenger details */}
-                        <div className="mb-4">
-                            <Text strong>Bắt đầu chuyến đi:</Text>
-                            <Text block>T7, 27 Tháng 4 Năm 2024</Text>
-                        </div>
-
-                        <div className="mb-4">
-                            <Text strong>Kết thúc chuyến đi:</Text>
-                            <Text block>T4, 1 Tháng 5 Năm 2024</Text>
-                        </div>
-
-                        <div className="mb-4">
-                            <Text strong>Hành khách:</Text>
-                            <Text block>Người lớn: 1 x 6.390.000 đ</Text>
-                            <Text block>Phụ thu phòng đơn: 1.600.000 đ</Text>
-                            <Text block>Ưu đãi giờ chót: -400.000 đ</Text>
-                        </div>
-
-                        {/* Total Cost */}
-                        <div className="mb-4">
-                            <Title level={4}>TỔNG TIỀN</Title>
-                            <Title level={3} type="danger">7.590.000 đ</Title>
-                        </div>
+                        <Policy/>
                     </Card>
                 </Col>
             </Row>

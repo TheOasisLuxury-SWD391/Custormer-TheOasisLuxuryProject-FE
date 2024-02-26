@@ -31,10 +31,10 @@ export default function ProfileMenu({ avatar }) {
       label: <NavLink to={AGENT_PROFILE_PAGE}>View Profile</NavLink>,
       key: 'view_profile',
     },
-    {
-      label: <NavLink to={ADD_HOTEL_PAGE}>Add Hotel</NavLink>,
-      key: 'add_hotel',
-    },
+    // {
+    //   label: <NavLink to={ADD_HOTEL_PAGE}>Add Hotel</NavLink>,
+    //   key: 'add_hotel',
+    // },
     {
       label: (
         <NavLink to={AGENT_ACCOUNT_SETTINGS_PAGE}>Account Settings</NavLink>

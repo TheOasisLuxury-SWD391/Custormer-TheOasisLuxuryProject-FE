@@ -29,8 +29,8 @@ export default function ForgetPassWord() {
         <Logo
           withLink
           linkTo="/"
-          src="/images/logo-alt.svg"
-          title="TripFinder."
+          src="/images/logo-TOA.svg"
+          title="The Oasis Luxury"
         />
         <Title>Welcome Back</Title>
         <TitleInfo>Enter your email to recover your account</TitleInfo>

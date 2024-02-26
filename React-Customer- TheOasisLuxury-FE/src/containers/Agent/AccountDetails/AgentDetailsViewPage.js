@@ -34,7 +34,7 @@ import AgentDetailsPage, {
 
 const ProfileNavigation = (props) => {
   const { path, className } = props;
-  const { loggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const navigations = [
     { label: <NavLink to={path}>Listing</NavLink>, key: 'listing' },
@@ -52,7 +52,7 @@ const ProfileNavigation = (props) => {
     <NavigationArea>
       <Container fluid={true}>
         <Menu className={className} items={navigations} />
-        {loggedIn && (
+        {isLoggedIn && (
           <Link className="add_card" to={ADD_HOTEL_PAGE}>
             <IoIosAdd /> Add Hotel
           </Link>

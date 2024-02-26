@@ -111,6 +111,30 @@ const AuthProvider = ({ children }) => {
       console.error('Error during registration:', error);
     }
   };
+
+  const getUserInfo = async (userId) => {
+    try {
+      const token = localStorage.getItem('token'); // Lấy token từ localStorage
+      const response = await fetch(`http://localhost:5000/api/v1/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Sử dụng token cho việc xác thực
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('User info:', data);
+        // Cập nhật thông tin người dùng vào state nếu cần
+      } else {
+        console.error('Failed to fetch user info');
+      }
+    } catch (error) {
+      console.error('Error fetching user info:', error);
+    }
+  };
+  
   
 
 
@@ -131,6 +155,7 @@ const AuthProvider = ({ children }) => {
         handleLogin,
         handleRegister,
         user,
+        getUserInfo,
         setIsLoggedIn, // Provide setIsLoggedIn to update login state
         setLoginData, // Optional: If you want to allow updating loginData from consumer components
       }}

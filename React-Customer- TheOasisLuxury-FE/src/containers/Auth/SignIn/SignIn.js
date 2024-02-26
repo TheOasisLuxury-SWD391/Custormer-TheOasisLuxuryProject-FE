@@ -20,8 +20,8 @@ const SignIn = () => {
         <Logo
           withLink
           linkTo="/"
-          src="/images/logo-alt.svg"
-          title="TripFinder."
+          src="/images/logo-TOA.svg"
+          title="The Oasis Luxury"
         />
         <Title>Welcome Back</Title>
         <TitleInfo>Please log into your account</TitleInfo>

@@ -20,10 +20,10 @@ const SignUp = () => {
         <Logo
           withLink
           linkTo="/"
-          src="/images/logo-alt.svg"
-          title="TripFinder."
+          src="/images/logo-TOA.svg"
+          title="The Oasis Luxury"
         />
-        <Title>Welcome To TripFinder</Title>
+        <Title>Welcome To The Oasis Luxury</Title>
         <TitleInfo>Please Register for your account</TitleInfo>
         <SignUpForm />
         <Divider>Or Register Up With </Divider>

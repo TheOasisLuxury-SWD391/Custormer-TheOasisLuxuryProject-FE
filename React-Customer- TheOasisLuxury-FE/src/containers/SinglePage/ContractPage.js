@@ -13,9 +13,9 @@ const ContractPage = () => {
     const sigPadB = useRef(null);
     const navigate = useNavigate();
     const location = useLocation()
-    
+
     const { orderId } = location.state;
-    
+
     const { villaDetails } = useContext(VillaContext);
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
@@ -103,16 +103,16 @@ const ContractPage = () => {
                             <h1 className='text-cyan-700 text-lg font-bold'>Điều 1. Đối tượng hợp đồng</h1>
                             <p>Bên A đồng ý cho bên B mua Time share khu nghỉ dưỡng từ ngày đến ngày. Thông tin Time share khu nghỉ dưỡng cụ thể như sau:</p>
                             <p className='mr-10'>Tên Villa: {'villa_name'}</p>
-                                <p>Mã Villa: {'villa_id'} </p>
-                                <p>Địa chỉ villa: {'address'} </p>
-                                <p className='flex'>
-                                    <p className='mr-10'>Thời gian bắt đầu: {'start_date'} </p>
-                                    <p className='mr-10'>Thời gian kết thúc: {'end_date'} </p>
-                                </p>
-                                <p className='flex'>
-                                    <span className='mr-10'>Tổng số tuần: {'total_week'} </span>
-                                    <span className='mr-10'>Tiện ích: {'utilities'} </span>
-                                </p>
+                            <p>Mã Villa: {'villa_id'} </p>
+                            <p>Địa chỉ villa: {'address'} </p>
+                            <p className='flex'>
+                                <p className='mr-10'>Thời gian bắt đầu: {'start_date'} </p>
+                                <p className='mr-10'>Thời gian kết thúc: {'end_date'} </p>
+                            </p>
+                            <p className='flex'>
+                                <span className='mr-10'>Tổng số tuần: {'total_week'} </span>
+                                <span className='mr-10'>Tiện ích: {'utilities'} </span>
+                            </p>
                             <br />
                             <h2 className='text-cyan-700 text-lg font-bold'>Điều 2. Giá bán và phương thức thanh toán</h2>
                             <p>1. Giá bán Time share Villa là {'price'} đồng Việt Nam/ {'total_week'} tuần.</p>
@@ -121,31 +121,32 @@ const ContractPage = () => {
                             <p>2.3. Phương thức thanh toán: thanh toán bằng tiền Việt Nam thông qua hình thức {'dropdown'} (trả bằng tiền mặt hoặc chuyển Khoản qua ngân hàng)</p>
                             <p>2.4. Thời hạn thanh toán: Bên mua trả tiền mua Time share villa vào ngày {'now_date'}.</p>
                             <br />
+                            
                             {/* Điều 3. Thời điểm giao nhận và thời hạn bán Time share khu nghỉ dưỡng */}
                             <h2 className='text-cyan-700 text-lg font-bold'>Điều 3. Thời điểm giao nhận và thời hạn bán Time share khu nghỉ dưỡng</h2>
                             <p>3.1. Thời điểm giao nhận Time share khu nghỉ dưỡng là {'start_date'}.</p>
                             <p>3.2. Thời hạn kết thúc Time share khu nghỉ dưỡng là {'end_date'}.</p>
                             <br />
-                            
+
                             {/* Điều 4. Quyền và nghĩa vụ của Bên mua */}
                             <h2 className='text-cyan-700 text-lg font-bold'>Điều 4. Quyền và nghĩa vụ của Bên mua</h2>
                             {/* Nội dung cụ thể của Điều 4 về quyền và nghĩa vụ */}
                             <p>-  Yêu cầu Bên mua trả đủ tiền mua Time share villa theo đúng thỏa thuận đã cam kết;</p>
-                            <p>-  Yêu cầu Bên mua có trách nhiệm sửa chữa các hư hỏng và bồi thường thiệt hại do lỗi của Bên mua gây ra (nếu có); <br/>
+                            <p>-  Yêu cầu Bên mua có trách nhiệm sửa chữa các hư hỏng và bồi thường thiệt hại do lỗi của Bên mua gây ra (nếu có); <br />
 
--  Yêu cầu Bên mua thanh toán đủ số tiền mua Timeshare villa (đối với thời gian đã mua) và giao lại villa ở trong các trường hợp các bên thỏa thuận chấm dứt hợp đồng mua Time share villa ở trước thời hạn;<br/>
+                                -  Yêu cầu Bên mua thanh toán đủ số tiền mua Timeshare villa (đối với thời gian đã mua) và giao lại villa ở trong các trường hợp các bên thỏa thuận chấm dứt hợp đồng mua Time share villa ở trước thời hạn;<br />
 
--  Bảo trì, cải tạo villa ở;<br/>
+                                -  Bảo trì, cải tạo villa ở;<br />
 
--  Giao villa ở và trang thiết bị gắn liền với villa ở (nếu có) cho Bên mua đúng thời gian quy định tại Khoản 1 Điều 3 của hợp đồng này;<br/>
+                                -  Giao villa ở và trang thiết bị gắn liền với villa ở (nếu có) cho Bên mua đúng thời gian quy định tại Khoản 1 Điều 3 của hợp đồng này;<br />
 
--  Thông báo cho Bên mua biết các quy định về quản lý sử dụng villa ở;<br/>
+                                -  Thông báo cho Bên mua biết các quy định về quản lý sử dụng villa ở;<br />
 
--  Bảo đảm cho Bên mua sử dụng ổn định villa ở trong thời hạn mua Time share villa;<br/>
+                                -  Bảo đảm cho Bên mua sử dụng ổn định villa ở trong thời hạn mua Time share villa;<br />
 
--  Trả lại số tiền mua Time share villa mà Bên mua đã trả trước trong trường hợp các bên thỏa thuận chấm dứt hợp đồng mua Time share villa ở trước thời hạn;<br/>
+                                -  Trả lại số tiền mua Time share villa mà Bên mua đã trả trước trong trường hợp các bên thỏa thuận chấm dứt hợp đồng mua Time share villa ở trước thời hạn;<br />
 
--  Bảo trì, quản lý villa ở bán Time share theo quy định của pháp luật về quản lý sử dụng villa ở;</p>
+                                -  Bảo trì, quản lý villa ở bán Time share theo quy định của pháp luật về quản lý sử dụng villa ở;</p>
                             <br />
 
                             {/* Điều 5. Quyền và nghĩa vụ của Bên bán */}
@@ -154,20 +155,20 @@ const ContractPage = () => {
                             <p>- Nhận villa ở và trang thiết bị gắn liền với villa ở (nếu có) theo đúng thỏa thuận tại Khoản 1 Điều 3 của hợp đồng này;</p>
                             <p>- Yêu cầu Bên bán Time share sửa chữa kịp thời các hư hỏng về villa ở;<br />
 
-- Yêu cầu Bên bán Time share villa  trả lại số tiền mua Time share villa mà Bên mua đã nộp trước trong trường hợp chấm dứt hợp đồng mua Time share villa trước thời hạn;<br />
+                                - Yêu cầu Bên bán Time share villa  trả lại số tiền mua Time share villa mà Bên mua đã nộp trước trong trường hợp chấm dứt hợp đồng mua Time share villa trước thời hạn;<br />
 
-- Được đổi villa ở đang mua với người khác hoặc bán Time share lại (nếu có thỏa thuận);<br />
+                                - Được đổi villa ở đang mua với người khác hoặc bán Time share lại (nếu có thỏa thuận);<br />
 
-- Được tiếp tục mua theo các điều kiện thỏa thuận với Bên bán Time share trong trường hợp có thay đổi về chủ sở hữu villa ở;<br />
+                                - Được tiếp tục mua theo các điều kiện thỏa thuận với Bên bán Time share trong trường hợp có thay đổi về chủ sở hữu villa ở;<br />
 
-- Trả đủ tiền mua Time share villa theo đúng thời hạn đã cam kết trong hợp đồng;<br />
+                                - Trả đủ tiền mua Time share villa theo đúng thời hạn đã cam kết trong hợp đồng;<br />
 
-- Sử dụng villa ở đúng mục đích; có trách nhiệm sửa chữa phần hư hỏng do mình gây ra;<br />
-- Chấp hành đầy đủ các quy định về quản lý sử dụng villa ở;<br />
+                                - Sử dụng villa ở đúng mục đích; có trách nhiệm sửa chữa phần hư hỏng do mình gây ra;<br />
+                                - Chấp hành đầy đủ các quy định về quản lý sử dụng villa ở;<br />
 
-- Không được chuyển nhượng hợp đồng mua Time share villa hoặc cho người khác mua lại, trừ trường hợp được Bên bán Time share đồng ý;<br />
+                                - Không được chuyển nhượng hợp đồng mua Time share villa hoặc cho người khác mua lại, trừ trường hợp được Bên bán Time share đồng ý;<br />
 
-- Chấp hành các quy định về giữ gìn vệ sinh môi trường và an ninh trật tự trong khu vực cư trú;</p>
+                                - Chấp hành các quy định về giữ gìn vệ sinh môi trường và an ninh trật tự trong khu vực cư trú;</p>
                             <br />
 
                             {/* Điều 6. Cam kết của các bên */}
@@ -175,9 +176,9 @@ const ContractPage = () => {
                             <p>6.1. Bên bán Time share cam kết villa ở bán Time share thuộc quyền sở hữu hợp pháp của mình, không có tranh chấp về quyền sở hữu, không bị kê biên để thi hành án hoặc để chấp hành quyết định hành chính của cơ quan villa nước có thẩm quyền (không thuộc diện bị thu hồi hoặc không bị giải tỏa); cam kết villa ở đảm bảo chất lượng, an toàn cho bên mua Time share villa.</p>
                             <p>6.2. Bên mua Time share villa đã tìm hiểu kỹ các thông tin về villa ở mua.<br />
 
-6.3. Việc ký kết hợp đồng này giữa các bên là hoàn toàn tự nguyện, không bị ép buộc, lừa dối. Trong quá trình thực hiện hợp đồng, nếu cần thay đổi hoặc bổ sung nội dung của hợp đồng này thì các bên thỏa thuận lập thêm phụ lục hợp đồng có chữ ký của hai bên, phụ lục hợp đồng có giá trị pháp lý như hợp đồng này.<br />
+                                6.3. Việc ký kết hợp đồng này giữa các bên là hoàn toàn tự nguyện, không bị ép buộc, lừa dối. Trong quá trình thực hiện hợp đồng, nếu cần thay đổi hoặc bổ sung nội dung của hợp đồng này thì các bên thỏa thuận lập thêm phụ lục hợp đồng có chữ ký của hai bên, phụ lục hợp đồng có giá trị pháp lý như hợp đồng này.<br />
 
-6.4. Các bên cùng cam kết thực hiện đúng và đầy đủ các nội dung đã thỏa thuận trong hợp đồng.</p>
+                                6.4. Các bên cùng cam kết thực hiện đúng và đầy đủ các nội dung đã thỏa thuận trong hợp đồng.</p>
                             <br />
 
                             {/* Điều 7. Trường Hợp Bất Khả Kháng */}
@@ -200,35 +201,35 @@ const ContractPage = () => {
                             <br />
 
                         </div>
-                    <div className='flex justify-around'>
-                        <div className="my-4 text-center">
-                            <label className='font-bold'>Chữ ký Bên A:</label>
-                            <p>(ký và ghi rõ họ tên)</p>
-                            <br/>
-                            <p> ANH</p>
-                            <br/>
-                            <h1 className='font-bold'>Nguyễn Văn Anh</h1>
+                        <div className='flex justify-around'>
+                            <div className="my-4 text-center">
+                                <label className='font-bold'>Chữ ký Bên A:</label>
+                                <p>(ký và ghi rõ họ tên)</p>
+                                <br />
+                                <p> ANH</p>
+                                <br />
+                                <h1 className='font-bold'>Nguyễn Văn Anh</h1>
+                            </div>
+                            {/* Chữ ký Bên B */}
+                            <div className='my-4 text-center'>
+                                <label className='font-bold'>Chữ ký Bên B:</label>
+                                <SignatureCanvas
+                                    penColor="black"
+                                    canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
+                                    ref={sigPadB}
+                                />
+                                <Button onClick={clearSignatureB}>Xóa Chữ Ký</Button>
+                                <Button onClick={saveSignatureB}>Lưu Chữ Ký</Button>
+                            </div>
                         </div>
-                        {/* Chữ ký Bên B */}
-                        <div className='my-4 text-center'>
-                            <label className='font-bold'>Chữ ký Bên B:</label>
-                            <SignatureCanvas
-                                penColor="black"
-                                canvasProps={{ width: 500, height: 200, className: 'sigCanvas' }}
-                                ref={sigPadB}
-                            />
-                            <Button onClick={clearSignatureB}>Xóa Chữ Ký</Button>
-                            <Button onClick={saveSignatureB}>Lưu Chữ Ký</Button>
-                        </div>
-                    </div>
-                    <Form.Item>
-                        <Button type="primary" htmlType="submit">
-                            Đặt Order và Lưu Hợp Đồng
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </Col>
-        </Row>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Đặt Order và Lưu Hợp Đồng
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Col>
+            </Row>
         </Container >
 
     );

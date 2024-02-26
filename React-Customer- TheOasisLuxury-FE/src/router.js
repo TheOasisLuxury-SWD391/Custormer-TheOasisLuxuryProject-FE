@@ -29,9 +29,9 @@ import PaymentForm from 'containers/SinglePage/PaymentPage';
 
 // protected route
 function RequireAuth({ children }) {
-  let { loggedIn } = useContext(AuthContext);
+  let { isLoggedIn } = useContext(AuthContext);
   let location = useLocation();
-  if (!loggedIn) {
+  if (!isLoggedIn) {
     return <Navigate to={LOGIN_PAGE} state={{ from: location }} />;
   }
 

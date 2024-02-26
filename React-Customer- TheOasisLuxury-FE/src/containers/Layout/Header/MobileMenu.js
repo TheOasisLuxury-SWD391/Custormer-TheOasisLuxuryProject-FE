@@ -11,7 +11,7 @@ import {
 
 const MobileMenu = ({ className }) => {
   // auth context
-  const { loggedIn, logOut } = useContext(AuthContext);
+  const { isLoggedIn, logOut } = useContext(AuthContext);
 
   const navigations = [
     {
@@ -27,7 +27,7 @@ const MobileMenu = ({ className }) => {
       key: 'pricing',
     },
     {
-      label: loggedIn && (
+      label: isLoggedIn && (
         <NavLink to={`${AGENT_ACCOUNT_SETTINGS_PAGE}`}>
           Account Settings
         </NavLink>
@@ -35,7 +35,7 @@ const MobileMenu = ({ className }) => {
       key: 'account_settings',
     },
     {
-      label: loggedIn && <button onClick={logOut}>Log Out</button>,
+      label: isLoggedIn && <button onClick={logOut}>Log Out</button>,
       key: 'logout',
     },
   ];
