@@ -11,14 +11,7 @@ const usePasswordChange = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log('Submitting password change request...');
-      console.log('User ID:', user.user_id);
-      console.log('Data:', data);
-
       const result = await changePassWord(user.user_id, data.oldPassword, data.newPassword, data.confirmPassword);
-      
-      console.log('Result:', result);
-
       if (result) {
         console.log('Password changed successfully!');
         toast.success("Password changed successfully!");
@@ -29,7 +22,7 @@ const usePasswordChange = () => {
     } catch (error) {
       console.error('Error changing password:', error);
       toast.error('Failed to change password');
-      
+
     }
   };
 
@@ -46,7 +39,6 @@ const usePasswordChange = () => {
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        // Optionally, you can display an error message to the user
       }
     };
 
@@ -70,7 +62,7 @@ export default function ChangePassWord() {
 
   const newPassword = watch('newPassword');
   const confirmPassword = watch('confirmPassword');
-  
+
   const { onSubmit, userInfo } = usePasswordChange();
 
   return (
@@ -170,7 +162,7 @@ export default function ChangePassWord() {
           </Col>
         </Row>
       </form>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }
