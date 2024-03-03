@@ -8,6 +8,7 @@ export const SINGLE_POST_PAGE = '/villas';
 
 // Agent Profile Page Section
 export const AGENT_PROFILE_PAGE = '/profile';
+export const ORDER_HISTORY = '/my-orders';
 export const AGENT_PROFILE_FAVORITE = 'favorite-post';
 export const AGENT_PROFILE_CONTACT = 'contact';
 export const AGENT_ACCOUNT_SETTINGS_PAGE = '/account-settings';

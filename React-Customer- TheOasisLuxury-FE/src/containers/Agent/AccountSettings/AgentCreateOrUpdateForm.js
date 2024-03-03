@@ -1,266 +1,202 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Row, Col, Input, Select, Button, DatePicker } from 'antd';
 import FormControl from 'components/UI/FormControl/FormControl';
 // import DatePicker from 'components/UI/AntdDatePicker/AntdDatePicker';
 import { FormTitle } from './AccountSettings.style';
-
-const genderOptions = [
-  { label: 'Male', value: 'male' },
-  { label: 'Female', value: 'female' },
-  { label: 'Other', value: 'Other' },
-];
-const languageOptions = [
-  { label: 'English', value: 'english' },
-  { label: 'Spanish', value: 'spanish' },
-  { label: 'French', value: 'french' },
-  { label: 'Russian', value: 'russian' },
-];
+import { AuthContext } from 'context/AuthProvider';
+import moment from 'moment';
 
 
 const AgentCreateOrUpdateForm = () => {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [userInfo, setUserInfo] = useState({});
+  console.log('userInfo', userInfo);
+  
   const {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const { user, getUserInfo, updateUserInfo } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await getUserInfo(user.user_id);
+      console.log('userData', userData);
+      if (userData) {
+        setUserInfo(userData); // Cập nhật state với thông tin người dùng
+        reset(userData); // Cập nhật form với thông tin người dùng
+      }
+    };
+
+    if (user.user_id) {
+      fetchUserData();
+    }
+  }, [user.user_id, reset, getUserInfo]);
+
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    // Thực hiện PATCH request để cập nhật thông tin người dùng tại đây
+    await updateUserInfo(user.user_id, data).then(() => {
+      // Giả sử updateUserInfo trả về dữ liệu người dùng đã cập nhật
+      // Điều này phụ thuộc vào cách bạn cài đặt API và hàm updateUserInfo
+      setUserInfo({ ...userInfo, user: { ...userInfo.user, ...data } });
+      reset({ ...userInfo.user, ...data });
+      setIsEditing(false);
+    }).catch(error => {
+      console.error('Failed to update user info', error);
+      // Xử lý lỗi ở đây
+    });
+  };
+
+  const onEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const onCancelClick = () => {
+    setIsEditing(false);
+    reset(userInfo);
+  };
+
   return (
     <Fragment>
       <FormTitle>Basic Information</FormTitle>
       <form className="form-container" onSubmit={handleSubmit(onSubmit)}>
-        <Row gutter={30}>
-          <Col lg={12} xs={24}>
-            <FormControl
-              label="First name"
-              htmlFor="firstName"
-              error={errors.firstName && <span>This field is required!</span>}
-            >
-              <Controller
-                name="firstName"
-                defaultValue=""
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input onChange={onChange} onBlur={onBlur} value={value} />
-                )}
-              />
-            </FormControl>
-          </Col>
-          <Col lg={12} xs={24}>
-            <FormControl
-              label="Last name"
-              htmlFor="lastName"
-              error={errors.lastName && <span>This field is required!</span>}
-            >
-              <Controller
-                name="lastName"
-                defaultValue=""
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input onChange={onChange} onBlur={onBlur} value={value} />
-                )}
-              />
-            </FormControl>
-          </Col>
-        </Row>
-        <Row gutter={30}>
-          <Col lg={12} xs={24}>
-            <FormControl
-              label="Date of birth"
-              htmlFor="dateOfBirthday"
-              error={
-                errors.dateOfBirthday && <span>This field is required!</span>
-              }
-            >
-              <Controller
-                name="dateOfBirthday"
-                defaultValue=""
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <DatePicker
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                  />
-                )}
-              />
-            </FormControl>
-          </Col>
-          <Col lg={12} xs={24}>
+        {/* Các trường của form */}
+        {isEditing ? (
+          // {/* // Hiển thị các trường input để chỉnh sửa */}
+          <div>
             <Row gutter={30}>
-              <Col sm={12} xs={24}>
+              <Col lg={12} xs={24}>
                 <FormControl
-                  label="I am"
-                  htmlFor="agentGender"
-                  error={
-                    errors.agentGender && <span>This field is required!</span>
-                  }
+                  label="Full name"
+                  htmlFor="full_name"
+                  error={errors.full_name && <span>This field is required!</span>}
                 >
                   <Controller
-                    name="agentGender"
-                    defaultValue=""
+                    name="full_name"
+                    defaultValue={userInfo.user?.full_name || ''}
                     control={control}
                     rules={{ required: true }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Select
-                        options={genderOptions}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        defaultValue={value || 'male'}
-                      />
-                    )}
-                  />
-                </FormControl>
-              </Col>
-              <Col sm={12} xs={24}>
-                <FormControl
-                  label="Preferred Language"
-                  htmlFor="preferredLanguage"
-                  error={
-                    errors.preferredLanguage && (
-                      <span>This field is required!</span>
-                    )
-                  }
-                >
-                  <Controller
-                    name="preferredLanguage"
-                    defaultValue=""
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Select
-                        options={languageOptions}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        defaultValue={value || 'english'}
-                      />
+                    render={({ field }) => (
+                      <Input {...field} />
                     )}
                   />
                 </FormControl>
               </Col>
             </Row>
-          </Col>
-        </Row>
-        <Row gutter={30}>
-          <Col lg={12} xs={24}>
-            <FormControl
-              label="Email address"
-              htmlFor="email"
-              error={
-                errors.email && (
-                  <>
-                    {errors.email?.type === 'required' && (
-                      <span>This field is required!</span>
+            <Row gutter={30}>
+              <Col lg={12} xs={24}>
+                <FormControl
+                  label="Email"
+                  htmlFor="email"
+                  error={errors.email && <span>This field is required!</span>}
+                >
+                  <Controller
+                    name="email"
+                    defaultValue={userInfo.user?.email || ''}
+                    control={control}
+                    rules={{ required: true, pattern: /^\S+@\S+$/i }}
+                    render={({ field }) => (
+                      <Input {...field} />
                     )}
-                    {errors.email?.type === 'pattern' && (
-                      <span>Please enter a valid email address!</span>
-                    )}
-                  </>
-                )
-              }
-            >
-              <Controller
-                name="email"
-                defaultValue=""
-                control={control}
-                rules={{
-                  required: true,
-                  pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    type="email"
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
                   />
-                )}
-              />
-            </FormControl>
-          </Col>
-          <Col lg={12} xs={24}>
-            <FormControl
-              label="Phone number"
-              htmlFor="phoneNumber"
-              error={
-                errors.phoneNumber && (
-                  <>
-                    {errors.phoneNumber?.type === 'required' && (
-                      <span>This field is required!</span>
+                </FormControl>
+              </Col>
+              <Col lg={12} xs={24}>
+                <FormControl
+                  label="Phone Number"
+                  htmlFor="phone_number"
+                  error={errors.phone_number && <span>This field is required!</span>}
+                >
+                  <Controller
+                    name="phone_number"
+                    defaultValue={userInfo.user?.phone_number || ''}
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Input {...field} />
                     )}
-                    {errors.phoneNumber?.type === 'pattern' && (
-                      <span>Please enter your valid number!</span>
-                    )}
-                  </>
-                )
-              }
-            >
-              <Controller
-                name="phoneNumber"
-                defaultValue=""
-                control={control}
-                rules={{
-                  required: true,
-                  pattern: /^[0-9]*$/,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input onChange={onChange} onBlur={onBlur} value={value} />
-                )}
-              />
-            </FormControl>
-          </Col>
-          <Col lg={24} xs={24}>
-            <FormControl
-              label="Where you live"
-              htmlFor="address"
-              error={errors.address && <span>This field is required!</span>}
-            >
-              <Controller
-                name="address"
-                defaultValue=""
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input onChange={onChange} onBlur={onBlur} value={value} />
-                )}
-              />
-            </FormControl>
-          </Col>
-          <Col lg={24} xs={24}>
-            <FormControl
-              label="Describe Yourself (Optional)"
-              htmlFor="describeYourself"
-            >
-              <Controller
-                name="describeYourself"
-                defaultValue=""
-                control={control}
-                rules={{
-                  required: true,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input.TextArea
-                    rows={5}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
                   />
-                )}
-              />
-            </FormControl>
-          </Col>
-        </Row>
+                </FormControl>
+              </Col>
+            </Row>
+            <Row gutter={30}>
+              <Col lg={12} xs={24}>
+                <FormControl
+                  label="Birthday"
+                  htmlFor="birthday"
+                  error={errors.birthday && <span>This field is required!</span>}
+                >
+                  <Controller
+                    name="birthday"
+                    defaultValue={userInfo.user?.birthday || ''}
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <DatePicker onChange={(date, dateString) => field.onChange(dateString)} onBlur={field.onBlur} value={field.value ? moment(field.value) : null} />
+                    )}
+                  />
+                </FormControl>
+              </Col>
+              <Col lg={12} xs={24}>
+                <FormControl
+                  label="Gender"
+                  htmlFor="gender"
+                  error={errors.gender && <span>This field is required!</span>}
+                >
+                  <Controller
+                    name="gender"
+                    defaultValue={userInfo.user?.gender || ''}
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select {...field} onChange={value => field.onChange(value)}>
+                        <Select.Option value="male">Male</Select.Option>
+                        <Select.Option value="female">Female</Select.Option>
+                        <Select.Option value="other">Other</Select.Option>
+                      </Select>
+                    )}
+                  />
+                </FormControl>
+              </Col>
+            </Row>
+
+          </div>
+        ) : (
+          // Hiển thị thông tin người dùng mà không có input, chỉ có text
+          <Fragment>
+            <Row gutter={30}>
+              <Col span={24}>
+                <p>Full Name: {userInfo.user?.full_name}</p>
+                <p>User Name: {userInfo.user?.user_name}</p>
+                <p>Email: {userInfo.user?.email}</p>
+                <p>Phone Number: {userInfo.user?.phone_number}</p>
+                <p>Birthday: {userInfo.user?.birthday}</p>
+                <p>Gender: {userInfo.user?.gender}</p>
+                {/* Hiển thị thêm các thông tin khác tương tự */}
+              </Col>
+            </Row>
+          </Fragment>
+        )}
         <div className="submit-container">
-          <Button htmlType="submit" type="primary">
-            Save Changes
-          </Button>
+          {isEditing ? (
+            <div className="submit-container">
+              <Button htmlType="submit" type="primary">Save Changes</Button>
+              <Button htmlType="submit" type="primary" onClick={onCancelClick} style={{ marginLeft: '10px' }}>Cancel</Button>
+            </div>
+          ) : (
+            <Button htmlType="submit" type="primary" onClick={onEditClick}>Edit Profile</Button>
+          )}
         </div>
       </form>
+
+
     </Fragment>
   );
 };

@@ -137,6 +137,30 @@ const AuthProvider = ({ children }) => {
       return null;
     }
   };
+
+  const updateUserInfo = async (userId, updatedData) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/v1/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log('User info updated:', data);
+        // Cập nhật state hoặc thực hiện hành động tiếp theo nếu cần
+      } else {
+        console.error('Failed to update user info:', data.message);
+      }
+    } catch (error) {
+      console.error('Error updating user info:', error);
+    }
+  };
   
   
 
@@ -158,6 +182,7 @@ const AuthProvider = ({ children }) => {
         handleLogin,
         handleRegister,
         user,
+        updateUserInfo,
         getUserInfo,
         setIsLoggedIn, // Provide setIsLoggedIn to update login state
         setLoginData, // Optional: If you want to allow updating loginData from consumer components

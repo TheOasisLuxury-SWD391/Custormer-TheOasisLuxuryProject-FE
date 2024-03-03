@@ -7,6 +7,7 @@ import {
   AGENT_PROFILE_PAGE,
   AGENT_ACCOUNT_SETTINGS_PAGE,
   ADD_HOTEL_PAGE,
+  ORDER_HISTORY,
 } from 'settings/constant';
 
 export default function ProfileMenu({ avatar }) {
@@ -28,9 +29,13 @@ export default function ProfileMenu({ avatar }) {
 
   const menuItems = [
     {
-      label: <NavLink to={AGENT_PROFILE_PAGE}>View Profile</NavLink>,
-      key: 'view_profile',
+      label: <NavLink to={ORDER_HISTORY}>Order History</NavLink>,
+      key: 'order_history',
     },
+    // {
+    //   label: <NavLink to={AGENT_PROFILE_PAGE}>View Profile</NavLink>,
+    //   key: 'view_profile',
+    // },
     // {
     //   label: <NavLink to={ADD_HOTEL_PAGE}>Add Hotel</NavLink>,
     //   key: 'add_hotel',

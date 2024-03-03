@@ -10,7 +10,7 @@ import Navbar from 'components/Navbar/Navbar';
 import { AuthContext } from 'context/AuthProvider';
 import { LayoutContext } from 'context/LayoutProvider';
 import useWindowSize from 'library/hooks/useWindowSize';
-import { AGENT_PROFILE_PAGE } from 'settings/constant';
+import { AGENT_ACCOUNT_SETTINGS_PAGE, AGENT_PROFILE_PAGE } from 'settings/constant';
 import AuthMenu from './AuthMenu';
 import MainMenu from './MainMenu';
 import MobileMenu from './MobileMenu';
@@ -123,7 +123,7 @@ export default function Header() {
                   <AvatarInfo>
                     <Text as="h3" content="Nova Scotia" />
                     <TextLink
-                      link={AGENT_PROFILE_PAGE}
+                      link={AGENT_ACCOUNT_SETTINGS_PAGE}
                       content="View Profile"
                     />
                   </AvatarInfo>

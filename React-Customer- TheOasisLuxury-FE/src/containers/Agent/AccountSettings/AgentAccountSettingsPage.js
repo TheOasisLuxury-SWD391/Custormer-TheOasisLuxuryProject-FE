@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Row, Col, Menu, Avatar } from 'antd';
 import Container from 'components/UI/Container/Container.style';
@@ -16,6 +16,7 @@ import AccountSettingWrapper, {
   AgentName,
   FromWrapper,
 } from './AccountSettings.style';
+import { AuthContext } from 'context/AuthProvider';
 
 const navigations = [
   {
@@ -34,6 +35,7 @@ const navigations = [
 
 
 function AccountSettingNavLink() {
+
   return (
     <SidebarMenuWrapper>
       <Menu
@@ -46,7 +48,27 @@ function AccountSettingNavLink() {
   );
 }
 
+
 export default function AgentAccountSettingsPage() {
+  const [userInfo, setUserInfo] = useState({});
+  console.log('userInfo', userInfo);
+
+  const { user, getUserInfo } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userData = await getUserInfo(user.user_id);
+      console.log('userData', userData);
+      if (userData) {
+        setUserInfo(userData); // Cập nhật state với thông tin người dùng
+      }
+    };
+
+    if (user.user_id) {
+      fetchUserData();
+    }
+  }, [user.user_id, getUserInfo]);
+
   return (
     <AccountSettingWrapper>
       <Container fullWidth={true}>
@@ -59,8 +81,8 @@ export default function AgentAccountSettingsPage() {
                   alt="avatar"
                 />
                 <ContentWrapper>
-                  <AgentName>Aziz Acharki Ahmedh</AgentName>
-                  <Link to={AGENT_PROFILE_PAGE}>View profile</Link>
+                  <AgentName>{userInfo.user?.full_name}</AgentName>
+                  {/* <Link to={AGENT_PROFILE_PAGE}>View profile</Link> */}
                 </ContentWrapper>
               </AgentAvatar>
               <AccountSettingNavLink />
