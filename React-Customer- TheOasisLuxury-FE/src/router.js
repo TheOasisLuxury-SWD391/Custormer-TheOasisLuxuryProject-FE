@@ -22,10 +22,14 @@ import {
   BOOK_TIME_SHARE,
   CONTRACT_TIME_SHARE,
   PAYMENT_FORM,
+  ORDER_HISTORY,
+  ORDER_DETAIL,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 import ContractPage from 'containers/SinglePage/ContractPage';
 import PaymentForm from 'containers/SinglePage/PaymentPage';
+import HistoryOrder from 'containers/MyOrder/HistoryOrder';
+import OrderDetailPage from 'containers/MyOrder/OrderDetail';
 
 // protected route
 function RequireAuth({ children }) {
@@ -144,6 +148,22 @@ export default function AppRoutes() {
             }
           />
         </Route>
+        <Route
+            path={ORDER_HISTORY}
+            element={
+              <React.Suspense fallback={<Loader />}>
+                <HistoryOrder />
+              </React.Suspense>
+            }
+          />
+          <Route
+            path={ORDER_DETAIL}
+            element={
+              <React.Suspense fallback={<Loader />}>
+                <OrderDetailPage />
+              </React.Suspense>
+            }
+          />
         {/* end of Nested routes */}
         <Route
           path={PRICING_PLAN_PAGE}

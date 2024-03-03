@@ -51,14 +51,12 @@ function AccountSettingNavLink() {
 
 export default function AgentAccountSettingsPage() {
   const [userInfo, setUserInfo] = useState({});
-  console.log('userInfo', userInfo);
 
   const { user, getUserInfo } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = await getUserInfo(user.user_id);
-      console.log('userData', userData);
       if (userData) {
         setUserInfo(userData); // Cập nhật state với thông tin người dùng
       }

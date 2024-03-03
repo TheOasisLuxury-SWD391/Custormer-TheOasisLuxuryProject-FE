@@ -12,7 +12,6 @@ const AgentCreateOrUpdateForm = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userInfo, setUserInfo] = useState({});
-  console.log('userInfo', userInfo);
   
   const {
     control,
@@ -26,7 +25,6 @@ const AgentCreateOrUpdateForm = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const userData = await getUserInfo(user.user_id);
-      console.log('userData', userData);
       if (userData) {
         setUserInfo(userData); // Cập nhật state với thông tin người dùng
         reset(userData); // Cập nhật form với thông tin người dùng
@@ -40,7 +38,6 @@ const AgentCreateOrUpdateForm = () => {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
     // Thực hiện PATCH request để cập nhật thông tin người dùng tại đây
     await updateUserInfo(user.user_id, data).then(() => {
       // Giả sử updateUserInfo trả về dữ liệu người dùng đã cập nhật
