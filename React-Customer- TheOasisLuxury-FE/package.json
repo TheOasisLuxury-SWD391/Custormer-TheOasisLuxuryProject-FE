@@ -27,6 +27,8 @@
     "react-share": "^4.4.1",
     "react-signature-canvas": "^1.0.6",
     "react-stickynode": "^4.1.0",
+    "react-toast": "^1.0.3",
+    "react-toastify": "^10.0.4",
     "react-waypoint": "^10.3.0",
     "styled-components": "^5.3.6",
     "styled-system": "^5.1.5"

@@ -163,7 +163,40 @@ const AuthProvider = ({ children }) => {
   };
   
   
-
+  const changePassWord = async (userId, oldPassword, newPassword, confirmPassword) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      const reqBody = {
+        old_password: oldPassword,
+        new_password: newPassword,
+        confirm_password: confirmPassword
+      };
+  
+      const response = await fetch(`http://localhost:5000/api/v1/users/change-password`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqBody),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Password changed successfully:', data);
+        return data;
+        // You may want to update the user information in your state if needed.
+      } else {
+        console.error('Failed to change password');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      return null;
+    }
+  };
+  
 
   const logOut = () => {
     localStorage.removeItem('access_token');
@@ -184,6 +217,7 @@ const AuthProvider = ({ children }) => {
         user,
         updateUserInfo,
         getUserInfo,
+        changePassWord,
         setIsLoggedIn, // Provide setIsLoggedIn to update login state
         setLoginData, // Optional: If you want to allow updating loginData from consumer components
       }}
