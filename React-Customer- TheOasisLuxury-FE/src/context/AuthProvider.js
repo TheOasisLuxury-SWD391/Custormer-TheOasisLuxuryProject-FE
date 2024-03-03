@@ -126,12 +126,15 @@ const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('User info:', data);
+        return data;
         // Cập nhật thông tin người dùng vào state nếu cần
       } else {
         console.error('Failed to fetch user info');
+        return null;
       }
     } catch (error) {
       console.error('Error fetching user info:', error);
+      return null;
     }
   };
   

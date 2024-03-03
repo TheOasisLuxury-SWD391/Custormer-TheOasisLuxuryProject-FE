@@ -1,10 +1,11 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Form, Input, Button, DatePicker, Row, Col } from 'antd';
 import SignatureCanvas from 'react-signature-canvas';
 import Container from 'components/UI/Container/Container';
 import moment from 'moment';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { VillaContext } from 'context/VillaContext';
+import { AuthContext } from 'context/AuthProvider';
 
 
 const ContractPage = () => {
@@ -13,12 +14,35 @@ const ContractPage = () => {
     const sigPadB = useRef(null);
     const navigate = useNavigate();
     const location = useLocation()
-
-    const { orderId } = location.state;
-
+    const { orderId, reservationDetails  } = location.state;
     const { villaDetails } = useContext(VillaContext);
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
+    console.log('details',details)
+
+    const { getUserInfo, user } = useContext(AuthContext);
+
+    // State to store the fetched user details
+    const [userInfo, setUserInfo] = useState({});
+
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            if (user && user.user_id) {
+                const userDetails = await getUserInfo(user.user_id);
+                if (userDetails && userDetails.user) {
+                    setUserInfo(userDetails.user);
+                    // Update form fields with user details
+                    form.setFieldsValue({
+                        fullName: userDetails.user.full_name || '',
+                        phoneNumber: userDetails.user.phone_number || '',
+                        // Set other fields as necessary
+                    });
+                }
+            }
+        };
+        console.log(reservationDetails);
+        fetchUserInfo();
+    }, [user, getUserInfo, form, reservationDetails]);
 
     // Lấy orderId từ state
 
@@ -31,14 +55,11 @@ const ContractPage = () => {
         console.log('Signature Data URL B: ', signatureB);
 
         const contractId = '84385738';
-        navigate(`/villas/${idVilla}/orders/${orderId}/contract/${contractId}/payment`);
+        navigate(`/orders/${orderId}/contract/${contractId}/payment`);
     };
 
-    // Thay thế các giá trị tĩnh bằng dữ liệu động
-    const dynamicValues = {
-        dateNow: moment().format('DD/MM/YYYY'),
-        // Các giá trị khác...
-    };
+    const currentDate = moment().format('DD/MM/YYYY');
+    
 
     return (
         <Container>
@@ -48,7 +69,7 @@ const ContractPage = () => {
                         <div className="mb-4">
                             <h2 className="text-center"> CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM <br />
                                 Độc lập - Tự do - Hạnh Phúc</h2>
-                            <p className='text-right'>TP.Hồ Chí Minh, {'date_now'}</p>
+                            <p className='text-right'>TP.Hồ Chí Minh, {currentDate}</p>
                             <br />
                             <h1 className="text-xl font-bold text-center text-cyan-700">HỢP ĐỒNG MUA TIMESHARE KHU VILLA </h1>
                             <br />
@@ -57,10 +78,10 @@ const ContractPage = () => {
                                 - Căn cứ nhu cầu và khả năng của các bên</p>
                         </div>
                         <div className="mb-4">
-                            <p>Hôm nay, {'date_now'}., chúng tôi bao gồm:</p>
+                            <p>Hôm nay,  {currentDate}s., chúng tôi bao gồm:</p>
                             <br />
                             <div>
-                                <h2 className=" font-bold">Bên A (bên bán):</h2>
+                                <h2 className=" font-bold text-lg">Bên A (bên bán):</h2>
                                 <p>Tên công ty: The Oasis Luxury Company <br />
                                     Địa chỉ trụ sở: Khu dân cư và công viên Phước Thiện, Phường Long Bình và Phường Long Thạch Mỹ, Quận 9, TP.Hồ Chí Minh.<br />
                                     Mã số thuế: 012856421-689.<br /> </p>
@@ -82,29 +103,28 @@ const ContractPage = () => {
                             </div>
                             <br />
                             <div>
-                                <h2 className=" font-bold">Bên B( bên mua):</h2>
+                                <h2 className=" font-bold text-lg">Bên B( bên mua):</h2>
                                 <p>Người đại diện theo pháp luật:</p>
-                                <p className='mr-10'>Ông/Bà: <input type='text' /> (1)</p>
-                                <p>Số điện thoại liên hệ: <input type='text' /> (2) </p>
-                                <p className='mr-10'>Mã số thuế: <input type='number' /> (3) </p>
+                                <p className='mr-10'><strong>Họ và tên: </strong> {userInfo.full_name}</p>
+                                <p className='mr-10'><strong>Số điện thoại liên hệ: </strong> {userInfo.phone_number}</p>
+                                <p className='mr-10'><strong>Mã số thuế: </strong> {userInfo.tax_code}</p>
+
                                 <p className='flex'>
-                                </p>
-                                <p className='flex'>
-                                    <span className='mr-10'>Số CCCD: <input type='number' /> (4) </span>
-                                    <span className='mr-10'>Ngày cấp: <input type='date' /> (5)</span>
-                                    <span>Nơi cấp: <input type='text' /> (6)</span>
+                                    <span className='mr-10'><strong>Số CCCD: </strong> {userInfo.CCCD} </span>
+                                    <span className='mr-10'><strong>Ngày cấp: </strong>  {userInfo.date_provide_CCCD} </span>
+                                    <span className='mr-10'><strong>Nơi cấp:  </strong>  {userInfo.place_provide_CCCD} </span>
                                 </p>
                             </div>
-                            <br />
+                            <br />  
                             <p>Cùng bàn bạc thống nhất những thỏa thuận sau đây:</p>
                         </div>
 
                         <div className="mb-4">
                             <h1 className='text-cyan-700 text-lg font-bold'>Điều 1. Đối tượng hợp đồng</h1>
                             <p>Bên A đồng ý cho bên B mua Time share khu nghỉ dưỡng từ ngày đến ngày. Thông tin Time share khu nghỉ dưỡng cụ thể như sau:</p>
-                            <p className='mr-10'>Tên Villa: {'villa_name'}</p>
-                            <p>Mã Villa: {'villa_id'} </p>
-                            <p>Địa chỉ villa: {'address'} </p>
+                            <p className='mr-10'>Tên Villa: {details.villa_name}</p>
+                            <p>Mã Villa: {details._id} </p>
+                            <p>Địa chỉ villa: {details.address} </p>
                             <p className='flex'>
                                 <p className='mr-10'>Thời gian bắt đầu: {'start_date'} </p>
                                 <p className='mr-10'>Thời gian kết thúc: {'end_date'} </p>
@@ -119,7 +139,7 @@ const ContractPage = () => {
                             <p>- Giá bán này đã bao gồm chi phí bảo trì, quản lý vận hành villa và các Khoản thuế mà Bên bán phải nộp cho villa nước theo quy định.</p>
                             <p>2.2. Các chi phí sử dụng điện, nước, điện thoại và các dịch vụ khác do Bên mua thanh toán cho bên cung cấp điện, nước, điện thoại và các cơ quan cung cấp dịch vụ khác.</p>
                             <p>2.3. Phương thức thanh toán: thanh toán bằng tiền Việt Nam thông qua hình thức {'dropdown'} (trả bằng tiền mặt hoặc chuyển Khoản qua ngân hàng)</p>
-                            <p>2.4. Thời hạn thanh toán: Bên mua trả tiền mua Time share villa vào ngày {'now_date'}.</p>
+                            <p>2.4. Thời hạn thanh toán: Bên mua trả tiền mua Time share villa vào ngày  {currentDate}.</p>
                             <br />
                             
                             {/* Điều 3. Thời điểm giao nhận và thời hạn bán Time share khu nghỉ dưỡng */}

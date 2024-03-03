@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Input, Button, DatePicker, Select, InputNumber, Row, Col, Typography } from 'antd';
 import Container from 'components/UI/Container/Container';
 import Card from 'components/UI/Card/Card';
@@ -6,28 +6,25 @@ import { AuthContext } from 'context/AuthProvider.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { VillaContext } from 'context/VillaContext';
 import Policy from './Policy/Policy';
+import { FormActionArea } from './Reservation/Reservation.style';
 
 
 const { Title, Text } = Typography;
 
-const { Option } = Select;
+// const { Option } = Select;
 
 const BookingTimeShareForm = () => {
-    const { user } = useContext(AuthContext);
+    const { user, getUserInfo } = useContext(AuthContext);
+    const [userInfo, setUserInfo] = useState({});
     const { villaDetails } = useContext(VillaContext);
-    // console.log('villaDetails',villaDetails);
     const navigate = useNavigate(); // Initialize use
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
-    console.log('details', details);
-
-
 
 
     // Form state
     const location = useLocation();
     const reservationState = location.state; // This contains startDate, endDate, totalWeeks, totalPrice
-    console.log('reservationState', reservationState);
 
     const [form, setForm] = useState({
         fullName: '',
@@ -43,24 +40,50 @@ const BookingTimeShareForm = () => {
         total_week: reservationState?.totalWeeks, // Added for order description
     });
 
+    useEffect(() => {
+        const fetchUserInfo = async () => {
+            const userDetails = await getUserInfo(user.user_id);
+            console.log('userDetails', userDetails)
+            if (userDetails) {
+                setUserInfo(userDetails);
+                // Update form state with user details
+                setForm({
+                    ...form,
+                    fullName: userDetails.user.full_name || '',
+                    email: userDetails.user.email || '',
+                    phoneNumber: userDetails.user.phone_number || '',
+                });
+            }
+        };
+
+        if (user.user_id) {
+            fetchUserInfo();
+        }
+    }, [user.user_id, getUserInfo]);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm(prevForm => ({
+            ...prevForm,
+            [name]: value,
+        }));
+    };
+
     // Function to handle form submission
     const handleSubmit = async (event) => {
-        event.preventDefault(); // Prevent default form submission behavior
+        event.preventDefault(); 
 
         // Prepare the data to be sent in the POST request
         const postData = {
             user_id: user.user_id,
-            villa_time_share_id: "65d60c1418aae7db0ac56409",
+            villa_time_share_id: "65e40adedee99599d33ee1f7",
             price: reservationState?.totalPrice,
             start_date: reservationState?.startDate,
             end_date: reservationState?.endDate, // Format the end date
             description: form.description, // Description from form
             order_name: details.villa_name,
-            status: "PENDING",
             total_week: form.total_week,
-            // Include other data as necessary
         };
-        console.log('postData', postData);
         try {
             const token = localStorage.getItem('token'); // Assuming you're using token-based authentication
             const response = await fetch('http://localhost:5000/api/v1/users/order', {
@@ -79,9 +102,8 @@ const BookingTimeShareForm = () => {
             }
 
             const result = await response.json();
-            console.log(result);
             const orderId = result.result._id; // result là phản hồi từ API
-            navigate(`/villas/${idVilla}/orders/${orderId}/contract`, { state: { orderId } });
+            navigate(`/orders/${orderId}/contract`, { state: { orderId, reservationDetails: reservationState  } });
         } catch (error) {
             console.error('Error during the fetch operation:', error);
         }
@@ -120,41 +142,44 @@ const BookingTimeShareForm = () => {
 
             <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
                 <Col xl={16}>
-                    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+                    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 text-lg" onSubmit={handleSubmit}>
                         {/* Header section */}
                         <div className="mb-4">
                             <h2 className="text-xl font-bold">BOOKING TIME SHARE VILLAS FORM</h2>
                         </div>
 
-                        {/* Contact Information */}
+                        {/* Contact Information with Input fields */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullName">
-                                Họ và Tên*
-                            </label>
-                            <Input placeholder="Nhập họ tên" id="fullName" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+                            <label htmlFor="fullName"> <strong>Họ và tên*</strong> </label>
+                            <Input
+                                id="fullName"
+                                name="fullName"
+                                value={form.fullName}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="email"><strong>Email*</strong></label>
+                            <Input
+                                id="email"
+                                name="email"
+                                value={form.email}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="phoneNumber"><strong>Số điện thoại*</strong></label>
+                            <Input
+                                id="phoneNumber"
+                                name="phoneNumber"
+                                value={form.phoneNumber}
+                                onChange={handleInputChange}
+                            />
                         </div>
 
-                        {/* Email */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                                Email*
-                            </label>
-                            <Input placeholder="Email" id="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-                        </div>
-
-                        {/* Phone Number */}
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneNumber">
-                                Số điện thoại*
-                            </label>
-                            <Input placeholder="Số điện thoại" id="phoneNumber" value={form.phoneNumber} onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })} />
-                        </div>
-
-                        <div className='mb4'>
-                            <p><strong>Ngày bắt đầu: </strong> {reservationState?.startDate || 'Default Start Date'}</p>
-                            <p><strong>Ngày kết thúc: </strong> {reservationState?.endDate || 'Default End Date'}</p>
-                            {/* <p><strong>Tổng thời gian: </strong> <InputNumber min={1} value={form.total_week} onChange={(e) => setForm({ ...form, total_week: e.target.value })} id="total_week" /> tuần</p> */}
-                            
+                        <div className='mb-4 '>
+                            <p><strong>Ngày bắt đầu: </strong> {reservationState?.startDate || 'Default Start Date'} - <strong>Ngày kết thúc: </strong> {reservationState?.endDate || 'Default End Date'}</p>
+                            {/* <p><strong>Ngày kết thúc: </strong> {reservationState?.endDate || 'Default End Date'}</p> */}
                         </div>
 
                         {/* Date Picker
@@ -167,19 +192,8 @@ const BookingTimeShareForm = () => {
 
                         {/* Number of total_week */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="total_week">
-                                Tổng thời gian mua (đơn vị Tuần):
-                            </label>
-                            <InputNumber min={1} value={form.total_week} onChange={(e) => setForm({ ...form, total_week: e.target.value })} id="total_week" />
+                            <p><strong>Tổng thời gian mua:  </strong> {form.total_week} tuần</p>
                         </div>
-
-                        {/* Number of Children
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="children">
-                                Trẻ em (Từ 5 - 11 tuổi)
-                            </label>
-                            <InputNumber min={0} defaultValue={0} id="children" />
-                        </div> */}
 
                         {/* Additional Requests */}
                         <div className="mb-4">
@@ -189,21 +203,24 @@ const BookingTimeShareForm = () => {
                             <Input.TextArea rows={4} id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Mô tả cho đơn hàng" />
                         </div>
                         <div className='flex text-xl font-bold text-center text-cyan-700'>
-                        <p className='mr-4'>Tổng tiền: </p> <p>${reservationState?.totalPrice || 'Default Price'}</p> 
+                            <p className='mr-4'>Tổng tiền: </p> <p>${reservationState?.totalPrice || 'Default Price'}</p>
                         </div>
 
                         {/* Submit Button */}
-                        <div className="flex items-center justify-between">
-                            <Button type="primary" htmlType="submit">
+                        {/* <div className="items-center justify-betwee w-full"> */}
+                        <FormActionArea>
+                            <Button type="primary" htmlType="submit" className='w-full'>
                                 ĐẶT NGAY
                             </Button>
-                        </div>
+                        </FormActionArea>
+
+                        {/* </div> */}
                     </form>
                 </Col>
                 {/* Tổng quan và tổng tiền*/}
                 <Col xl={8}>
                     <Card className="bg-white shadow-md rounded">
-                        <Policy/>
+                        <Policy />
                     </Card>
                 </Col>
             </Row>
