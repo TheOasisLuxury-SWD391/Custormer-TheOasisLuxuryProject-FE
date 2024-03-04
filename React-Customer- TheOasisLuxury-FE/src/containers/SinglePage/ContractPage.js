@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { VillaContext } from 'context/VillaContext';
 import { AuthContext } from 'context/AuthProvider';
+import { OrderContext } from 'context/OrderContext';
 
 
 const ContractPage = () => {
@@ -19,6 +20,9 @@ const ContractPage = () => {
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
     console.log('details',details)
+
+     // Use OrderContext
+     const { orderDetails, fetchOrderDetails } = useContext(OrderContext);
 
     const { getUserInfo, user } = useContext(AuthContext);
 
@@ -43,6 +47,25 @@ const ContractPage = () => {
         console.log(reservationDetails);
         fetchUserInfo();
     }, [user, getUserInfo, form, reservationDetails]);
+
+    useEffect(() => {
+        if (orderId) {
+          fetchOrderDetails(orderId);
+        }
+      }, [orderId, fetchOrderDetails]);
+      
+
+    console.log('orderDetails',orderDetails);
+
+    useEffect(() => {
+        // Chỉ thực hiện hành động khi orderDetails cho orderId cụ thể đã được tải
+        if (orderDetails && orderDetails[orderId]) {
+          // Thực hiện các hành động với orderDetails[orderId]
+          console.log("Order Details: ", orderDetails[orderId]);
+        }
+      }, [orderDetails, orderId]);
+      
+    
 
     // Lấy orderId từ state
 

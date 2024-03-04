@@ -20,11 +20,13 @@ const BookingTimeShareForm = () => {
     const navigate = useNavigate(); // Initialize use
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
+    console.log('details',details );
 
 
     // Form state
     const location = useLocation();
     const reservationState = location.state; // This contains startDate, endDate, totalWeeks, totalPrice
+    console.log('reservationState',reservationState);
 
     const [form, setForm] = useState({
         fullName: '',
