@@ -24,12 +24,14 @@ import {
   PAYMENT_FORM,
   ORDER_HISTORY,
   ORDER_DETAIL,
+  INVOICE_PAGE,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 import ContractPage from 'containers/SinglePage/ContractPage';
 import PaymentForm from 'containers/SinglePage/PaymentPage';
 import HistoryOrder from 'containers/MyOrder/HistoryOrder';
 import OrderDetailPage from 'containers/MyOrder/OrderDetail';
+import InvoiceComponent from 'containers/SinglePage/Invoice/Invoice';
 
 // protected route
 function RequireAuth({ children }) {
@@ -268,6 +270,16 @@ export default function AppRoutes() {
                 </React.Suspense>
               }
           />
+          <Route
+              path={INVOICE_PAGE}
+              element={
+                <React.Suspense fallback={<Loader />}>
+                  <InvoiceComponent />
+                </React.Suspense>
+              }
+          />
+
+
           <Route
               path={PAYMENT_FORM}
               element={

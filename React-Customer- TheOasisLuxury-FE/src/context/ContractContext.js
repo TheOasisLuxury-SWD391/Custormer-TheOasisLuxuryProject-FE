@@ -12,7 +12,7 @@ export const ContractProvider = ({ children }) => {
       setLoading(true);
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch("http://localhost:5000/api/v1/users/create-contracts", {
+        const response = await fetch("http://localhost:5000/api/v1/users//new/getContracts", {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
@@ -39,7 +39,7 @@ export const ContractProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/v1/users/create-contracts/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/v1/users/contracts/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -62,7 +62,7 @@ export const ContractProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/v1/users/create-contracts`, {
+      const response = await fetch(`http://localhost:5000/api/v1/users/create-contract`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -84,7 +84,7 @@ export const ContractProvider = ({ children }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/v1/users/create-contracts/${id}`, {
+      const response = await fetch(`http://localhost:5000/api/v1/users/contracts/${id}`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,

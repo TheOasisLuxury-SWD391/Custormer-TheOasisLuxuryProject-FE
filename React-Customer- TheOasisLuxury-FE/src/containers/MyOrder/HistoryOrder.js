@@ -1,10 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Tabs } from 'antd';
+import { Col, Row, Tabs } from 'antd';
 import PendingOrders from './PendingOrders';
 import ConfirmedOrders from './ConfirmedOrders';
 import CancelledOrders from './CancelledOrders';
 import CompletedOrders from './CompletedOrders';
 import { AuthContext } from 'context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
+import Container from 'components/UI/Container/Container';
+import Breadcrumbs from 'components/UI/Breadcrumbs';
+import BackButton from 'components/UI/ButtonBACK';
 
 const HistoryOrder = () => {
     const [userInfo, setUserInfo] = useState({});
@@ -23,11 +27,30 @@ const HistoryOrder = () => {
         }
     }, [user.user_id, getUserInfo]);
 
-    
+    const navigate = useNavigate();
 
+    const handleBackClick = () => {
+        navigate(`/`);
+    };
+
+    const breadcrumbs = [
+        { title: 'Home', href: '/' },
+        { title: 'User', href: '/user' },
+        // Thêm các breadcrumb khác nếu cần
+    ];
 
     return (
         <div>
+            <Container>
+                <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 30 }}>
+                    <Col span={24} className='flex'>
+                        <Breadcrumbs breadcrumbs={breadcrumbs} />
+                        <BackButton />
+                    </Col>
+                </Row>
+            </Container>
+            <div>
+            <h2 className="text-xl font-bold text-center m-10">LỊCH SỬ ĐẶT HÀNG CỦA TÔI</h2>
             <Tabs defaultActiveKey="1" centered>
                 <Tabs.TabPane tab="Chờ thanh toán" key="1">
                     <PendingOrders orders={userInfo.user?.orders?.filter(order => order.status === 'PENDING') || []} />
@@ -43,6 +66,7 @@ const HistoryOrder = () => {
                 </Tabs.TabPane>
 
             </Tabs>
+            </div>
         </div>
     );
 };

@@ -7,6 +7,9 @@ import { FormActionArea } from 'containers/SinglePage/Reservation/Reservation.st
 import Policy from 'containers/SinglePage/Policy/Policy';
 import Card from 'components/UI/Card/Card';
 import { VillaContext } from 'context/VillaContext';
+import BackButton from 'components/UI/ButtonBACK';
+import Container from 'components/UI/Container/Container';
+import Breadcrumbs from 'components/UI/Breadcrumbs';
 
 const OrderDetailPage = () => {
   const { orderId } = useParams();
@@ -16,7 +19,7 @@ const OrderDetailPage = () => {
   const { user, getUserInfo } = useContext(AuthContext);
   const { villaDetails } = useContext(VillaContext);
   const idVilla = villaDetails && Object.keys(villaDetails)[0];
-    const details = villaDetails[idVilla];
+  const details = villaDetails[idVilla];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -46,58 +49,75 @@ const OrderDetailPage = () => {
     return <div>Order not found</div>;
   }
 
+  const breadcrumbs = [
+    { title: 'Home', href: '/' },
+    { title: 'User', href: '/user' },
+    // Thêm các breadcrumb khác nếu cần
+  ];
+
   return (
-    <Row style={{ marginTop: 30 }} className='w-2/3 mx-auto'>
-      <Col xl={16}>
-        {/* Header section */}
-        <div className="mb-4">
-          <h2 className="text-xl font-bold">ORDER DETAIL TIMESHARE VILLA </h2>
-        </div>
-        <div className="mb-4">
-          <p><strong>Mã Order:  </strong>{order._id}</p>
-        </div>
-        <div className="mb-4">
-          <p><strong>Tên Villa:  </strong>{order.order_name}</p>
-        </div>
-        <div className="mb-4">
-          <p><strong>Trạng thái:  </strong>{order.status}</p>
-        </div>
+    <div>
 
-        <div className='mb-4 '>
-          <p><strong>Ngày bắt đầu: </strong>{order.start_date}</p>
-        </div>
+      <Container>
+        <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 30 }}>
+          <Col span={24} className='flex'>
+            <Breadcrumbs breadcrumbs={breadcrumbs} />
+            <BackButton />
+          </Col>
+        </Row>
+      </Container>
+      <Row style={{ marginTop: 30 }} className='w-2/3 mx-auto'>
+        <Col xl={16}>
+          {/* Header section */}
+          <div className="mb-4">
+            <h2 className="text-xl font-bold">ORDER DETAIL TIMESHARE VILLA </h2>
+          </div>
+          <div className="mb-4">
+            <p><strong>Mã Order:  </strong>{order._id}</p>
+          </div>
+          <div className="mb-4">
+            <p><strong>Tên Villa:  </strong>{order.order_name}</p>
+          </div>
+          <div className="mb-4">
+            <p><strong>Trạng thái:  </strong>{order.status}</p>
+          </div>
 
-        {/* Number of total_week */}
-        {/* <div className="mb-4">
+          <div className='mb-4 '>
+            <p><strong>Ngày bắt đầu: </strong>{order.start_date}</p>
+          </div>
+
+          {/* Number of total_week */}
+          {/* <div className="mb-4">
                             <p><strong>Tổng thời gian mua:  </strong> {form.total_week} tuần</p>
                         </div> */}
 
-        {/* Additional Requests */}
+          {/* Additional Requests */}
 
-        <div className='flex text-xl font-bold text-center text-cyan-700'>
-          <p className='mr-4'>Tổng tiền: </p> <p>${order.price}</p>
-        </div>
+          <div className='flex text-xl font-bold text-center text-cyan-700'>
+            <p className='mr-4'>Tổng tiền: </p> <p>${order.price}</p>
+          </div>
 
-        {/* Submit Button */}
-        {/* <div className="items-center justify-betwee w-full"> */}
-        {order.status === 'PENDING' && (
-          <FormActionArea>
-            <Button type="primary" onClick={handleContractSigning}>
-              Ký Contract
-            </Button>
-          </FormActionArea>
-        )}
+          {/* Submit Button */}
+          {/* <div className="items-center justify-betwee w-full"> */}
+          {order.status === 'PENDING' && (
+            <FormActionArea>
+              <Button type="primary" onClick={handleContractSigning}>
+                Ký Contract
+              </Button>
+            </FormActionArea>
+          )}
 
-        {/* </div> */}
+          {/* </div> */}
 
-      </Col>
-      {/* Tổng quan và tổng tiền*/}
-      <Col xl={8}>
-        <Card className="bg-white shadow-md rounded">
-          <Policy />
-        </Card>
-      </Col>
-    </Row>
+        </Col>
+        {/* Tổng quan và tổng tiền*/}
+        <Col xl={8}>
+          <Card className="bg-white shadow-md rounded">
+            <Policy />
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 };
 

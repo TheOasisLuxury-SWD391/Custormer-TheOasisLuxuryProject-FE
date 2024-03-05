@@ -16,7 +16,7 @@ const Home = () => {
       />
       <LocationGrid />
       <TopVillasGrid  />
-      <LuxaryHotelsGrid />
+      {/* <LuxaryHotelsGrid /> */}
     </>
   );
 };

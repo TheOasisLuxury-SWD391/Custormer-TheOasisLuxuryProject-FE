@@ -25,7 +25,8 @@ export const PRIVACY_PAGE = '/privacy';
 export const ADD_HOTEL_PAGE = '/add-hotel';
 export const BOOK_TIME_SHARE = '/villas/:slug/order';
 export const CONTRACT_TIME_SHARE = '/orders/:orderId/contract';
-export const PAYMENT_FORM = '/villas/:idVilla/orders/:orderId/contract/:contractId/payment';
+export const PAYMENT_FORM = '/orders/:orderId/payment';
+export const INVOICE_PAGE = '/orders/:orderId/invoice';
 
 // Login / Registration Page
 export const LOGIN_PAGE = '/sign-in';

@@ -65,6 +65,7 @@ export const OrderProvider = ({ children }) => {
   }, []);
 
   const updateOrder = useCallback(async (id, updates) => {
+    debugger
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
