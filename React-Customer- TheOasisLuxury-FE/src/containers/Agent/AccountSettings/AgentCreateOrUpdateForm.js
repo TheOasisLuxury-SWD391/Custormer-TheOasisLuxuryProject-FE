@@ -1,8 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { Row, Col, Input, Select, Button, DatePicker } from 'antd';
+import { Row, Col, Input, Select, Button, DatePicker, message , Form } from 'antd';
 import FormControl from 'components/UI/FormControl/FormControl';
-// import DatePicker from 'components/UI/AntdDatePicker/AntdDatePicker';
 import { FormTitle } from './AccountSettings.style';
 import { AuthContext } from 'context/AuthProvider';
 import moment from 'moment';
@@ -12,7 +11,7 @@ const AgentCreateOrUpdateForm = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const [userInfo, setUserInfo] = useState({});
-  
+  const [successMessage, setSuccessMessage] = useState('');
   const {
     control,
     formState: { errors },
@@ -45,9 +44,12 @@ const AgentCreateOrUpdateForm = () => {
       setUserInfo({ ...userInfo, user: { ...userInfo.user, ...data } });
       reset({ ...userInfo.user, ...data });
       setIsEditing(false);
+      setSuccessMessage('Profile updated successfully!');
+      message.success('Profile updated successfully!', 2);
     }).catch(error => {
       console.error('Failed to update user info', error);
       // Xử lý lỗi ở đây
+      message.error('Failed to update profile. Please try again!');
     });
   };
 
@@ -59,7 +61,19 @@ const AgentCreateOrUpdateForm = () => {
     setIsEditing(false);
     reset(userInfo);
   };
+  const hideSuccessMessage = () => {
+    setSuccessMessage('');
+  };
 
+  useEffect(() => {
+    if (successMessage) {
+      const timeoutId = setTimeout(hideSuccessMessage, 2000); 
+      
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [successMessage]);
   return (
     <Fragment>
       <FormTitle>Basic Information</FormTitle>
@@ -168,18 +182,30 @@ const AgentCreateOrUpdateForm = () => {
         ) : (
           // Hiển thị thông tin người dùng mà không có input, chỉ có text
           <Fragment>
-            <Row gutter={30}>
-              <Col span={24}>
-                <p>Full Name: {userInfo.user?.full_name}</p>
-                <p>User Name: {userInfo.user?.user_name}</p>
-                <p>Email: {userInfo.user?.email}</p>
-                <p>Phone Number: {userInfo.user?.phone_number}</p>
-                <p>Birthday: {userInfo.user?.birthday}</p>
-                <p>Gender: {userInfo.user?.gender}</p>
-                {/* Hiển thị thêm các thông tin khác tương tự */}
-              </Col>
-            </Row>
-          </Fragment>
+          <Row gutter={30}>
+            <Col span={24}>
+              <Form.Item label="Full Name">
+                <span>{userInfo.user?.full_name}</span>
+              </Form.Item>
+              <Form.Item label="User Name">
+                <span>{userInfo.user?.user_name}</span>
+              </Form.Item>
+              <Form.Item label="Email">
+                <span>{userInfo.user?.email}</span>
+              </Form.Item>
+              <Form.Item label="Phone Number">
+                <span>{userInfo.user?.phone_number}</span>
+              </Form.Item>
+              <Form.Item label="Birthday">
+                <span>{userInfo.user?.birthday ? moment(userInfo.user?.birthday).format("DD/MM/YYYY") : ""}</span>
+              </Form.Item>
+              <Form.Item label="Gender">
+                <span>{userInfo.user?.gender}</span>
+              </Form.Item>
+              {/* Hiển thị thêm các thông tin khác tương tự */}
+            </Col>
+          </Row>
+        </Fragment>
         )}
         <div className="submit-container">
           {isEditing ? (
@@ -191,6 +217,11 @@ const AgentCreateOrUpdateForm = () => {
             <Button htmlType="submit" type="primary" onClick={onEditClick}>Edit Profile</Button>
           )}
         </div>
+        {successMessage && (
+          <div style={{ color: 'green', marginTop: '10px' }}>
+            {successMessage}
+          </div>
+        )}
       </form>
 
 
