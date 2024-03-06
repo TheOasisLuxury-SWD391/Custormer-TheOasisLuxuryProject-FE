@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { Row, Col, Input, Select, Button, DatePicker, message } from 'antd';
 export const AuthContext = createContext();
 
 
@@ -37,7 +37,7 @@ const AuthProvider = ({ children }) => {
   };
 
 
-  const handleLogin = async (data) => {
+  const handleLogin = async (data, rememberMe) => {
     try {
       const response = await fetch('http://localhost:5000/api/v1/users/login/', {
         method: 'POST',
@@ -46,34 +46,41 @@ const AuthProvider = ({ children }) => {
         },
         body: JSON.stringify(data),
       });
-
+  
       if (response.ok) {
-        const data = await response.json();
-        // Set token in local storage or state
-        // children.setIsLoggedIn(true);
-        setIsLoggedIn(true);
-        const accessToken = data.result.access_token; // Trích xuất access_token
-        const userId = data.result.user_id;
-        localStorage.setItem('token', accessToken); // Lưu token vào localStorage
+        const responseData = await response.json();
+        const { access_token: accessToken, user_id: userId } = responseData.result;
+  
+        // Lưu token vào localStorage
+        localStorage.setItem('token', accessToken);
         setUser({ user_id: userId });
-        console.log('Login successful');
+        setIsLoggedIn(true);
+  
         if (rememberMe) {
-          // Save credentials to local storage
-          localStorage.setItem('savedUserName', loginData.user_name);
-          localStorage.setItem('savedPassword', loginData.password);
+          // Lưu tên đăng nhập và mật khẩu vào localStorage nếu người dùng chọn "Nhớ mật khẩu"
+          localStorage.setItem('savedUserName', data.user_name);
+          localStorage.setItem('savedPassword', data.password);
         } else {
-          // Clear saved credentials if "Remember Me" is not checked
+          // Xóa tên đăng nhập và mật khẩu khỏi localStorage nếu người dùng không chọn "Nhớ mật khẩu"
           localStorage.removeItem('savedUserName');
           localStorage.removeItem('savedPassword');
         }
-
+  
+        console.log('Đăng nhập thành công');
+        message.success('Đăng nhập thành công');
       } else {
-        console.error('Login failed');
+      
+        const errorData = await response.json(); // Lấy thông tin lỗi từ phản hồi
+        const errorMessage = errorData.message || 'Đăng nhập thất bại. Vui lòng thử lại!';
+        message.error('Đăng nhập thất bại');
+        console.error('Đăng nhập thất bại');
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      message.error('Đã xảy ra lỗi. Vui lòng thử lại sau!');
+      console.error('Lỗi trong quá trình đăng nhập:', error);
     }
   };
+  
 
   const handleRegister = async (registerData) => {
     try {
@@ -99,6 +106,7 @@ const AuthProvider = ({ children }) => {
       if (response.ok) {
         const data = await response.json();
         console.log('Registration successful');
+        message.success('Registration successful');
         setIsLoggedIn(true);
         // Lưu trữ token vào localStorage
         localStorage.setItem('token', data.result.access_token);
@@ -106,9 +114,11 @@ const AuthProvider = ({ children }) => {
         navigate('/');
       } else {
         console.error('Registration failed');
+        message.error('Registration failed');
       }
     } catch (error) {
       console.error('Error during registration:', error);
+      message.error('Registration failed');
     }
   };
 

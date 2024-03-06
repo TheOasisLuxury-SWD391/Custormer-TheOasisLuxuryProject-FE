@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { MdLockOpen } from 'react-icons/md';
-import { Input, Switch, Button } from 'antd';
+import { Input, Switch, Button, message } from 'antd';
 import FormControl from 'components/UI/FormControl/FormControl';
 import { AuthContext } from 'context/AuthProvider';
 import { FORGET_PASSWORD_PAGE } from 'settings/constant';
@@ -15,15 +15,26 @@ export default function SignInForm() {
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const onSubmit = (data) => {
-    handleLogin(data); 
+  const [successMessage, setSuccessMessage] = useState(null);
+
+  const onSubmit = async (data) => {
+    try {
+      await handleLogin(data);
+     
+    } catch (error) {
+      message.error('Đăng nhập thất bại. Vui lòng thử lại!');
+    }
   };
+  
+
   if (isLoggedIn) {
     return <Navigate to="/" replace={true} />;
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
+
       <FormControl
         label="Tên đăng nhập" // Đã được thay đổi từ Email sang Tên đăng nhập
         htmlFor="user_name" // Đã thay đổi htmlFor và name
@@ -108,6 +119,7 @@ export default function SignInForm() {
         <MdLockOpen />
         Đăng nhập
       </Button>
+      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
     </form>
   );
 }
