@@ -52,7 +52,7 @@ const HistoryOrder = () => {
             <div>
             <h2 className="text-xl font-bold text-center m-10">LỊCH SỬ ĐẶT HÀNG CỦA TÔI</h2>
             <Tabs defaultActiveKey="1" centered>
-                <Tabs.TabPane tab="Chờ thanh toán" key="1">
+                <Tabs.TabPane tab="Đang chờ" key="1">
                     <PendingOrders orders={userInfo.user?.orders?.filter(order => order.status === 'PENDING') || []} />
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Đã xác nhận" key="2">

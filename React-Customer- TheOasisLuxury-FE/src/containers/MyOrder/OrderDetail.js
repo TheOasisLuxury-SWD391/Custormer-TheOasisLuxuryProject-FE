@@ -10,6 +10,9 @@ import { VillaContext } from 'context/VillaContext';
 import BackButton from 'components/UI/ButtonBACK';
 import Container from 'components/UI/Container/Container';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
+import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE } from 'settings/constant';
+import Modal from 'antd/es/modal/Modal';
+import { toast } from 'react-toastify';
 
 const OrderDetailPage = () => {
   const { orderId } = useParams();
@@ -20,6 +23,26 @@ const OrderDetailPage = () => {
   const { villaDetails } = useContext(VillaContext);
   const idVilla = villaDetails && Object.keys(villaDetails)[0];
   const details = villaDetails[idVilla];
+
+  const showConfirmDialog = () => {
+    Modal.confirm({
+        title: 'Vui lòng xem chính sách huỷ hợp đồng',
+        content: 'Bạn chắc chắn huỷ Hợp đồng?',
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk() {
+          handleCancel();
+        },
+        onCancel() {
+            console.log('Cancel operation aborted by the user.');
+        },
+        okButtonProps: {
+            className: 'bg-cyan-700 hover:bg-cyan-900 text-white font-bold  rounded float-right',
+        },
+    });
+};
+
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -49,9 +72,40 @@ const OrderDetailPage = () => {
     return <div>Order not found</div>;
   }
 
+  const handleCancel = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        if (!orderId) {
+            console.error("No order ID found. Unable to update order status.");
+            return;
+        }
+
+        const response = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({ status: "CANCELLED" }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        console.log("Order cancelled successfully");
+        toast.success("Order cancelled successfully");
+        navigate(HOME_PAGE); // Redirect user to a different page after cancellation if desired
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        toast.error("Error cancelling order");
+    }
+};
+
   const breadcrumbs = [
-    { title: 'Home', href: '/' },
-    { title: 'User', href: '/user' },
+    { title: 'Home', href: HOME_PAGE },
+    { title: 'Villa', href: LISTING_POSTS_PAGE },
+    { title: 'Order', href: BOOK_TIME_SHARE },
     // Thêm các breadcrumb khác nếu cần
   ];
 
@@ -103,6 +157,13 @@ const OrderDetailPage = () => {
             <FormActionArea>
               <Button type="primary" onClick={handleContractSigning}>
                 Ký Contract
+              </Button>
+            </FormActionArea>
+          )}
+          {['PENDING', 'CONFIRMED'].includes(order.status) && (
+            <FormActionArea>
+              <Button type="default" onClick={showConfirmDialog}>
+                Cancel Order
               </Button>
             </FormActionArea>
           )}

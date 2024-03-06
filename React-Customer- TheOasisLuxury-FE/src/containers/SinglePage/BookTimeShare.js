@@ -9,6 +9,7 @@ import Policy from './Policy/Policy';
 import { FormActionArea } from './Reservation/Reservation.style';
 import BackButton from 'components/UI/ButtonBACK';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
+import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE } from 'settings/constant';
 
 
 const { Title, Text } = Typography;
@@ -114,8 +115,9 @@ const BookingTimeShareForm = () => {
     };
 
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
-        { title: 'User', href: '/user' },
+        { title: 'Home', href: HOME_PAGE },
+        { title: 'Villa', href: LISTING_POSTS_PAGE },
+        { title: 'Order', href: BOOK_TIME_SHARE },
         // Thêm các breadcrumb khác nếu cần
     ];
 

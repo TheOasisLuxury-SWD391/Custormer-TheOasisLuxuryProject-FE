@@ -35,12 +35,11 @@ const SearchArea = ({ searchTitleStyle, searchDescriptionStyle }) => {
         <SearchWrapper>
           <Heading
             {...searchTitleStyle}
-            content="Latest reviews. Lowest prices."
+            content="Tìm kiếm kỳ nghỉ theo cách của bạn"
           />
           <Text
             {...searchDescriptionStyle}
-            content="compares prices from 200+ booking sites to help you find the lowest
-          price on the right hotel for you."
+            content="So sánh Villa và Timeshare có sẵn từ hơn +100 Villa tại The Oasis Luxury để giúp bạn tìm được VillaTimeshare phù hợp với bạn."
           />
           <SearchForm />
         </SearchWrapper>
