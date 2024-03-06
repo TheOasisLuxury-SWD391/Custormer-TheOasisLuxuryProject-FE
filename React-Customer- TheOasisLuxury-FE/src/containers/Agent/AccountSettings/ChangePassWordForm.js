@@ -1,8 +1,54 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Input, Button, Row, Col } from 'antd';
 import FormControl from 'components/UI/FormControl/FormControl';
 import { FormTitle } from './AccountSettings.style';
+import { AuthContext } from 'context/AuthProvider';
+import { ToastContainer, toast } from 'react-toast';
+import 'react-toastify/dist/ReactToastify.css';
+const usePasswordChange = () => {
+  const { user, getUserInfo, changePassWord } = useContext(AuthContext);
+
+  const onSubmit = async (data) => {
+    try {
+      const result = await changePassWord(user.user_id, data.oldPassword, data.newPassword, data.confirmPassword);
+      if (result) {
+        console.log('Password changed successfully!');
+        toast.success("Password changed successfully!");
+      } else {
+        console.error('Failed to change password');
+        toast.error('Failed to change password');
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      toast.error('Failed to change password');
+
+    }
+  };
+
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUserInfo(user.user_id);
+        console.log('User Data:', userData);
+
+        if (userData) {
+          setUserInfo(userData);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    if (user.user_id) {
+      fetchUserData();
+    }
+  }, [user.user_id, getUserInfo]);
+
+  return { onSubmit, userInfo };
+};
 
 export default function ChangePassWord() {
   const {
@@ -13,9 +59,11 @@ export default function ChangePassWord() {
   } = useForm({
     mode: 'onChange',
   });
+
   const newPassword = watch('newPassword');
   const confirmPassword = watch('confirmPassword');
-  const onSubmit = (data) => console.log(data);
+
+  const { onSubmit, userInfo } = usePasswordChange();
 
   return (
     <>
@@ -114,6 +162,7 @@ export default function ChangePassWord() {
           </Col>
         </Row>
       </form>
+      <ToastContainer />
     </>
   );
 }
