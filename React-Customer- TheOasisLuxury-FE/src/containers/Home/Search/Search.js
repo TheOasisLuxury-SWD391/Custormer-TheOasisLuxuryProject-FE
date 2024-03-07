@@ -8,6 +8,8 @@ import GlideCarousel, {
 } from 'components/UI/GlideCarousel/GlideCarousel';
 import SearchForm from './SearchForm';
 import BannerWrapper, { SearchWrapper } from './Search.style';
+import { ProjectProvider } from 'context/ProjectContext';
+import { SubdivisionProvider } from 'context/SubdivisionContext';
 
 const SearchArea = ({ searchTitleStyle, searchDescriptionStyle }) => {
   return (
@@ -41,7 +43,12 @@ const SearchArea = ({ searchTitleStyle, searchDescriptionStyle }) => {
             {...searchDescriptionStyle}
             content="So sánh Villa và Timeshare có sẵn từ hơn +100 Villa tại The Oasis Luxury để giúp bạn tìm được VillaTimeshare phù hợp với bạn."
           />
-          <SearchForm />
+          <ProjectProvider>
+            <SubdivisionProvider>
+              <SearchForm />
+            </SubdivisionProvider>
+          </ProjectProvider>
+
         </SearchWrapper>
       </Container>
     </BannerWrapper>

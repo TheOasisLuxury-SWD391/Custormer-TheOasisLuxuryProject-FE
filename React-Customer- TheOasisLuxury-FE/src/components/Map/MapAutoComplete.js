@@ -58,8 +58,8 @@ const SearchInput = (props) => {
             type="text"
             defaultValue=""
             value={locationInput.searchedLocation || ''}
-            placeholder="Search “Thailand, Asia”"
-            size="large"
+            placeholder="Tìm kiếm Villa"
+            size="large" 
             onChange={handleOnChange}
             onPressEnter={handleOnPressEnter}
           />

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import BackButton from 'components/UI/ButtonBACK';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
 import Container from 'components/UI/Container/Container';
+import { BOOK_TIME_SHARE, CONTRACT_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE, PAYMENT_FORM } from 'settings/constant';
 
 const { Option } = Select;
 
@@ -25,15 +26,18 @@ const PaymentForm = () => {
     setPaymentMethod(value);
   };
   const breadcrumbs = [
-    { title: 'Home', href: '/' },
-    { title: 'User', href: '/user' },
+    { title: 'Home', href: HOME_PAGE },
+    { title: 'Villa', href: LISTING_POSTS_PAGE },
+    { title: 'Order', href: BOOK_TIME_SHARE },
+    { title: 'Contract', href: CONTRACT_TIME_SHARE },
+    { title: 'Payment', href: PAYMENT_FORM },
     // Thêm các breadcrumb khác nếu cần
   ];
 
   return (
     <div>
       <Container className='mb-10'>
-        <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 30 }}>
+        <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 60 }}>
           <Col span={24} className='flex'>
             <Breadcrumbs breadcrumbs={breadcrumbs} />
             <BackButton />

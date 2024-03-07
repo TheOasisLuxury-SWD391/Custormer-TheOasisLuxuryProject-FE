@@ -1,9 +1,8 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Row, Col, Input, Select, Button, DatePicker, message } from 'antd';
-export const AuthContext = createContext();
+import { message } from 'antd';
 
+export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   let navigate = useNavigate();
@@ -28,6 +27,11 @@ const AuthProvider = ({ children }) => {
     if (savedUserName && savedPassword) {
       setLoginData({ user_name: savedUserName, password: savedPassword });
       setRememberMe(true);
+    }
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      setIsLoggedIn(true);
     }
   }, []);
 
@@ -209,9 +213,7 @@ const AuthProvider = ({ children }) => {
   
 
   const logOut = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    setUser({});
+    localStorage.removeItem('token');  // Make sure this matches the key you use when setting the token
     setIsLoggedIn(false);
     navigate('/login');
   };
@@ -228,8 +230,8 @@ const AuthProvider = ({ children }) => {
         updateUserInfo,
         getUserInfo,
         changePassWord,
-        setIsLoggedIn, // Provide setIsLoggedIn to update login state
-        setLoginData, // Optional: If you want to allow updating loginData from consumer components
+        setIsLoggedIn,
+        setLoginData,
       }}
     >
       {children}

@@ -5,6 +5,7 @@ import BodyInvoice from './BodyInvoice';
 import { useNavigate } from 'react-router-dom';
 import Container from 'components/UI/Container/Container';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
+import { BOOK_TIME_SHARE, CONTRACT_TIME_SHARE, HOME_PAGE, INVOICE_PAGE, LISTING_POSTS_PAGE, PAYMENT_FORM } from 'settings/constant';
 
 const invoiceData = {
     villaName: 'Villa Sunset',
@@ -63,15 +64,19 @@ const InvoiceComponent = () => {
         navigate(`/`);
     };
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
-        { title: 'User', href: '/user' },
+        { title: 'Home', href: HOME_PAGE },
+        { title: 'Villa', href: LISTING_POSTS_PAGE },
+        { title: 'Order', href: BOOK_TIME_SHARE },
+        { title: 'Contract', href: CONTRACT_TIME_SHARE },
+        { title: 'Payment', href: PAYMENT_FORM },
+        { title: 'Invoice', href: INVOICE_PAGE },
         // Thêm các breadcrumb khác nếu cần
     ];
 
     return (
         <div>
             <Container>
-                <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 30 }}>
+                <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 50 }}>
                     <Col span={24} className='flex'>
                         <Breadcrumbs breadcrumbs={breadcrumbs} />
                         <button
@@ -89,7 +94,7 @@ const InvoiceComponent = () => {
                 <HeaderInvoice />
                 <main>
                     <div className="mb-4 text-center">
-                        <h2 className="text-xl font-bold">HOÁ ĐƠN ĐẶT MUA TIMESHARE VILLA</h2>
+                        <h2 className="text-xl font-bold text-cyan-700">HOÁ ĐƠN ĐẶT MUA TIMESHARE VILLA</h2>
                     </div>
                     {/* Invoice information like booking number, charge date, etc. */}
                     {/* <Table dataSource={dataSource} columns={columns} pagination={false} /> */}

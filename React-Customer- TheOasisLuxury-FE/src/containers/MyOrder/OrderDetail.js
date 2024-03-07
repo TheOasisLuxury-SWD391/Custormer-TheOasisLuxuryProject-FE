@@ -10,7 +10,7 @@ import { VillaContext } from 'context/VillaContext';
 import BackButton from 'components/UI/ButtonBACK';
 import Container from 'components/UI/Container/Container';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
-import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE } from 'settings/constant';
+import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE, ORDER_HISTORY } from 'settings/constant';
 import Modal from 'antd/es/modal/Modal';
 import { toast } from 'react-toastify';
 
@@ -104,8 +104,8 @@ const OrderDetailPage = () => {
 
   const breadcrumbs = [
     { title: 'Home', href: HOME_PAGE },
-    { title: 'Villa', href: LISTING_POSTS_PAGE },
-    { title: 'Order', href: BOOK_TIME_SHARE },
+    { title: 'Order History', href: ORDER_HISTORY },
+    { title: 'Order Detail', href: BOOK_TIME_SHARE },
     // Thêm các breadcrumb khác nếu cần
   ];
 

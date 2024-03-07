@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Container from 'components/UI/Container/Container';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
 import BackButton from 'components/UI/ButtonBACK';
+import { HOME_PAGE, ORDER_HISTORY } from 'settings/constant';
 
 const HistoryOrder = () => {
     const [userInfo, setUserInfo] = useState({});
@@ -34,8 +35,8 @@ const HistoryOrder = () => {
     };
 
     const breadcrumbs = [
-        { title: 'Home', href: '/' },
-        { title: 'User', href: '/user' },
+        { title: 'Home', href: HOME_PAGE },
+        { title: 'Order History', href: ORDER_HISTORY },
         // Thêm các breadcrumb khác nếu cần
     ];
 

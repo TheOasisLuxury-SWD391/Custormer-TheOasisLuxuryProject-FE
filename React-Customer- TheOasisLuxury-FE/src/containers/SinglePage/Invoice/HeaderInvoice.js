@@ -8,7 +8,7 @@ export default class HeaderInvoice extends Component {
         <div className="flex items-center">
           {/* Assuming you have the logo saved in your project directory */}
           <div>
-            <h2 className="text-lg font-bold">Công ty Agoda Company Pte. Ltd.</h2>
+            <h2 className="text-lg font-bold">Công ty The Oasis Luxury Pte. Ltd.</h2>
             <p className="text-sm">Số 30 Đường Cecil</p>
             <p className="text-sm">Prudential Tower #19-08</p>
             <p className="text-sm">Singapore 049712</p>

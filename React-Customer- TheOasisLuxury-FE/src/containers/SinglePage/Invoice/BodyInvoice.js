@@ -86,11 +86,11 @@ const  BodyInvoice = ({ customerData }) => {
           <div className="flex float-right m-4">
             <div className=" mr-32">
               <h3 className="text-sm leading-6 font-medium text-gray-900">VAT (10%)</h3>
-              <h3 className="text-lg leading-6 font-bold text-gray-900">Tổng Cộng Tiền Thanh Toán</h3>
+              <h3 className="text-lg leading-6 font-bold text-cyan-700">Tổng Cộng Tiền Thanh Toán</h3>
             </div>
             <div className="ml-4 ">
               <div className="text-sm leading-6 font-medium text-gray-90 text-right">VND: 0</div>
-              <div className="text-lg leading-6 font-medium text-gray-900 text-right">VND: 1,300,000 (USD 60)</div>
+              <div className="text-lg leading-6 font-medium text-cyan-700 text-right">VND: 1,300,000 (USD 60)</div>
             </div>
           </div>
         </div>
