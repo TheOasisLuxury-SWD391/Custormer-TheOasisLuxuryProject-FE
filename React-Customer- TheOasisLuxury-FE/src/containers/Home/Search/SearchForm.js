@@ -98,7 +98,7 @@ export default function SearchForm() {
         <Select
           showSearch
           className='w-full m-3'
-          placeholder="Select a project"
+          placeholder="Chọn Dự Án"
           loading={loadingProjects}
           onChange={onProjectChange}
         >
@@ -112,7 +112,7 @@ export default function SearchForm() {
         <Select
           showSearch
           className='w-full m-3'
-          placeholder="Select a subdivision"
+          placeholder="Chọn Phân Khu"
           loading={loadingSubdivisions}
           onChange={onSubdivisionChange}
           disabled={!selectedProject || loadingSubdivisions}

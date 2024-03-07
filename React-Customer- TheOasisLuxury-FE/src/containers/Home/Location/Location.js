@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 import Loader from 'components/Loader/Loader';
@@ -13,6 +13,7 @@ import GlideCarousel, {
 import useDataApi from 'library/hooks/useDataApi';
 import { LISTING_POSTS_PAGE } from 'settings/constant';
 import LocationWrapper, { CarouselSection } from './Location.style';
+import { SubdivisionContext } from 'context/SubdivisionContext';
 const carouselOptions = {
   type: 'carousel',
   perView: 5,
@@ -42,18 +43,18 @@ const carouselOptions = {
 };
 
 const LocationGrid = () => {        
-  const { data } = useDataApi('/data/location.json');
+  const { subdivisions, loading } = useContext(SubdivisionContext);
 
   return (
     <LocationWrapper>
       <Container fluid={true}>
         <SectionTitle
-          title={<Heading content="EXPLORE PROJECTS" />}
+          title={<Heading content="KHÁM PHÁ PHÂN KHU" />}
           link={<TextLink link={LISTING_POSTS_PAGE} content="Show all" />}
         />
 
         <CarouselSection>
-          {data.length !== 0 ? (
+        {!loading && subdivisions.length !== 0 ? (
             <GlideCarousel
               carouselSelector="explore_carousel"
               prevButton={<IoIosArrowBack />}
@@ -61,13 +62,13 @@ const LocationGrid = () => {
               options={carouselOptions}
             >
               <>
-                {data.map((post, index) => (
+              {subdivisions.map((subdivision, index) => (
                   <GlideSlide key={index}>
                     <ImageCard
                       link="listing"
-                      imageSrc={post.locationImage.url}
-                      title={post.city}
-                      meta={`${post.numberOfPost} Hotels`}
+                      imageSrc={subdivision.url_image || 'defaultImagePath'}
+                      title={subdivision.subdivision_name}
+                      meta={`${subdivision.quantityVilla} Villas`}
                     />
                   </GlideSlide>
                 ))}

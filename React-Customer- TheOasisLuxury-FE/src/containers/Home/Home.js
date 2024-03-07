@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { TopVillasGrid , LuxaryHotelsGrid } from './Grid';
+import { TopVillasGrid, LuxaryHotelsGrid } from './Grid';
 import SearchArea from './Search/Search';
 import LocationGrid from './Location/Location';
 import { LayoutContext } from 'context/LayoutProvider';
 import { Waypoint } from 'react-waypoint';
+import { SubdivisionProvider } from 'context/SubdivisionContext';
 
 const Home = () => {
   const [, dispatch] = useContext(LayoutContext);
@@ -14,8 +15,10 @@ const Home = () => {
         onEnter={() => dispatch({ type: 'HIDE_TOP_SEARCHBAR' })}
         onLeave={() => dispatch({ type: 'SHOW_TOP_SEARCHBAR' })}
       />
-      <LocationGrid />
-      <TopVillasGrid  />
+      <SubdivisionProvider>
+        <LocationGrid />
+      </SubdivisionProvider>
+      <TopVillasGrid />
       {/* <LuxaryHotelsGrid /> */}
     </>
   );
