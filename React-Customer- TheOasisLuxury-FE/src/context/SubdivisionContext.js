@@ -11,11 +11,11 @@ export const SubdivisionProvider = ({ children }) => {
   const fetchSubdivisions = useCallback(async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       const response = await fetch("http://localhost:5000/api/v1/subdivisions/", {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        // headers: {
+        //   'Authorization': `Bearer ${token}`,
+        // },
       });
       if (response.ok) {
         const data = await response.json();
@@ -57,7 +57,7 @@ export const SubdivisionProvider = ({ children }) => {
   }, []);
 
   return (
-    <SubdivisionContext.Provider value={{ subdivisions, subdivisionDetails, fetchSubdivisions, loading }}>
+    <SubdivisionContext.Provider value={{ subdivisions, subdivisionDetails, fetchSubdivisions, loading, fetchSubdivisionDetails }}>
     {children}
   </SubdivisionContext.Provider>
   

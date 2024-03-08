@@ -11,11 +11,11 @@ export const ProjectProvider = ({ children }) => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem('token'); // Assuming token-based authentication
+        // const token = localStorage.getItem('token'); // Assuming token-based authentication
         const response = await fetch("http://localhost:5000/api/v1/projects/", {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Include the token in the request headers
-          },
+          // headers: {
+          //   'Authorization': `Bearer ${token}`, // Include the token in the request headers
+          // },
         });
 
         if (response.ok) {
@@ -38,11 +38,11 @@ export const ProjectProvider = ({ children }) => {
   const fetchProjectDetails = useCallback(async (slug) => {
     setLoading(true);
     try {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:5000/api/v1/projects/${slug}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+        // headers: {
+        //   'Authorization': `Bearer ${token}`,
+        // },
       });
       if (response.ok) {
         const jsonResponse = await response.json();

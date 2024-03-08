@@ -144,8 +144,8 @@ const BookingTimeShareForm = () => {
                                         </div>
                                     </Col>
                                     <Col span={16}>
-                                        <div className="tour-details ">
-                                            <Title level={4}>{details.villa_name}</Title>
+                                        <div className="tour-details text-lg">
+                                            <Title level={3} >{details.villa_name}</Title>
                                             <p><strong>Địa chỉ: </strong> {details.address}</p>
                                             <p><strong>Thuộc dự án: </strong> project name</p>
                                             <p><strong>Thuộc phân khu: </strong> subdivision name</p>
