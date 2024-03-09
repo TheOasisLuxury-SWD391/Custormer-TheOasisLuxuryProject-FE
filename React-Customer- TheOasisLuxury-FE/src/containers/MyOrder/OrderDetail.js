@@ -20,9 +20,11 @@ const OrderDetailPage = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
   const { user, getUserInfo } = useContext(AuthContext);
-  const { villaDetails } = useContext(VillaContext);
-  const idVilla = villaDetails && Object.keys(villaDetails)[0];
-  const details = villaDetails[idVilla];
+
+  const [orderDetail, setOrderDetail] = useState(null);
+  const [villaTimeShareDetail, setVillaTimeShareDetail] = useState(null);
+  const [villaDetail, setVillaDetail] = useState(null); // State mới để lưu thông tin villa
+  console.log('villaDetail',villaDetail);
 
   const showConfirmDialog = () => {
     Modal.confirm({
@@ -46,6 +48,8 @@ const OrderDetailPage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+// console.log('order.villa_time_share_id', order.villa_time_share_id);
+
       const userData = await getUserInfo(user.user_id);
       if (userData) {
         setUserInfo(userData); // Cập nhật state với thông tin người dùng
@@ -57,11 +61,85 @@ const OrderDetailPage = () => {
     }
   }, [user.user_id, getUserInfo]);
 
-  const order = userInfo.user?.orders?.find(order => order._id === orderId);
+  useEffect(() => {
+    const fetchOrderDetail = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const orderData = await response.json();
+          setOrderDetail(orderData);
+          fetchVillaTimeShareDetail(orderData.villa_time_share_id); // Fetch Villa Time Share detail
+        } else {
+          console.error('Failed to fetch order detail:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching order detail:', error);
+      }
+    };
+
+    if (orderId) {
+      fetchOrderDetail();
+    }
+  }, [orderId]);
+
+  useEffect(() => {
+    if (villaTimeShareDetail && villaTimeShareDetail.result && villaTimeShareDetail.result.villa_id) {
+      fetchVillaDetail(villaTimeShareDetail.result.villa_id);
+    }
+  }, [villaTimeShareDetail]);
+
+   // Fetch villa time share detail by villa_time_share_id
+   const fetchVillaTimeShareDetail = async (villaTimeShareId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/v1/villas/get-villa0time-share/${villaTimeShareId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const villaTimeShareData = await response.json();
+        setVillaTimeShareDetail(villaTimeShareData);
+      } else {
+        console.error('Failed to fetch villa time share detail:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching villa time share detail:', error);
+    }
+  };
+
+  const fetchVillaDetail = async (villaId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:5000/api/v1/villas/${villaId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const villaData = await response.json();
+        setVillaDetail(villaData); // Cập nhật state với thông tin villa
+      } else {
+        console.error('Failed to fetch villa detail:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching villa detail:', error);
+    }
+  };
+
+  
+
+  const order = userInfo.user?.orders?.find(order => order._id === orderId);  
+
 
   const handleContractSigning = () => {
-    if (details) {
-      navigate(`/orders/${orderId}/contract`, { state: { orderId, idVilla: idVilla } });
+    if (villaDetail) {
+      navigate(`/orders/${orderId}/contract/${villaDetail.result._id}`, { state: { orderId, idVilla: villaDetail.result._id } });
     } else {
       // Handle the case where details are not available
       console.error('Villa details are not available');
@@ -101,6 +179,7 @@ const OrderDetailPage = () => {
         toast.error("Error cancelling order");
     }
 };
+
 
   const breadcrumbs = [
     { title: 'Home', href: HOME_PAGE },

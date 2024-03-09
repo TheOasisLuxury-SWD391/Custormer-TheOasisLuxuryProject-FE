@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, DatePicker } from 'antd';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
@@ -7,13 +7,46 @@ import ReservationFormWrapper, {
   FieldWrapper,
 } from './Reservation.style.js';
 import HtmlLabel from 'components/UI/HtmlLabel/HtmlLabel.js';
+import { VillaContext } from 'context/VillaContext.js';
+import { TimeSharesContext } from 'context/TimeShareContext.js';
 
 const { RangePicker } = DatePicker;
 
 const RenderReservationForm = ({ pricePerWeek }) => {
   const navigate = useNavigate();
+  // Get id API Villa
+  const { villaDetails } = useContext(VillaContext);
+  const idVilla = villaDetails && Object.keys(villaDetails)[0];
+  const details = villaDetails[idVilla];
 
-  const [dates, setDates] = useState([null, null]);
+  // Get id API Timeshare by details.time_share_id
+  const { timeShareDetails, fetchTimeShareDetails } = useContext(TimeSharesContext);
+  const idTimeShare = timeShareDetails && Object.keys(timeShareDetails)[0];
+  const detailsTimeShare = timeShareDetails[idTimeShare];
+  console.log('detailsTimeShare', detailsTimeShare); 
+
+
+  useEffect(() => {
+    if (details?.time_share_id) {
+      fetchTimeShareDetails(details?.time_share_id);
+    }
+  }, [details, fetchTimeShareDetails]);
+  
+
+
+
+  // Khởi tạo state dates với giá trị mặc định từ detailsTimeShare
+  const [dates, setDates] = useState([
+    detailsTimeShare ? moment(detailsTimeShare.start_date) : null,
+    detailsTimeShare ? moment(detailsTimeShare.end_date) : null,
+  ]);
+
+
+  const disabledDate = (current) => {
+    // Vô hiệu hóa ngày nếu không nằm trong khoảng cho phép hoặc deflag là true
+    return detailsTimeShare.deflag || (current && (current < moment(detailsTimeShare.start_date) || current > moment(detailsTimeShare.end_date)));
+  };
+
   const [totalPrice, setTotalPrice] = useState(0);
 
   const handleDateChange = (dates) => {
@@ -58,6 +91,8 @@ const RenderReservationForm = ({ pricePerWeek }) => {
           id="dateRange"
           format="YYYY-MM-DD"
           onChange={handleDateChange}
+          disabledDate={disabledDate}
+          value={dates}
           suffixIcon={null}
         />
         <p style={{ margin: '0 0 10px' }}>Chú ý: Chúng tôi dựa theo số tuần để bạn chọn nếu bạn dư dưới 7 ngày của 1 tuần sẽ tính tiền cả 1 tuần đó.</p>

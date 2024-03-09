@@ -21,7 +21,7 @@ const ContractPage = () => {
     const sigPadB = useRef(null);
     const navigate = useNavigate();
     const location = useLocation()
-    const { orderId, reservationDetails } = location.state;
+    const { orderId, contractId, villaTimeshareId, reservationDetails } = location.state;
     const { villaDetails } = useContext(VillaContext);
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
@@ -97,21 +97,21 @@ const ContractPage = () => {
         saveSignatureB();
         const contractData = {
             // Populate this with all necessary contract data
-            insert_date: currentDate,
-            userId: user.user_id,
-            villaId: idVilla,
+            // insert_date: currentDate,
+            // userId: user.user_id,
+            // villaId: idVilla,
             url_image: signatureB,
-            contract_name: details.villa_name,
-            order_id: orderId,
+            // contract_name: details.villa_name,
+            // order_id: orderId,
             sign_contract: isSignatureSaved,
-            deflag: isChecked,
+            // deflag: isChecked,
             // Include other necessary fields from the form
         };
 
         try {
             const token = localStorage.getItem('token');
-            const contractResponse = await fetch('http://localhost:5000/api/v1/users/create-contract', {
-                method: 'POST',
+            const contractResponse = await fetch(`http://localhost:5000/api/v1/users/contracts/${contractId}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
@@ -123,23 +123,21 @@ const ContractPage = () => {
                 throw new Error(`HTTP error! status: ${contractResponse.status}`);
             }
 
-            const contractResult = await contractResponse.json();
-            const contractId = contractResult._id;
+            // Nếu đã ký thì đổi status Order thành confirm => Đổi thành khi nào admin ấn approve thì mới đổi status của cả Order và Contract
+            // if (contractData.sign_contract) {
+            //     const updateResponse = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
+            //         method: 'PATCH',
+            //         headers: {
+            //             'Authorization': `Bearer ${token}`,
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({ status: "CONFIRMED" }),
+            //     });
 
-            if (contractData.deflag) {
-                const updateResponse = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ status: "CONFIRMED" }),
-                });
-
-                if (!updateResponse.ok) {
-                    throw new Error(`HTTP error! status: ${updateResponse.status}`);
-                }
-            }
+            //     if (!updateResponse.ok) {
+            //         throw new Error(`HTTP error! status: ${updateResponse.status}`);
+            //     }
+            // }
 
             navigate(`/orders/${orderId}/payment`, { state: { orderId } });
 
@@ -177,7 +175,7 @@ const ContractPage = () => {
                 return;
             }
 
-            const response = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
+            const orderResponse = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -186,8 +184,17 @@ const ContractPage = () => {
                 body: JSON.stringify({ status: "CANCELLED" }),
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            const contractResponse = await fetch(`http://localhost:5000/api/v1/users/contracts/${contractId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ status: "REJECTED" }),
+            });
+
+            if (!orderResponse.ok || !contractResponse.ok) {
+                throw new Error(`HTTP error! status: ${orderResponse.status} &  ${contractResponse.status}`);
             }
 
             console.log("Order cancelled successfully");
@@ -234,7 +241,7 @@ const ContractPage = () => {
                                     - Căn cứ nhu cầu và khả năng của các bên</p>
                             </div>
                             <div className="mb-4">
-                                <p>Hôm nay,  {currentDate}s., chúng tôi bao gồm:</p>
+                                <p>Hôm nay,  {currentDate}., chúng tôi bao gồm:</p>
                                 <br />
                                 <div>
                                     <h2 className=" font-bold text-lg">Bên A (bên bán):</h2>

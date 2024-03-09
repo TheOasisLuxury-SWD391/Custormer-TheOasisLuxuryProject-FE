@@ -23,7 +23,7 @@ const BookingTimeShareForm = () => {
     const navigate = useNavigate(); // Initialize use
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
-    console.log('details', details);
+    console.log('details', details); 
 
 
     // Form state
@@ -81,7 +81,8 @@ const BookingTimeShareForm = () => {
         // Prepare the data to be sent in the POST request
         const postData = {
             user_id: user.user_id,
-            villa_time_share_id: "65e40adedee99599d33ee1f7",
+            villa_id: idVilla,
+            // villa_time_share_id: "65e40adedee99599d33ee1f7",
             price: reservationState?.totalPrice,
             start_date: reservationState?.startDate,
             end_date: reservationState?.endDate, // Format the end date
@@ -107,8 +108,10 @@ const BookingTimeShareForm = () => {
             }
 
             const result = await response.json();
-            const orderId = result.result._id; // result là phản hồi từ API
-            navigate(`/orders/${orderId}/contract`, { state: { orderId, reservationDetails: reservationState } });
+            const orderId = result.result.order; // result là phản hồi từ API
+            const contractId = result.result.contract; // result là phản hồi từ API
+            const villaTimeshareId = result.result.villa_time_share; // result là phản hồi từ API
+            navigate(`/orders/${orderId}/contract/${contractId}`, { state: { orderId, contractId,villaTimeshareId, reservationDetails: reservationState } });
         } catch (error) {
             console.error('Error during the fetch operation:', error);
         }

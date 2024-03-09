@@ -5,6 +5,7 @@ import Heading from 'components/UI/Heading/Heading';
 import Text from 'components/UI/Text/Text';
 import TextLink from 'components/UI/TextLink/TextLink';
 import RenderReservationForm from './RenderReservationForm';
+import { TimeSharesProvider } from 'context/TimeShareContext';
 
 const CardHeader = ({ price, priceStyle, pricePeriodStyle, linkStyle }) => {
   return (
@@ -27,7 +28,7 @@ export default function Reservation({ price }) {
     <Card
       className="reservation_sidebar"
       header={<CardHeader price={price} />} // Pass the price prop to CardHeader
-      content={<RenderReservationForm pricePerWeek={price} />}
+      content={<TimeSharesProvider><RenderReservationForm pricePerWeek={price} /></TimeSharesProvider>}
       footer={
         <p>
           Special offers available. <TextLink to="/#1" content="See details" />

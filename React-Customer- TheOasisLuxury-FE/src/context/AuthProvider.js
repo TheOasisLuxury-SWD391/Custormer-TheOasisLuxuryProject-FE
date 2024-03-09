@@ -1,6 +1,7 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
+import ToastMessage from 'components/UI/ToastMessage';
 
 export const AuthContext = createContext();
 
@@ -20,6 +21,8 @@ const AuthProvider = ({ children }) => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const [user, setUser] = useState({});
+  const [toast, setToast] = useState({ type: null, message: null });
+
 
   useEffect(() => {
     const savedUserName = localStorage.getItem('savedUserName');
@@ -41,7 +44,7 @@ const AuthProvider = ({ children }) => {
   };
 
 
-  const handleLogin = async (data, rememberMe) => {
+ const handleLogin = async (data, rememberMe) => {
     try {
       const response = await fetch('http://localhost:5000/api/v1/users/login/', {
         method: 'POST',
@@ -75,8 +78,7 @@ const AuthProvider = ({ children }) => {
       } else {
       
         const errorData = await response.json(); // Lấy thông tin lỗi từ phản hồi
-        const errorMessage = errorData.message || 'Đăng nhập thất bại. Vui lòng thử lại!';
-        message.error('Đăng nhập thất bại');
+        message.error('Username hoặc Password không đúng. Vui lòng thử lại!');
         console.error('Đăng nhập thất bại');
       }
     } catch (error) {
@@ -88,7 +90,6 @@ const AuthProvider = ({ children }) => {
 
   const handleRegister = async (registerData) => {
     try {
-      // Bạn có thể cần điều chỉnh dữ liệu gửi đi cho phù hợp
       const registerPayload = {
         full_name: registerData.full_name,
         birthday: registerData.birthday,
@@ -107,24 +108,26 @@ const AuthProvider = ({ children }) => {
         body: JSON.stringify(registerPayload),
       });
   
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
         console.log('Registration successful');
-        message.success('Registration successful');
+        setToast({ type: 'success', message: 'Register success' });
         setIsLoggedIn(true);
-        // Lưu trữ token vào localStorage
         localStorage.setItem('token', data.result.access_token);
         localStorage.setItem('refresh_token', data.result.refresh_token);
         navigate('/');
       } else {
         console.error('Registration failed');
-        message.error('Registration failed');
+        // Xử lý và hiển thị lỗi chi tiết từ API
+        const errorMessages = Object.values(data.errors).join(', ');
+          setToast({ type: 'error', message: errorMessages });
       }
     } catch (error) {
+      setToast({ type: 'error', message: 'Error during registration' });
       console.error('Error during registration:', error);
-      message.error('Registration failed');
     }
   };
+  
 
   const getUserInfo = async (userId) => {
     try {
@@ -234,6 +237,7 @@ const AuthProvider = ({ children }) => {
         setLoginData,
       }}
     >
+      {toast.message && <ToastMessage type={toast.type} content={toast.message} />}
       {children}
     </AuthContext.Provider>
   );
