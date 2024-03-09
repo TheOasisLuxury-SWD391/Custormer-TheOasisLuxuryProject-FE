@@ -12,7 +12,6 @@ export const OrderProvider = ({ children }) => {
   const [orderDetails, setOrderDetails] = useState({});
 
   const fetchOrders = useCallback(async () => {
-    debugger
     setLoading(true);
     try {
       const token = localStorage.getItem('token'); // Assuming token-based authentication
@@ -42,7 +41,6 @@ export const OrderProvider = ({ children }) => {
   }, [fetchOrders]);
 
   const fetchOrderDetails = useCallback(async (id) => {
-    debugger
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -65,7 +63,6 @@ export const OrderProvider = ({ children }) => {
   }, []);
 
   const updateOrder = useCallback(async (id, updates) => {
-    debugger
     setLoading(true);
     try {
       const token = localStorage.getItem('token');

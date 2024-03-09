@@ -21,11 +21,20 @@ const ContractPage = () => {
     const sigPadB = useRef(null);
     const navigate = useNavigate();
     const location = useLocation()
-    const { orderId, contractId, villaTimeshareId, reservationDetails } = location.state;
+    const { orderId, contractId, villaTimeshareId, reservationDetails, idVillaDetail } = location.state;
     const { villaDetails } = useContext(VillaContext);
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
-    const details = villaDetails[idVilla];
-    console.log('details', details)
+    let details;
+
+    if (villaDetails[idVilla] !== undefined && villaDetails[idVilla] !== null) {
+        details = villaDetails[idVilla];
+    } else {
+        details = villaDetails[idVillaDetail];
+    }
+    // console.log('idVillaDetail', idVillaDetail)
+    // console.log('details', details)
+    // const [orderDetail, setOrderDetail] = useState(null);
+
 
 
 
@@ -65,6 +74,8 @@ const ContractPage = () => {
         }
     }, [orderId, fetchOrderDetails]);
 
+    
+
 
     console.log('orderDetails', orderDetails);
 
@@ -96,16 +107,15 @@ const ContractPage = () => {
         console.log('Signature Data URL B: ', signatureB);
         saveSignatureB();
         const contractData = {
-            // Populate this with all necessary contract data
-            // insert_date: currentDate,
-            // userId: user.user_id,
-            // villaId: idVilla,
             url_image: signatureB,
-            // contract_name: details.villa_name,
-            // order_id: orderId,
             sign_contract: isSignatureSaved,
-            // deflag: isChecked,
-            // Include other necessary fields from the form
+        };
+
+        const userInfoToUpdate = {
+            date_provide_CCCD: values.date_provide_CCCD || "",
+            place_provide_CCCD: values.place_provide_CCCD || "",
+            CCCD: values.CCCD || "",
+            tax_code: values.tax_code || "",
         };
 
         try {
@@ -123,21 +133,24 @@ const ContractPage = () => {
                 throw new Error(`HTTP error! status: ${contractResponse.status}`);
             }
 
-            // Nếu đã ký thì đổi status Order thành confirm => Đổi thành khi nào admin ấn approve thì mới đổi status của cả Order và Contract
-            // if (contractData.sign_contract) {
-            //     const updateResponse = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
-            //         method: 'PATCH',
-            //         headers: {
-            //             'Authorization': `Bearer ${token}`,
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({ status: "CONFIRMED" }),
-            //     });
+            console.log("Contract updated successfully");
 
-            //     if (!updateResponse.ok) {
-            //         throw new Error(`HTTP error! status: ${updateResponse.status}`);
-            //     }
-            // }
+            // Cập nhật thông tin người dùng sau khi lưu hợp đồng thành công
+            const userResponse = await fetch(`http://localhost:5000/api/v1/users/${user.user_id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify(userInfoToUpdate),
+            });
+
+            if (!userResponse.ok) {
+                throw new Error(`HTTP error! status: ${userResponse.status}`);
+            }
+
+            console.log("User info updated successfully");
+            toast.success("Contract and user info updated successfully");
 
             navigate(`/orders/${orderId}/payment`, { state: { orderId } });
 
@@ -164,7 +177,7 @@ const ContractPage = () => {
             },
         });
     };
-    
+
 
 
     const handleCancel = async () => {
@@ -228,7 +241,7 @@ const ContractPage = () => {
             <Container>
                 <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 50 }}>
                     <Col span={24}>
-                        <Form form={form} layout="vertical" onFinish={onFinish}>
+                        <Form form={form} layout="vertical" onFinish={onFinish} >
                             <div className="mb-4">
                                 <h2 className="text-center"> CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM <br />
                                     Độc lập - Tự do - Hạnh Phúc</h2>
@@ -270,13 +283,40 @@ const ContractPage = () => {
                                     <p>Người đại diện theo pháp luật:</p>
                                     <p className='mr-10'><strong>Họ và tên: </strong> {userInfo.full_name}</p>
                                     <p className='mr-10'><strong>Số điện thoại liên hệ: </strong> {userInfo.phone_number}</p>
-                                    <p className='mr-10'><strong>Mã số thuế: </strong> {userInfo.tax_code}</p>
+                                    <Form.Item
+                                        label="Số CCCD"
+                                        name="CCCD"
+                                        rules={[{ required: true, message: 'Vui lòng nhập số CCCD!' }]}
+                                    >
+                                        <Input placeholder="Nhập số CCCD" />
+                                    </Form.Item>
 
-                                    <p className='flex'>
-                                        <span className='mr-10'><strong>Số CCCD: </strong> {userInfo.CCCD} </span>
-                                        <span className='mr-10'><strong>Ngày cấp: </strong>  {userInfo.date_provide_CCCD} </span>
-                                        <span className='mr-10'><strong>Nơi cấp:  </strong>  {userInfo.place_provide_CCCD} </span>
-                                    </p>
+                                    {/* Ngày cấp */}
+                                    <Form.Item
+                                        label="Ngày cấp"
+                                        name="date_provide_CCCD"
+                                        rules={[{ required: true, message: 'Vui lòng chọn ngày cấp!' }]}
+                                    >
+                                        <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+                                    </Form.Item>
+
+                                    {/* Nơi cấp */}
+                                    <Form.Item
+                                        label="Nơi cấp"
+                                        name="place_provide_CCCD"
+                                        rules={[{ required: true, message: 'Vui lòng nhập nơi cấp!' }]}
+                                    >
+                                        <Input placeholder="Nhập nơi cấp CCCD" />
+                                    </Form.Item>
+
+                                    {/* Mã số thuế */}
+                                    <Form.Item
+                                        label="Mã số thuế"
+                                        name="tax_code"
+                                        rules={[{ required: true, message: 'Vui lòng nhập mã số thuế!' }]}
+                                    >
+                                        <Input placeholder="Nhập mã số thuế" />
+                                    </Form.Item>
                                 </div>
                                 <br />
                                 <p>Cùng bàn bạc thống nhất những thỏa thuận sau đây:</p>
