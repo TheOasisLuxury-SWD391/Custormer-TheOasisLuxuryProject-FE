@@ -29,26 +29,27 @@ const TopVillasGrid = () => {
     limit = 10;
   }
 
-  const displayedVillas = villas.slice(0, limit);
-  
+  // Lọc ra chỉ những villas có trạng thái "ACTIVE"
+  const activeVillas = villas.filter(villa => villa.status === "ACTIVE").slice(0, limit);
+
   return (
     <Container fluid={true}>
       <SectionTitle title={<Heading content="Top Villas" />} />
       <div className='flex flex-wrap justify-start'>
-        {villas.length === 0 ? (
-          <div>Loading...</div> // Show loading only if villas are empty
+        {activeVillas.length === 0 ? (
+          <div>No active villas found.</div>
         ) : (
-          displayedVillas.map((villa) => (
+          activeVillas.map((villa) => (
             <PostGrid
               key={villa._id}
               title={villa.villa_name}
-              rating={4.5} // Assuming rating is not part of the villa data; adjust as necessary
-              location={{ formattedAddress: villa.address }} // Adjust according to your data structure
+              rating={4.5}
+              location={{ formattedAddress: villa.address }}
               price={villa.stiff_price}
-              ratingCount={10} // Assuming rating count is not part of the villa data; adjust as necessary
+              ratingCount={10}
               gallery={villa.url_image}
-              slug={villa._id} // Assuming you want to use the ID as a slug; adjust as necessary
-              link="/villas" // Adjust the base path as necessary
+              slug={villa._id}
+              link="/villas"
             />
           ))
         )}

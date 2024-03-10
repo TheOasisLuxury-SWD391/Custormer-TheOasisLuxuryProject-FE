@@ -10,12 +10,14 @@ import useDataApi from 'library/hooks/useDataApi';
 import { LISTING_POSTS_PAGE, SINGLE_POST_PAGE } from 'settings/constant';
 import PostGrid from 'components/ProductCard/ProductCard';
 import { VillaContext } from 'context/VillaContext';
+import { useSearch } from 'context/SearchContext';
 
 
 const ListingPage = () => {
   // const [villas, setVillas] = useState([]);
   const { width } = useWindowSize();
   const { villas } = useContext(VillaContext);
+  const { searchQuery } = useSearch();
 
   // Adjusting the limit based on screen width, similar to your existing logic
   let limit = 10;
@@ -29,26 +31,34 @@ const ListingPage = () => {
     limit = 10;
   }
 
-  const displayedVillas = villas.slice(0, limit);
+  // Lọc villas dựa trên searchQuery và chỉ hiển thị những villas có trạng thái là "ACTIVE"
+  const filteredVillas = villas.filter(villa => {
+    const isActive = villa.status === "ACTIVE";
+    const queryLower = searchQuery.toLowerCase();
+    const matchesName = villa.villa_name.toLowerCase().includes(queryLower);
+    const matchesAddress = villa.address.toLowerCase().includes(queryLower);
+    
+    return isActive && (matchesName || matchesAddress);
+  });
 
   return (
     <Container fluid={true}>
       <SectionTitle title={<Heading content="Listing Villas" />} />
       <div className='flex flex-wrap justify-start'>
-        {villas.length === 0 ? (
-          <div>Loading...</div> // Show loading only if villas are empty
+        {filteredVillas.length === 0 ? (
+          <div>Không tìm thấy địa điểm hay tên Villa mà bạn muốn.</div>
         ) : (
-          displayedVillas.map((villa) => (
+          filteredVillas.slice(0, limit).map((villa) => (
             <PostGrid
               key={villa._id}
               title={villa.villa_name}
-              rating={4.5} // Assuming rating is not part of the villa data; adjust as necessary
-              location={{ formattedAddress: villa.address }} // Adjust according to your data structure
+              rating={4.5}
+              location={{ formattedAddress: villa.address }}
               price={villa.stiff_price}
-              ratingCount={10} // Assuming rating count is not part of the villa data; adjust as necessary
+              ratingCount={10}
               gallery={villa.url_image}
-              slug={villa._id} // Assuming you want to use the ID as a slug; adjust as necessary
-              link="/villas" // Adjust the base path as necessary
+              slug={villa._id}
+              link="/villas"
             />
           ))
         )}

@@ -322,31 +322,25 @@ export const NavbarSearchWrapper = styled.div`
     box-sizing: border-box;
   }
 
-  .map_autocomplete {
-    width: 100%;
-  }
-
   input {
     font-size: 17px;
     font-weight: 700;
     padding-left: 15px;
-    padding-right: 30px;
+    padding-right: 50px; // Đủ không gian cho icon tìm kiếm
     border-radius: 4px;
     color: ${themeGet('text.0', '#2C2C2C')};
     border: 1px solid ${themeGet('border.0', '#EBEBEB')};
     background-color: ${themeGet('color.2', '#F7F7F7')};
     height: 50px;
     width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     transition: all 0.3s ease;
+
     @media (max-width: 1200px) {
       height: 48px;
     }
 
     &::placeholder {
-      color: rgb(72, 72, 72);
+      color: ${themeGet('text.1', '#909090')};
     }
 
     &:hover,
@@ -355,18 +349,25 @@ export const NavbarSearchWrapper = styled.div`
     }
   }
 
-  > svg {
+  > button {
     position: absolute;
-    z-index: 1;
-    top: auto;
-    right: 15px;
-    width: 20px;
-    height: 20px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
 
-    @media (max-width: 480px) {
-      right: 25px;
+    svg {
+      color: ${themeGet('text.1', '#909090')};
+      transition: color 0.3s;
+
+      &:hover {
+        color: ${themeGet('primary.0', '#008489')};
+      }
     }
   }
 `;
+
 
 export default HeaderWrapper;
