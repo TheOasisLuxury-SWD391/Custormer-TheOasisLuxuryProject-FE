@@ -54,7 +54,15 @@ const SinglePage = () => {
   } = details;
 
   // Transform data to fit existing component structure if necessary
-  const gallery = url_image ? url_image.map(url => ({ url })) : [];
+  const gallery = (url_image && Array.isArray(url_image) ? url_image : []).map((img) => ({
+    url: img, // Adjust according to your data structure
+    title: villa_name, // Optional: adjust as necessary
+  }))
+
+  const galleryItems = gallery.map((item) => ({
+    original: item.url,
+    thumbnail: item.url, // hoặc một đường dẫn thumbnail phù hợp nếu có
+  }));
 
 
   return (
@@ -69,7 +77,7 @@ const SinglePage = () => {
       <PostImage>
         <img
           className="absolute"
-          src="/images/single-post-bg.jpg"
+          src={url_image[0]}
           alt="Listing details page banner"
         />
         <Button
@@ -91,7 +99,7 @@ const SinglePage = () => {
           closable={false}
         >
           <Fragment>
-            <PostImageGallery />
+          <PostImageGallery items={galleryItems} />
             <Button
               onClick={() => setIsModalShowing(false)}
               className="image_gallery_close"

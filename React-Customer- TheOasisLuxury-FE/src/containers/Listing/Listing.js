@@ -46,10 +46,7 @@ const ListingPage = () => {
               location={{ formattedAddress: villa.address }} // Adjust according to your data structure
               price={villa.stiff_price}
               ratingCount={10} // Assuming rating count is not part of the villa data; adjust as necessary
-              gallery={(villa.url_image && Array.isArray(villa.url_image) ? villa.url_image : []).map((img) => ({
-                url: img, // Adjust according to your data structure
-                title: villa.villa_name, // Optional: adjust as necessary
-              }))}
+              gallery={villa.url_image}
               slug={villa._id} // Assuming you want to use the ID as a slug; adjust as necessary
               link="/villas" // Adjust the base path as necessary
             />

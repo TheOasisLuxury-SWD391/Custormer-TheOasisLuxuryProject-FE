@@ -3,22 +3,11 @@ import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import ImageGalleryWrapper from './ImageGallery.style';
 
-const images = [
-  {
-    original: '/images/post-image-1.jpg',
-    thumbnail: '/images/post-thumb-1.jpg',
-  },
-  {
-    original: '/images/post-image-2.jpg',
-    thumbnail: '/images/post-thumb-2.jpg',
-  },
-];
-
-const PostImageGallery = () => {
+const PostImageGallery = ({ items }) => {
   return (
     <ImageGalleryWrapper>
       <ImageGallery
-        items={images}
+        items={items}
         showPlayButton={false}
         showFullscreenButton={false}
         showIndex={true}
