@@ -138,8 +138,8 @@ const OrderDetailPage = () => {
 
 
   const handleContractSigning = () => {
-    if (villaDetail) {
-      navigate(`/orders/${orderId}/contract/`, { state: { orderId, idVillaDetail: villaDetail.result._id } });
+    if (villaDetail !== null && villaDetail.result && villaDetail.result._id) {
+      navigate(`/orders/${orderId}/contract/`, { state: { orderId, idVilla: villaDetail.result._id } });
     } else {
       // Handle the case where details are not available
       console.error('Villa details are not available');

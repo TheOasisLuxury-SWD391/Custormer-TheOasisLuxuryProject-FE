@@ -111,7 +111,7 @@ const BookingTimeShareForm = () => {
             const orderId = result.result.order; // result là phản hồi từ API
             // const contractId = result.result.contract; // result là phản hồi từ API
             const villaTimeshareId = result.result.villa_time_share; // result là phản hồi từ API
-            navigate(`/orders/${orderId}/contract`, { state: { orderId, villaTimeshareId, reservationDetails: reservationState } });
+            navigate(`/orders/${orderId}/contract`, { state: { orderId, villaTimeshareId, idVilla, reservationDetails: reservationState } });
         } catch (error) {
             console.error('Error during the fetch operation:', error);
         }
