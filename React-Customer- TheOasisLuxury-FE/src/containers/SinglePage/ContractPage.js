@@ -125,61 +125,67 @@ const ContractPage = () => {
     };
 
     const onFinish = async (values) => {
-        console.log('Received values of form: ', values);
-        console.log('Signature Data URL B: ', signatureB);
-        saveSignatureB();
-        const contractData = {
-            url_image: signatureB,
-            sign_contract: isSignatureSaved,
-        };
-
-        const userInfoToUpdate = {
-            date_provide_CCCD: values.date_provide_CCCD || "",
-            place_provide_CCCD: values.place_provide_CCCD || "",
-            CCCD: values.CCCD || "",
-            tax_code: values.tax_code || "",
-        };
-
-        try {
-            const token = localStorage.getItem('token');
-            const contractResponse = await fetch(`http://localhost:5000/api/v1/users/contracts/${contractId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(contractData),
-            });
-
-            if (!contractResponse.ok) {
-                throw new Error(`HTTP error! status: ${contractResponse.status}`);
+        if(villaDetail){
+            console.log('Received values of form: ', values);
+            console.log('Signature Data URL B: ', signatureB);
+            saveSignatureB();
+    
+            const contractData = {
+                orderId: orderId,
+                url_image: signatureB,
+                sign_contract: isSignatureSaved,
+                contract_name: villaDetail.result.villa_name,
+                status: 'PENDING',
+            };
+    
+            const userInfoToUpdate = {
+                date_provide_CCCD: values.date_provide_CCCD || "",
+                place_provide_CCCD: values.place_provide_CCCD || "",
+                CCCD: values.CCCD || "",
+                tax_code: values.tax_code || "",
+            };
+    
+            try {
+                const token = localStorage.getItem('token');
+                const contractResponse = await fetch('http://localhost:5000/api/v1/users/create-contract/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(contractData),
+                });
+    
+                if (!contractResponse.ok) {
+                    throw new Error(`HTTP error! status: ${contractResponse.status}`);
+                }
+    
+                const responseData = await contractResponse.json();
+                console.log("Contract created successfully", responseData);
+    
+                // Cập nhật thông tin người dùng sau khi lưu hợp đồng thành công
+                const userResponse = await fetch(`http://localhost:5000/api/v1/users/${user.user_id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(userInfoToUpdate),
+                });
+    
+                if (!userResponse.ok) {
+                    throw new Error(`HTTP error! status: ${userResponse.status}`);
+                }
+    
+                console.log("User info updated successfully");
+                toast.success("Contract and user info updated successfully");
+    
+                navigate(`/orders/${orderId}/payment`, { state: { orderId } });
+    
+            } catch (error) {
+                console.error('Error processing contract or updating order:', error);
             }
-
-            console.log("Contract updated successfully");
-
-            // Cập nhật thông tin người dùng sau khi lưu hợp đồng thành công
-            const userResponse = await fetch(`http://localhost:5000/api/v1/users/${user.user_id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify(userInfoToUpdate),
-            });
-
-            if (!userResponse.ok) {
-                throw new Error(`HTTP error! status: ${userResponse.status}`);
-            }
-
-            console.log("User info updated successfully");
-            toast.success("Contract and user info updated successfully");
-
-            navigate(`/orders/${orderId}/payment`, { state: { orderId } });
-
-        } catch (error) {
-            console.error('Error processing contract or updating order:', error);
         }
-
     };
 
     const showConfirmDialog = () => {
