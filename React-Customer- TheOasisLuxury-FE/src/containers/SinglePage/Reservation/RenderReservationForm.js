@@ -68,10 +68,10 @@ const RenderReservationForm = ({ pricePerWeek }) => {
       const totalWeeks = Math.ceil(totalDays / 7);
       const totalPrice = totalWeeks * pricePerWeek;
 
-      alert(`Start Date: ${startDate.format('YYYY-MM-DD')}
-             End Date: ${endDate.format('YYYY-MM-DD')}
-             Total Weeks: ${totalWeeks}
-             Total Price: $${totalPrice}`);
+      // alert(`Start Date: ${startDate.format('YYYY-MM-DD')}
+      //        End Date: ${endDate.format('YYYY-MM-DD')}
+      //        Total Weeks: ${totalWeeks}
+      //        Total Price: $${totalPrice}`);
       navigate("/villas/${slug}/order", {
         state: {
           startDate: startDate.format('YYYY-MM-DD'),

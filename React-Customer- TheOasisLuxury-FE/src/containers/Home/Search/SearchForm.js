@@ -65,6 +65,14 @@ export default function SearchForm() {
     setSelectedSubdivision(value);
   };
 
+  // Lấy ra các subdivisions của project được chọn
+  const getSubdivisionsOfSelectedProject = () => {
+    if (!selectedProject || !projects.length) return [];
+    const project = projects.find(p => p.project_name === selectedProject);
+    return project ? project.subdivisions : [];
+  };
+
+
 
 
   // navigate to the search page
@@ -117,8 +125,8 @@ export default function SearchForm() {
           onChange={onSubdivisionChange}
           disabled={!selectedProject || loadingSubdivisions}
         >
-          {subdivisions.map(subdivision => (
-            <Option key={subdivision.subdivision_name} value={subdivision.subdivision_name}>{subdivision.subdivision_name}</Option>
+          {getSubdivisionsOfSelectedProject().map(subdivision => (
+            <Option key={subdivision?.subdivision_name} value={subdivision?.subdivision_name}>{subdivision?.subdivision_name}</Option>
           ))}
         </Select>
       </ComponentWrapper>
