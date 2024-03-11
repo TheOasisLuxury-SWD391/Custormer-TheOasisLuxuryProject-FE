@@ -24,6 +24,8 @@ const OrderDetailPage = () => {
   const [orderDetail, setOrderDetail] = useState(null);
   const [villaTimeShareDetail, setVillaTimeShareDetail] = useState(null);
   const [villaDetail, setVillaDetail] = useState(null); // State mới để lưu thông tin villa
+  console.log('orderDetail',orderDetail);
+  console.log('villaTimeShareDetail',villaTimeShareDetail);
   console.log('villaDetail',villaDetail);
 
   const showConfirmDialog = () => {

@@ -143,7 +143,7 @@ const BookingTimeShareForm = () => {
                                 <Row gutter={16}>
                                     <Col span={8}>
                                         <div className="tour-image-container">
-                                            <img src={details.url_image} alt="Tour Image" className="tour-image" />
+                                            <img src={details.url_image[0]} alt="Tour Image" className="tour-image" />
                                         </div>
                                     </Col>
                                     <Col span={16}>
