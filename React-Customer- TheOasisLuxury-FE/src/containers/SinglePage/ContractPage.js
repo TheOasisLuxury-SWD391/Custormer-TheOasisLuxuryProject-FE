@@ -180,7 +180,7 @@ const ContractPage = () => {
                 console.log("User info updated successfully");
                 toast.success("Contract and user info updated successfully");
 
-                navigate(`/orders/${orderId}/payment`, { state: { orderId } });
+                navigate(`/orders/${orderId}/payment`, { state: { orderId, idVilla } });
 
             } catch (error) {
                 console.error('Error processing contract or updating order:', error);

@@ -18,8 +18,9 @@ const PaymentForm = ({ value }) => {
   const [paymentMethod, setPaymentMethod] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-  const { orderId } = location.state || {};
+  const { orderId, idVilla } = location.state || {};
   console.log('orderId', orderId)
+  console.log('idVilla', idVilla)
 
   const [orderDetail, setOrderDetail] = useState(null);
   console.log('orderDetail', orderDetail)
@@ -102,7 +103,7 @@ const PaymentForm = ({ value }) => {
 
   const handlePayment = () => {
     // Navigate to the invoice page
-    navigate(`/orders/${orderId}/invoice`);
+    navigate(`/invoice/${orderDetail?.invoice_id}`, { state: { orderId, idVilla } });
   };
 
   const handleChange = (value) => {
