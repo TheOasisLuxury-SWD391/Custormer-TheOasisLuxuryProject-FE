@@ -25,6 +25,7 @@ import {
   ORDER_HISTORY,
   ORDER_DETAIL,
   INVOICE_PAGE,
+  LISTING_FILTER_PAGE,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 import ContractPage from 'containers/SinglePage/ContractPage';
@@ -32,6 +33,7 @@ import PaymentForm from 'containers/SinglePage/PaymentPage';
 import HistoryOrder from 'containers/MyOrder/HistoryOrder';
 import OrderDetailPage from 'containers/MyOrder/OrderDetail';
 import InvoiceComponent from 'containers/SinglePage/Invoice/Invoice';
+import ListingFilterPage from 'containers/Listing/ListingFilter';
 
 // protected route
 function RequireAuth({ children }) {
@@ -113,6 +115,14 @@ export default function AppRoutes() {
           element={
             <React.Suspense fallback={<Loader />}>
               <SinglePageView />
+            </React.Suspense>
+          }
+        />
+         <Route
+          path={`${LISTING_FILTER_PAGE}`}
+          element={
+            <React.Suspense fallback={<Loader />}>
+              <ListingFilterPage />
             </React.Suspense>
           }
         />

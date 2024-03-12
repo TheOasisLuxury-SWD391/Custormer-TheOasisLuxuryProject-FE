@@ -10,6 +10,7 @@ import SearchForm from './SearchForm';
 import BannerWrapper, { SearchWrapper } from './Search.style';
 import { ProjectProvider } from 'context/ProjectContext';
 import { SubdivisionProvider } from 'context/SubdivisionContext';
+import { TimeSharesProvider } from 'context/TimeShareContext';
 
 const SearchArea = ({ searchTitleStyle, searchDescriptionStyle }) => {
   return (
@@ -45,7 +46,9 @@ const SearchArea = ({ searchTitleStyle, searchDescriptionStyle }) => {
           />
           <ProjectProvider>
             <SubdivisionProvider>
-              <SearchForm />
+              <TimeSharesProvider>
+                <SearchForm />
+              </TimeSharesProvider>
             </SubdivisionProvider>
           </ProjectProvider>
 
