@@ -162,7 +162,9 @@ export const ItemWrapper = styled.div`
 export const FormActionArea = styled.div`
   button.ant-btn-primary {
     width: 100%;
+    margin: 10px;
     height: 47px;
+    align-items: center;
     color: ${themeGet('color.1', '#ffffff')};
     font-size: 15px;
     font-weight: 700;
