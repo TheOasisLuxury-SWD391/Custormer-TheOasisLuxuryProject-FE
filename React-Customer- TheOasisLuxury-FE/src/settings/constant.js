@@ -4,6 +4,7 @@ export const AGENTS_PAGE = '/agents';
 
 // Listing Single Page Section
 export const LISTING_POSTS_PAGE = '/listing';
+export const LISTING_FILTER_PAGE = '/listing-filter';
 export const SINGLE_POST_PAGE = '/villas';
 
 // Agent Profile Page Section

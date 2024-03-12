@@ -14,7 +14,7 @@ import { useSearch } from 'context/SearchContext';
 import { useLocation } from 'react-router-dom';
 
 
-const ListingPage = () => {
+const ListingFilterPage = () => {
   const location = useLocation();
   const { width } = useWindowSize();
   const { villas } = useContext(VillaContext);
@@ -25,26 +25,30 @@ const ListingPage = () => {
   const villaIds = queryParameters.getAll('villas'); // 'villas' là tên tham số trong query string
 
   // Lọc villas dựa trên searchQuery và chỉ hiển thị những villas có trạng thái là "ACTIVE"
-  const filteredVillas = villas.filter(villa => {
-    if(villaIds){
-      villaIds.includes(villa._id)
-    }
-    const isActive = villa.status === "ACTIVE";
-    const queryLower = searchQuery.toLowerCase();
-    const matchesName = villa.villa_name.toLowerCase().includes(queryLower);
-    const matchesAddress = villa.address.toLowerCase().includes(queryLower);
+  // const filteredVillas = villas.filter(villa => {
+  //   if(villaIds){
+  //     villaIds.includes(villa._id)
+  //   }
+  //   const isActive = villa.status === "ACTIVE";
+  //   const queryLower = searchQuery.toLowerCase();
+  //   const matchesName = villa.villa_name.toLowerCase().includes(queryLower);
+  //   const matchesAddress = villa.address.toLowerCase().includes(queryLower);
 
-    return isActive && (matchesName || matchesAddress);
-  });
+  //   return isActive && (matchesName || matchesAddress);
+  // });
+  const filteredVillas = villas.filter(villa => villaIds.includes(villa._id));
+console.log('villaIds',villaIds);
+  // Khi không tìm thấy villa nào khớp với ID, hiển thị tất cả villas
+  const displayVillas = villaIds.length > 0 ? filteredVillas : villas;
 
   return (
     <Container fluid={true}>
-      <SectionTitle title={<Heading content="Listing Villas" />} />
+      <SectionTitle title={<Heading content="Listing By Filter Villas" />} />
       <div className='flex flex-wrap justify-start'>
         {filteredVillas.length === 0 ? (
           <div>Không tìm thấy địa điểm hay tên Villa mà bạn muốn.</div>
         ) : (
-          filteredVillas.slice(0).map((villa) => (
+          displayVillas.slice(0).map((villa) => (
             <PostGrid
               key={villa._id}
               title={villa.villa_name}
@@ -63,4 +67,4 @@ const ListingPage = () => {
   );
 };
 
-export default ListingPage;
+export default ListingFilterPage;

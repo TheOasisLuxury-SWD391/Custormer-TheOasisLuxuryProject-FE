@@ -9,7 +9,7 @@ import { mapDataHelper } from 'components/Map/mapDataHelper';
 import ViewWithPopup from 'components/UI/ViewWithPopup/ViewWithPopup';
 import InputIncDec from 'components/UI/InputIncDec/InputIncDec';
 import { setStateToUrl } from 'library/helpers/url_handler';
-import { LISTING_POSTS_PAGE } from 'settings/constant';
+import { LISTING_FILTER_PAGE} from 'settings/constant';
 import { ProjectContext } from 'context/ProjectContext';
 import { SubdivisionContext } from 'context/SubdivisionContext';
 import {
@@ -18,6 +18,8 @@ import {
   RoomGuestWrapper,
   ItemWrapper,
 } from './Search.style';
+import { VillaContext } from 'context/VillaContext';
+import { TimeSharesContext } from 'context/TimeShareContext';
 
 const calendarItem = {
   separator: '-',
@@ -33,7 +35,31 @@ export default function SearchForm() {
     setStartDate: null,
     setEndDate: null,
   });
+  const { villas } = useContext(VillaContext);
+  console.log('villas', villas);
+  const { fetchTimeShareDetails, timeShareDetails, loading } = useContext(TimeSharesContext);
 
+  const filterVillasBySubdivision = (villas, selectedSubdivisionId) => {
+    return villas.filter(villa => villa.subdivision_id === selectedSubdivisionId);
+  };
+
+  const filterVillasByDateRange = (villas, startDate, endDate) => {
+    return villas.filter(villa => {
+      if(villa?.timeShareDetails?.result){
+        const timeShareStartDate = new Date(villa.timeShareDetails.result.start_date);
+        const timeShareEndDate = new Date(villa.timeShareDetails.result.end_date);
+        return startDate >= timeShareStartDate && endDate <= timeShareEndDate;
+      }
+      return false;
+    });
+  };
+
+  
+  
+
+  // // Usage example:
+  // let filteredVillas = filterVillasBySubdivision(villas, selectedSubdivisionId);
+  // filteredVillas = filterVillasByDateRange(filteredVillas, selectedStartDate, selectedEndDate);
   // Assume these are fetched from the backend or defined statically
   const [selectedProject, setSelectedProject] = useState(undefined);
   const [selectedSubdivision, setSelectedSubdivision] = useState(undefined);
@@ -62,7 +88,7 @@ export default function SearchForm() {
   };
 
   const onSubdivisionChange = (value) => {
-    setSelectedSubdivision(value);
+    setSelectedSubdivision(value); // Giả sử giá trị value chính là ID của subdivision
   };
 
   // Lấy ra các subdivisions của project được chọn
@@ -72,32 +98,85 @@ export default function SearchForm() {
     return project ? project.subdivisions : [];
   };
 
-
-
-
-  // navigate to the search page
-  const goToSearchPage = () => {
-    let tempLocation = [];
-    const mapData = mapValue ? mapDataHelper(mapValue) : [];
-    mapData &&
-      mapData.map((singleMapData, i) => {
-        return tempLocation.push({
-          formattedAddress: singleMapData ? singleMapData.formattedAddress : '',
-          lat: singleMapData ? singleMapData.lat.toFixed(3) : null,
-          lng: singleMapData ? singleMapData.lng.toFixed(3) : null,
-        });
+  const fetchTimeShareDetailsForVillas = async (villas) => {
+    try {
+      const token = localStorage.getItem('token');
+      const timeShareDetailsPromises = villas.map(async (villa) => {
+        if (villa?.time_share_id) {
+          try {
+            const timeShareResponse = await fetch(`http://localhost:5000/api/v1/timeshares/${villa.time_share_id}`, {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            });
+            if (timeShareResponse.ok) {
+              const timeShareData = await timeShareResponse.json();
+              villa.timeShareDetails = timeShareData;
+            } else {
+              console.error(`Failed to fetch timeshare for villa ${villa._id}`);
+            }
+          } catch (error) {
+            console.error(`Error fetching timeshare for villa ${villa._id}:`, error);
+          }
+        }
       });
-    const location = tempLocation ? tempLocation[0] : {};
-    const query = {
-      date_range: searchDate,
-      location,
+  
+      await Promise.all(timeShareDetailsPromises);
+    } catch (error) {
+      console.error("Error fetching timeshare details for villas:", error);
+    }
+  };
+  
+  // Sau đó gọi hàm fetchTimeShareDetailsForVillas từ useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await fetchTimeShareDetailsForVillas(villas);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-    const search = setStateToUrl(query);
+  
+    fetchData();
+  }, [villas]);
+  
+
+
+
+
+  const goToSearchPage = () => {
+    // Convert the date range from the state to Date objects
+    const startDate = searchDate.setStartDate ? new Date(searchDate.setStartDate) : null;
+    const endDate = searchDate.setEndDate ? new Date(searchDate.setEndDate) : null;
+    // Ensure both start and end dates are selected
+    if (!startDate || !endDate || !selectedSubdivision) {
+      alert("Please select a subdivision and a valid date range.");
+      return;
+    }
+
+    // Apply the filtering
+    let filteredVillas = filterVillasBySubdivision(villas, selectedSubdivision);
+    console.log('filteredVillas',filteredVillas);
+    filteredVillas = filterVillasByDateRange(filteredVillas, startDate, endDate);
+    
+
+    // Prepare the query with the filtered villa IDs
+    const query = {
+      date_range: `${searchDate.setStartDate},${searchDate.setEndDate}`,
+      villas: filteredVillas.map(villa => villa._id),
+    };
+
+    // Generate the search string from the query object
+    const searchString = createSearchParams(query).toString();
+    console.log('searchString',searchString);
+
     navigate({
-      pathname: LISTING_POSTS_PAGE,
-      search: `?${createSearchParams(search)}`,
+      pathname: LISTING_FILTER_PAGE,
+      search: `?${searchString}`,
     });
   };
+
+
 
   return (
     <FormWrapper>
@@ -126,9 +205,10 @@ export default function SearchForm() {
           disabled={!selectedProject || loadingSubdivisions}
         >
           {getSubdivisionsOfSelectedProject().map(subdivision => (
-            <Option key={subdivision?.subdivision_name} value={subdivision?.subdivision_name}>{subdivision?.subdivision_name}</Option>
+            <Option key={subdivision._id} value={subdivision._id}>{subdivision.subdivision_name}</Option>
           ))}
         </Select>
+
       </ComponentWrapper>
 
       <ComponentWrapper>
