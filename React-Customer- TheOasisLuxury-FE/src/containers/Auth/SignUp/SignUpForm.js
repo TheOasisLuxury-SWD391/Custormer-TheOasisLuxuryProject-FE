@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { MdLockOpen } from 'react-icons/md';
@@ -8,28 +8,23 @@ import { AuthContext } from 'context/AuthProvider';
 import { FieldWrapper, SwitchWrapper, Label } from '../Auth.style';
 
 const SignUpForm = () => {
-  // const { signUp, isLoggedIn } = useContext(AuthContext);
-  // const {
-  //   control,
-  //   watch,
-  //   formState: { errors },
-  //   handleSubmit,
-  // } = useForm({
-  //   mode: 'onChange',
-  // });
-  const { handleRegister, isLoggedIn } = useContext(AuthContext); // Assuming handleRegister is your registration function
+
+  const { handleRegister } = useContext(AuthContext); // Assuming handleRegister is your registration function
   const { control, handleSubmit, watch, formState: { errors } } = useForm();
 
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
 
   const onSubmit = data => {
+    
     // Adjust data structure if necessary before sending to handleRegister
     const registerData = {
       ...data,
       birthday: data.birthday ? data.birthday.format('YYYY-MM-DD')  : null,
       user_name: data.username, // Assuming the API expects user_name instead of username
       confirm_password: data.confirmPassword,
+      phone_number: data.phone_number,
+      email: data.email,
     };
 
     console.log('registerData',registerData);
@@ -40,28 +35,25 @@ const SignUpForm = () => {
       return; // Prevent form submission
     }
 
-
     handleRegister(registerData); // Pass the adjusted data for registration
   };
 
-  // if (isLoggedIn) {
-  //   return <Navigate to="/" replace={true} />;
-  // }
 
 
 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl
+       <FormControl
         label="Full Name"
         htmlFor="full_name"
+        error={errors.full_name && "Vui lòng nhập họ tên của bạn"}
       >
         <Controller
           name="full_name"
           control={control}
           defaultValue=""
-          rules={{ required: true }} // Add validation rules as needed
+          rules={{ required: true }}
           render={({ field }) => <Input {...field} />}
         />
       </FormControl>
@@ -69,6 +61,7 @@ const SignUpForm = () => {
       <FormControl
         label="Birthday"
         htmlFor="birthday"
+        error={errors.birthday && "Vui lòng nhập ngày sinh của bạn"}
       >
         <Controller
           name="birthday"
@@ -81,29 +74,50 @@ const SignUpForm = () => {
       <FormControl
         label="Phone Number"
         htmlFor="phone_number"
+        error={errors.phone_number && "Vui lòng nhập số điện thoại của bạn"}
       >
         <Controller
           name="phone_number"
           control={control}
           defaultValue=""
-          rules={{ required: true }} // Add validation rules as needed
+          rules={{ 
+            required: true,
+            pattern: {
+              value: /^0\d{9}$/, // Bắt đầu bằng số 0 và có 11 chữ số
+              message: "Số điện thoại không hợp lệ",
+            }
+          }}  // Add validation rules as needed
           render={({ field }) => <Input {...field} />}
         />
       </FormControl>
 
       {/* Username Field */}
-      <FormControl label="Username" htmlFor="username">
+      <FormControl 
+        label="Username" 
+        htmlFor="username" 
+        error={errors.username && "Username phải bao gồm ít nhất 1 chữ và 1 số"}
+        >
         <Controller
           name="username"
           control={control}
           defaultValue=""
-          rules={{ required: true }}
+          rules={{ 
+            required: true,
+            minLength: {
+              value: 8,
+              message: "Username phải có ít nhất 8 ký tự",
+            },
+            pattern: {
+              value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, // Ít nhất 8 ký tự bao gồm chữ và số
+              message: "Username phải bao gồm ít nhất 1 chữ và 1 số",
+            }
+          }} 
           render={({ field }) => <Input {...field} />}
         />
       </FormControl>
 
       {/* Email Field */}
-      <FormControl label="Email" htmlFor="email">
+      <FormControl label="Email" htmlFor="email" error={errors.email && "Vui lòng nhập email của bạn"} >
         <Controller
           name="email"
           control={control}
@@ -111,13 +125,14 @@ const SignUpForm = () => {
           rules={{
             required: true,
             pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+            message: "Vui lòng nhập đúng email của bạn",
           }}
           render={({ field }) => <Input type="email" {...field} />}
         />
       </FormControl>
 
       {/* Password Field */}
-      <FormControl label="Password" htmlFor="password">
+      <FormControl label="Password" htmlFor="password" error={errors.password && "Vui lòng nhập password của bạn"}>
         <Controller
           name="password"
           control={control}
@@ -128,7 +143,7 @@ const SignUpForm = () => {
       </FormControl>
 
       {/* Confirm Password Field */}
-      <FormControl label="Confirm password" htmlFor="confirmPassword">
+      <FormControl label="Confirm password" htmlFor="confirmPassword" >
         <Controller  
           name="confirmPassword"
           control={control}
@@ -139,36 +154,17 @@ const SignUpForm = () => {
         />
         {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
       </FormControl>
-      <FieldWrapper>
-        <SwitchWrapper>
-          <Controller
-            name="rememberMe"
-            control={control}
-            defaultValue={false}
-            render={({ field }) => (
-              <Switch {...field} />
-            )}
-          />
-          <Label>Remember Me</Label>
-        </SwitchWrapper>
-        <SwitchWrapper>
-          <Controller
-            name="termsAndConditions"
-            control={control}
-            defaultValue={false}
-            render={({ field }) => (
-              <Switch {...field} />
-            )}
-          />
-          <Label>I agree with terms and conditions</Label>
-        </SwitchWrapper>
-      </FieldWrapper>
+      
+
+      
+      {/* Nút Đăng ký */}
       <Button
         className="signin-btn"
         type="primary"
         htmlType="submit"
         size="large"
         style={{ width: '100%' }}
+        // disabled={!termsAccepted} // Disable nút khi chưa đồng ý điều khoản
       >
         <MdLockOpen />
         Register
