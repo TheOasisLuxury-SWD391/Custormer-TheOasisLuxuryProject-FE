@@ -48,6 +48,7 @@ const BodyInvoice = ({ value }) => {
 
           <div className="mb-8">
             <div className="mb-2">
+              <h1 className='text-center text-lg font-bold'>MÃ HOÁ ĐƠN: {orderDetail.invoice_id}</h1>
               <h3 className="text-lg font-bold">Thông Tin Người Đặt</h3>
             </div>
             <div className="bg-white p-4 shadow rounded text-base">

@@ -1,64 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row, Table } from 'antd';
 import HeaderInvoice from './HeaderInvoice';
 import BodyInvoice from './BodyInvoice';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Container from 'components/UI/Container/Container';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
 import { BOOK_TIME_SHARE, CONTRACT_TIME_SHARE, HOME_PAGE, INVOICE_PAGE, LISTING_POSTS_PAGE, PAYMENT_FORM } from 'settings/constant';
 
-const invoiceData = {
-    villaName: 'Villa Sunset',
-    villaCode: 'VS123',
-    address: '123 Beachside, Beautiful Island',
-    project: 'Ocean Views',
-    sector: 'Luxury',
-    price: 10000000,
-    VAT: 10,
-    totalPrice: 11000000,
-};
+function getOrderStatusStyle(status) {
+    switch (status) {
+        case "PENDING":
+            return { backgroundColor: "orange", color: "white" };
+        case "CONFIRMED":
+            return { backgroundColor: "#007bff", color: "white" };
+        case "COMPLETED":
+            return { backgroundColor: "#28a745", color: "white" };
+        case "CANCELLED":
+            return { backgroundColor: "#dc3545", color: "white" };
+        default:
+            return {};
+    }
+}
 
-const columns = [
-    {
-        title: 'Mô tả',
-        dataIndex: 'description',
-        key: 'description',
-    },
-    {
-        title: 'Số lượng',
-        dataIndex: 'amount',
-        key: 'amount',
-    },
-    {
-        title: 'Đơn giá',
-        dataIndex: 'price',
-        key: 'price',
-    },
-    {
-        title: 'VAT',
-        dataIndex: 'vat',
-        key: 'vat',
-    },
-    {
-        title: 'Tổng cộng',
-        dataIndex: 'total',
-        key: 'total',
-    },
-];
-
-const dataSource = [
-    {
-        key: '1',
-        description: `Villa: ${invoiceData.villaName} (Mã: ${invoiceData.villaCode})`,
-        amount: 1,
-        price: `${invoiceData.price.toLocaleString()} VND`,
-        vat: `${invoiceData.VAT}%`,
-        total: `${invoiceData.totalPrice.toLocaleString()} VND`,
-    },
-];
-
-const InvoiceComponent = () => {
+const InvoiceComponent = (status) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { orderId, idVilla } = location.state || {};
+    console.log('orderId', orderId);
+
+    const [orderDetail, setOrderDetail] = useState(null);
+    console.log('orderDetail', orderDetail);
+
+
+
+    useEffect(() => {
+        const fetchOrderDetail = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/v1/orders/${orderId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const orderData = await response.json();
+                    setOrderDetail(orderData);
+                } else {
+                    console.error('Failed to fetch order detail:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching order detail:', error);
+            }
+        };
+
+        if (orderId) {
+            fetchOrderDetail();
+        }
+    }, [orderId]);
+
 
     const handleBackClick = () => {
         navigate(`/`);
@@ -82,12 +81,13 @@ const InvoiceComponent = () => {
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right mr-10"
                             onClick={handleBackClick}
-                        >
+                            >
                             Home
                         </button>
                     </Col>
                 </Row>
             </Container>
+            {orderDetail ? (
 
             <div className="p-8 bg-white shadow-md rounded w-3/4 mx-auto mt-10">
                 {/* Logo and company info here */}
@@ -101,15 +101,27 @@ const InvoiceComponent = () => {
                     <BodyInvoice />
                 </main>
                 <footer className="text-right mt-4">
-                    <div className="flex justify-end">
-                        <img
-                            src="https://png.pngtree.com/png-clipart/20230912/original/pngtree-paid-in-full-fully-invoiced-picture-image_13032550.png"
-                            alt="Stamp"
-                            className="w-2/6 object-cover"
-                        />
+                    <div className="flex justify-end text-xl">
+                        <p className='m-2'><strong>TRẠNG THÁI ĐƠN HÀNG:</strong></p>
+                        <p
+                            className="text-gray-600"
+                            style={{
+                                borderRadius: "5px",
+                                padding: "10px",
+                                ...getOrderStatusStyle(orderDetail.status),
+                            }}
+                        >
+                            {" "}
+                            {orderDetail.status === "PENDING" && "ĐANG CHỜ"}
+                            {orderDetail.status === "CONFIRMED" && "ĐÃ XÁC NHẬN ĐƠN"}
+                            {orderDetail.status === "COMPLETED" && "ĐÃ HOÀN THÀNH"}
+                            {orderDetail.status === "CANCELLED" && "ĐÃ HUỶ"}
+                        </p>
                     </div>
                 </footer>
-            </div>
+            </div>) :(
+                 <div>Loading...</div>
+            )}
         </div>
     );
 };
