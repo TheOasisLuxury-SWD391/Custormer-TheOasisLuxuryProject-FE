@@ -44,11 +44,16 @@ export default function SearchForm() {
   };
 
   const filterVillasByDateRange = (villas, startDate, endDate) => {
+    // Chuyển đối tượng Date thành chuỗi có định dạng ngày tháng năm
+    const startOfDayUTCStr = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())).toISOString().split('T')[0];
+    const endOfDayUTCStr = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())).toISOString().split('T')[0];
+    
     return villas.filter(villa => {
       if(villa?.timeShareDetails?.result){
-        const timeShareStartDate = new Date(villa.timeShareDetails.result.start_date);
-        const timeShareEndDate = new Date(villa.timeShareDetails.result.end_date);
-        return startDate >= timeShareStartDate && endDate <= timeShareEndDate;
+        const timeShareStartDate = new Date(villa.timeShareDetails.result.start_date).toISOString().split('T')[0];
+        const timeShareEndDate = new Date(villa.timeShareDetails.result.end_date).toISOString().split('T')[0];
+        debugger
+        return startOfDayUTCStr >= timeShareStartDate && endOfDayUTCStr <= timeShareEndDate;
       }
       return false;
     });

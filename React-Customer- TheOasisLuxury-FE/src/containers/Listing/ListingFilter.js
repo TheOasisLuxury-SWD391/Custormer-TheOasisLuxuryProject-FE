@@ -11,10 +11,13 @@ import { LISTING_POSTS_PAGE, SINGLE_POST_PAGE } from 'settings/constant';
 import PostGrid from 'components/ProductCard/ProductCard';
 import { VillaContext } from 'context/VillaContext';
 import { useSearch } from 'context/SearchContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Col, Row } from 'antd';
 
 
 const ListingFilterPage = () => {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const { width } = useWindowSize();
   const { villas } = useContext(VillaContext);
@@ -24,46 +27,48 @@ const ListingFilterPage = () => {
   const queryParameters = new URLSearchParams(location.search);
   const villaIds = queryParameters.getAll('villas'); // 'villas' là tên tham số trong query string
 
-  // Lọc villas dựa trên searchQuery và chỉ hiển thị những villas có trạng thái là "ACTIVE"
-  // const filteredVillas = villas.filter(villa => {
-  //   if(villaIds){
-  //     villaIds.includes(villa._id)
-  //   }
-  //   const isActive = villa.status === "ACTIVE";
-  //   const queryLower = searchQuery.toLowerCase();
-  //   const matchesName = villa.villa_name.toLowerCase().includes(queryLower);
-  //   const matchesAddress = villa.address.toLowerCase().includes(queryLower);
-
-  //   return isActive && (matchesName || matchesAddress);
-  // });
   const filteredVillas = villas.filter(villa => villaIds.includes(villa._id));
-console.log('villaIds',villaIds);
+  console.log('villaIds', villaIds);
   // Khi không tìm thấy villa nào khớp với ID, hiển thị tất cả villas
   const displayVillas = villaIds.length > 0 ? filteredVillas : villas;
 
+  const handleBackClick = () => {
+    navigate(`/`);
+  };
+
   return (
-    <Container fluid={true}>
-      <SectionTitle title={<Heading content="Listing By Filter Villas" />} />
-      <div className='flex flex-wrap justify-start'>
-        {filteredVillas.length === 0 ? (
-          <div>Không tìm thấy địa điểm hay tên Villa mà bạn muốn.</div>
-        ) : (
-          displayVillas.slice(0).map((villa) => (
-            <PostGrid
-              key={villa._id}
-              title={villa.villa_name}
-              rating={4.5}
-              location={{ formattedAddress: villa.address }}
-              price={villa.stiff_price}
-              ratingCount={10}
-              gallery={villa.url_image}
-              slug={villa._id}
-              link="/villas"
-            />
-          ))
-        )}
-      </div>
-    </Container>
+    <div>
+      <Container>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right"
+          onClick={handleBackClick}
+        >
+          Home
+        </button>
+      </Container>
+      <Container fluid={true}>
+        <SectionTitle title={<Heading content="Listing By Filter Villas" />} />
+        <div className='flex flex-wrap justify-start'>
+          {filteredVillas.length === 0 ? (
+            <div>Không tìm thấy địa điểm hay tên Villa mà bạn muốn.</div>
+          ) : (
+            displayVillas.slice(0).map((villa) => (
+              <PostGrid
+                key={villa._id}
+                title={villa.villa_name}
+                rating={4.5}
+                location={{ formattedAddress: villa.address }}
+                price={villa.stiff_price}
+                ratingCount={10}
+                gallery={villa.url_image}
+                slug={villa._id}
+                link="/villas"
+              />
+            ))
+          )}
+        </div>
+      </Container>
+    </div>
   );
 };
 
