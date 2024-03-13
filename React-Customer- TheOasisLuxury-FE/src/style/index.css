@@ -5,3 +5,6 @@
 .jNrfLo .sticky-outer-wrapper nav.is_transparent > div > div a img{
     opacity: 1 !important;
 }
+:where(.css-dev-only-do-not-override-15rg2km).ant-tabs .ant-tabs-tab-btn{
+        font-size: 20px; 
+}

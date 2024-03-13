@@ -118,6 +118,7 @@ const InvoiceComponent = (status) => {
                             {orderDetail.status === "CANCELLED" && "ĐÃ HUỶ"}
                         </p>
                     </div>
+                    <p className='m-4'><span className='text-rose-700 font-bold'>*</span> Đơn đặt hàng của bạn đang chờ xét duyệt bởi Nguyễn Văn Anh. Bạn vui lòng chờ đơn được duyệt trong khoảng 24h. <br/>Cảm ơn bạn đã tin tưởng dịch vụ của chúng tôi! Nếu có thắc mắc thì hãy liên hệ chúng tôi qua đường dây nóng 1900 2324.</p>
                 </footer>
             </div>) :(
                  <div>Loading...</div>
