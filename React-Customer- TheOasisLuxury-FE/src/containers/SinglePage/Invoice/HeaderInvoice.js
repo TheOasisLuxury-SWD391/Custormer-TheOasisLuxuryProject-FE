@@ -8,7 +8,7 @@ export default class HeaderInvoice extends Component {
         <div className='text-center text-lg mb-10'>
           <div className='flex justify-center font-bold'>
             <p className='w-10'><img src="/images/check-circle-s-svgrepo-com.svg"/></p>
-            <p className='m-4 '>ĐƠN CỦA BẠN ĐÃ ĐƯỢC ĐẶT ĐƠN THÀNH CÔNG</p>
+            <p className='m-4 '>ĐƠN CỦA BẠN ĐÃ ĐƯỢC ĐẶT THÀNH CÔNG</p>
           </div>
           <p>Hãy kiểm tra đơn hàng của bạn trong <a href={ORDER_HISTORY} className='text-cyan-700'>Lịch sử đơn hàng</a> của bạn.</p>
         </div>
