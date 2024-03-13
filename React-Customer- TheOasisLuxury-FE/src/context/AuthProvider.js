@@ -2,6 +2,7 @@ import React, { useState, createContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import ToastMessage from 'components/UI/ToastMessage';
+import { LOGIN_PAGE } from 'settings/constant';
 
 export const AuthContext = createContext();
 
@@ -23,18 +24,12 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [toast, setToast] = useState({ type: null, message: null });
 
-
   useEffect(() => {
     const savedUserName = localStorage.getItem('savedUserName');
     const savedPassword = localStorage.getItem('savedPassword');
     if (savedUserName && savedPassword) {
       setLoginData({ user_name: savedUserName, password: savedPassword });
       setRememberMe(true);
-    }
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      setIsLoggedIn(true);
     }
   }, []);
 
@@ -44,7 +39,7 @@ const AuthProvider = ({ children }) => {
   };
 
 
- const handleLogin = async (data, rememberMe) => {
+  const handleLogin = async (data, rememberMe) => {
     try {
       const response = await fetch('http://localhost:5000/api/v1/users/login/', {
         method: 'POST',
@@ -112,22 +107,22 @@ const AuthProvider = ({ children }) => {
       if (response.ok) {
         console.log('Registration successful');
         setToast({ type: 'success', message: 'Register success' });
-        setIsLoggedIn(true);
+        setIsLoggedIn(false);
         localStorage.setItem('token', data.result.access_token);
         localStorage.setItem('refresh_token', data.result.refresh_token);
-        navigate('/');
+        setToast({ type: 'success', message: 'Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.' });
+        navigate(LOGIN_PAGE);
       } else {
         console.error('Registration failed');
         // Xử lý và hiển thị lỗi chi tiết từ API
         const errorMessages = Object.values(data.errors).join(', ');
-          setToast({ type: 'error', message: errorMessages });
+        setToast({ type: 'error', message: errorMessages });
       }
     } catch (error) {
-      setToast({ type: 'error', message: 'Error during registration' });
+      setToast({ type: 'error', message: 'Đã xảy ra lỗi. Vui lòng thử lại sau!' });
       console.error('Error during registration:', error);
     }
   };
-  
 
   const getUserInfo = async (userId) => {
     try {
@@ -216,9 +211,14 @@ const AuthProvider = ({ children }) => {
   
 
   const logOut = () => {
-    localStorage.removeItem('token');  // Make sure this matches the key you use when setting the token
+    // Remove user_id and access_token from localStorage
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("token");
+    localStorage.removeItem("savedUserName");
+    localStorage.removeItem("savedPassword");
+    setUser({});
     setIsLoggedIn(false);
-    navigate('/login');
+    navigate(LOGIN_PAGE);
   };
 
 
@@ -233,8 +233,8 @@ const AuthProvider = ({ children }) => {
         updateUserInfo,
         getUserInfo,
         changePassWord,
-        setIsLoggedIn,
-        setLoginData,
+        setIsLoggedIn, // Provide setIsLoggedIn to update login state
+        setLoginData, // Optional: If you want to allow updating loginData from consumer components
       }}
     >
       {toast.message && <ToastMessage type={toast.type} content={toast.message} />}
