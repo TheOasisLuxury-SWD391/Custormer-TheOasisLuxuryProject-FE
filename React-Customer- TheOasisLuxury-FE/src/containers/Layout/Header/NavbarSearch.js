@@ -12,15 +12,12 @@ import { useSearch } from 'context/SearchContext';
 export default function NavbarSearch() {
   let navigate = useNavigate();
   let location = useLocation();
-  const { setSearchQuery } = useSearch();
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
   };
 
   const handleSearch = () => {
-    setSearchQuery(inputValue.trim());
     navigate(LISTING_POSTS_PAGE);
   };
  

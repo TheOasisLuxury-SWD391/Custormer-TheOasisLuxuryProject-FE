@@ -34,6 +34,7 @@ import HistoryOrder from 'containers/MyOrder/HistoryOrder';
 import OrderDetailPage from 'containers/MyOrder/OrderDetail';
 import InvoiceComponent from 'containers/SinglePage/Invoice/Invoice';
 import ListingFilterPage from 'containers/Listing/ListingFilter';
+import TabListing from 'containers/Listing/TabsListing';
 
 // protected route
 function RequireAuth({ children }) {
@@ -106,7 +107,7 @@ export default function AppRoutes() {
           path={LISTING_POSTS_PAGE}
           element={
             <React.Suspense fallback={<Loader />}>
-              <ListingPage />
+              <TabListing />
             </React.Suspense>
           }
         />

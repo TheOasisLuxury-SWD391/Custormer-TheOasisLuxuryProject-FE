@@ -21,7 +21,7 @@ const ListingFilterPage = () => {
   const location = useLocation();
   const { width } = useWindowSize();
   const { villas } = useContext(VillaContext);
-  const { searchQuery } = useSearch();
+  // const { searchQuery } = useSearch();
 
   // Lấy ra ID villas từ query string
   const queryParameters = new URLSearchParams(location.search);
