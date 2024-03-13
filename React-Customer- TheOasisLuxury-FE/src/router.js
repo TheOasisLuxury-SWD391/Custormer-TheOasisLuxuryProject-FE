@@ -26,6 +26,8 @@ import {
   ORDER_DETAIL,
   INVOICE_PAGE,
   LISTING_FILTER_PAGE,
+  CONTACT_PAGE,
+  POLICY_PAGE,
 } from './settings/constant';
 import BookingTimeShareForm from 'containers/SinglePage/BookTimeShare';
 import ContractPage from 'containers/SinglePage/ContractPage';
@@ -35,6 +37,8 @@ import OrderDetailPage from 'containers/MyOrder/OrderDetail';
 import InvoiceComponent from 'containers/SinglePage/Invoice/Invoice';
 import ListingFilterPage from 'containers/Listing/ListingFilter';
 import TabListing from 'containers/Listing/TabsListing';
+import Policy from 'containers/SinglePage/Policy/Policy';
+import Contact from 'containers/SinglePage/Contact/Contact';
 
 // protected route
 function RequireAuth({ children }) {
@@ -124,6 +128,22 @@ export default function AppRoutes() {
           element={
             <React.Suspense fallback={<Loader />}>
               <ListingFilterPage />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path={CONTACT_PAGE}
+          element={
+            <React.Suspense fallback={<Loader />}>
+              <Contact />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path={POLICY_PAGE}
+          element={
+            <React.Suspense fallback={<Loader />}>
+              <Policy />
             </React.Suspense>
           }
         />

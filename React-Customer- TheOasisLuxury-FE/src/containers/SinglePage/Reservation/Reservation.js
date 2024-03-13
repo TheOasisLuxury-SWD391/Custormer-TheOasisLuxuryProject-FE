@@ -7,18 +7,20 @@ import TextLink from 'components/UI/TextLink/TextLink';
 import RenderReservationForm from './RenderReservationForm';
 import { TimeSharesProvider } from 'context/TimeShareContext';
 
-const CardHeader = ({ price, priceStyle, pricePeriodStyle, linkStyle }) => {
+const formatter = value => `${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+const CardHeader = ({ price, priceStyle, pricePeriodStyle, linkStyle, value }) => {
   return (
     <Fragment>
       <Heading
         content={
           <Fragment>
-            ${price} <Text as="span" content="/ Weeks" {...pricePeriodStyle} />
+            {formatter(price)} <Text as="span" content="/ Tuần" {...pricePeriodStyle} />
           </Fragment>
         }
         {...priceStyle}
       />
-      <TextLink link="/#1" content="Contact Hotel" {...linkStyle} />
+      <TextLink link="/#1" content="Liên hệ" {...linkStyle} />
     </Fragment>
   );
 };

@@ -5,9 +5,8 @@ import { Menu } from 'antd';
 import {
   HOME_PAGE,
   LISTING_POSTS_PAGE,
-  PRIVACY_PAGE,
-  PRICING_PLAN_PAGE,
-  AGENT_PROFILE_PAGE,
+  CONTACT_PAGE,
+  POLICY_PAGE,
 } from 'settings/constant';
 
 const navigations = [
@@ -20,17 +19,17 @@ const navigations = [
     key: 'listing',
   },
   {
-    label: <NavLink to={`${PRICING_PLAN_PAGE}`}>Pricing</NavLink>,
-    key: 'pricing',
+    label: <NavLink to={`${CONTACT_PAGE}`}>Contact</NavLink>,
+    key: 'contact',
   },
   {
-    label: <NavLink to={`${PRIVACY_PAGE}`}>Privacy</NavLink>,
-    key: 'privacy',
+    label: <NavLink to={`${POLICY_PAGE}`}>Policy</NavLink>,
+    key: 'policy',
   },
-  {
-    label: <NavLink to={`${AGENT_PROFILE_PAGE}`}>Agent</NavLink>,
-    key: 'agent',
-  },
+  // {
+  //   label: <NavLink to={`${AGENT_PROFILE_PAGE}`}>Agent</NavLink>,
+  //   key: 'agent',
+  // },
 ];
 
 const FooterMenu = () => {

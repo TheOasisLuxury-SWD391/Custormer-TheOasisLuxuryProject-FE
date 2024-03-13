@@ -21,6 +21,7 @@ const responsive = {
     items: 1,
   },
 };
+const formatter = value => `${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 const PostGrid = ({
   title,
@@ -31,6 +32,7 @@ const PostGrid = ({
   gallery,
   slug,
   link,
+  value
 }) => {
   return (
     <GridCard
@@ -39,7 +41,7 @@ const PostGrid = ({
       favorite={<Favourite onClick={(event) => console.log(event)} />}
       location={location.formattedAddress}
       title={<TextLink link={`${link}/${slug}`} content={title} />}
-      price={`$${price}/Night - Free Cancellation`}
+      price={`${formatter(price)}/ Tuần - Free Cancellation`}
       rating={<Rating rating={rating} ratingCount={ratingCount} type="bulk" />}
       viewDetailsBtn={<TextLink link={`${link}/${slug}`} icon={<FiExternalLink />} content="View Details" />}
     >

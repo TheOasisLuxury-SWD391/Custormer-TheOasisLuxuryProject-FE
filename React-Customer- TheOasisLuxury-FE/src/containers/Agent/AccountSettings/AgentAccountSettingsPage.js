@@ -23,10 +23,10 @@ const navigations = [
     label: <NavLink to={AGENT_ACCOUNT_SETTINGS_PAGE}>Edit Profile</NavLink>,
     key: 'edit_profile',
   },
-  {
-    label: <NavLink to={AGENT_IMAGE_EDIT_PAGE}>Change Photos</NavLink>,
-    key: 'change_photos',
-  },
+  // {
+  //   label: <NavLink to={AGENT_IMAGE_EDIT_PAGE}>Change Photos</NavLink>,
+  //   key: 'change_photos',
+  // },
   {
     label: <NavLink to={AGENT_PASSWORD_CHANGE_PAGE}>Change Password</NavLink>,
     key: 'change_password',
@@ -75,7 +75,7 @@ export default function AgentAccountSettingsPage() {
             <AccountSidebar>
               <AgentAvatar>
                 <Avatar
-                  src="http://s3.amazonaws.com/redqteam.com/isomorphic-reloaded-image/profilepic.png"
+                  src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
                   alt="avatar"
                 />
                 <ContentWrapper>
