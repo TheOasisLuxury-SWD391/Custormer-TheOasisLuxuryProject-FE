@@ -52,7 +52,6 @@ export default function SearchForm() {
       if(villa?.timeShareDetails?.result){
         const timeShareStartDate = new Date(villa.timeShareDetails.result.start_date).toISOString().split('T')[0];
         const timeShareEndDate = new Date(villa.timeShareDetails.result.end_date).toISOString().split('T')[0];
-        debugger
         return startOfDayUTCStr >= timeShareStartDate && endOfDayUTCStr <= timeShareEndDate;
       }
       return false;

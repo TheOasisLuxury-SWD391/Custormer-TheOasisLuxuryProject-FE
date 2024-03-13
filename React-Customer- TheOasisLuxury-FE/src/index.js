@@ -9,7 +9,6 @@ import { VillaProvider } from 'context/VillaContext';
 import AppRoutes from './router';
 import 'antd/dist/reset.css';
 import './style/index.css';
-import { SearchProvider } from 'context/SearchContext';
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -18,9 +17,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <VillaProvider> {/* Wrap AppRoutes with VillaProvider */}
-            <SearchProvider>
               <AppRoutes />
-            </SearchProvider>
           </VillaProvider>
         </AuthProvider>
       </BrowserRouter>

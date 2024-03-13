@@ -76,7 +76,7 @@ export default function Header() {
             avatar={<Logo src={avatarImg} />}
             profileMenu={<ProfileMenu avatar={<Logo src={avatarImg} />} />}
             headerType={headerType}
-            searchComponent={<NavbarSearch />}
+            // searchComponent={<NavbarSearch />}
             location={location}
             searchVisibility={searchVisibility}
           />
@@ -92,7 +92,7 @@ export default function Header() {
                   title="The Oasis Luxury"
                 />
               </>
-              <NavbarSearch />
+              {/* <NavbarSearch /> */}
             </LogoArea>
             <Button
               className={`hamburg-btn ${state ? 'active' : ''}`}
