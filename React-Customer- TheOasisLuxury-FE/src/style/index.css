@@ -8,3 +8,7 @@
 :where(.css-dev-only-do-not-override-15rg2km).ant-tabs .ant-tabs-tab-btn{
         font-size: 20px; 
 }
+.ant-message {
+    position: fixed; /* Đảm bảo message luôn hiển thị trên cùng khi cuộn */
+    top: 120px !important; /* Điều chỉnh khoảng cách từ bottom của trình duyệt */
+  }

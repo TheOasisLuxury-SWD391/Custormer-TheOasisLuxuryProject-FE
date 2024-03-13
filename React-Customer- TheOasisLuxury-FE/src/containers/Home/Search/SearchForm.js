@@ -58,13 +58,7 @@ export default function SearchForm() {
     });
   };
 
-  
-  
 
-  // // Usage example:
-  // let filteredVillas = filterVillasBySubdivision(villas, selectedSubdivisionId);
-  // filteredVillas = filterVillasByDateRange(filteredVillas, selectedStartDate, selectedEndDate);
-  // Assume these are fetched from the backend or defined statically
   const [selectedProject, setSelectedProject] = useState(undefined);
   const [selectedSubdivision, setSelectedSubdivision] = useState(undefined);
 

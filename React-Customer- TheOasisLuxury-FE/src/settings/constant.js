@@ -28,6 +28,8 @@ export const BOOK_TIME_SHARE = '/villas/:slug/order';
 export const CONTRACT_TIME_SHARE = '/orders/:orderId/contract';
 export const PAYMENT_FORM = '/orders/:orderId/payment';
 export const INVOICE_PAGE = '/invoice/:id';
+export const CONTACT_PAGE = '/contact';
+export const POLICY_PAGE = '/policy';
 
 // Login / Registration Page
 export const LOGIN_PAGE = '/sign-in';

@@ -21,9 +21,12 @@ const ContractPage = () => {
     const sigPadB = useRef(null);
     const navigate = useNavigate();
     const location = useLocation()
-    const { orderId, contractId, villaTimeshareId, reservationDetails, idVilla } = location.state;
+    const { orderId, villaTimeshareId, reservationDetails, idVilla } = location.state;
 
     const [villaDetail, setVillaDetail] = useState(null); // State mới để lưu thông tin villa
+    const [contractId, setContractId] = useState(null); // State mới để lưu thông tin villa
+    console.log('contractId._id',contractId);
+
 
     console.log('villaDetail', villaDetail);
 
@@ -79,6 +82,32 @@ const ContractPage = () => {
 
         if (orderId) {
             fetchOrderDetail();
+        }
+    }, [orderId]);
+
+        // Lấy id contract
+    useEffect(() => {
+        const fetchContractId = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`http://localhost:5000/api/v1/users/contracts/${orderId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                if (response.ok) {
+                    const contractID = await response.json();
+                    setContractId(contractID);
+                } else {
+                    console.error('Failed to fetch order detail:', response.status);
+                }
+            } catch (error) {
+                console.error('Error fetching order detail:', error);
+            }
+        };
+
+        if (orderId) {
+            fetchContractId();
         }
     }, [orderId]);
 
@@ -147,8 +176,8 @@ const ContractPage = () => {
 
             try {
                 const token = localStorage.getItem('token');
-                const contractResponse = await fetch('http://localhost:5000/api/v1/users/create-contract/', {
-                    method: 'POST',
+                const contractResponse = await fetch(`http://localhost:5000/api/v1/users/contracts/${contractId._id}`, {
+                    method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,

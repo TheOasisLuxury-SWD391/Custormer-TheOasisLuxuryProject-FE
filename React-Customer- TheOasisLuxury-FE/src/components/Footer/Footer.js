@@ -12,7 +12,7 @@ const Footer = ({ logo, menu, bgSrc, copyright, className, path }) => {
       <FooterWrapper id="footer" className={className} bg-img={bgSrc}>
         {logo && logo}
         {menu && <MenuWrapper>{menu}</MenuWrapper>}
-        {copyright && <CopyrightArea>{copyright}</CopyrightArea>}
+        {/* {copyright && <CopyrightArea>{copyright}</CopyrightArea>} */}
       </FooterWrapper>
       {!!path && <SecondaryFooter />}
     </>

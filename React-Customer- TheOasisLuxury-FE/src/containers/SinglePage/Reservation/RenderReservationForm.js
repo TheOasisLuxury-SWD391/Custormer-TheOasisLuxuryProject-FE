@@ -12,7 +12,10 @@ import { TimeSharesContext } from 'context/TimeShareContext.js';
 
 const { RangePicker } = DatePicker;
 
-const RenderReservationForm = ({ pricePerWeek }) => {
+const formatter = value => `${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+
+const RenderReservationForm = ({ pricePerWeek, value }) => {
   const navigate = useNavigate();
   // Get id API Villa
   const { villaDetails } = useContext(VillaContext);
@@ -44,7 +47,7 @@ const RenderReservationForm = ({ pricePerWeek }) => {
 
   const disabledDate = (current) => {
     // Vô hiệu hóa ngày nếu không nằm trong khoảng cho phép hoặc deflag là true
-    return detailsTimeShare.deflag || (current && (current < moment(detailsTimeShare.start_date) || current > moment(detailsTimeShare.end_date)));
+    return detailsTimeShare?.deflag || (current && (current < moment(detailsTimeShare?.start_date) || current > moment(detailsTimeShare?.end_date)));
   };
 
   const [totalPrice, setTotalPrice] = useState(0);
@@ -99,7 +102,7 @@ const RenderReservationForm = ({ pricePerWeek }) => {
       </FieldWrapper>
       <FieldWrapper>
         <HtmlLabel htmlFor="totalPrice" content="Total Price: " />
-        <strong>${totalPrice}</strong>
+        <strong>{formatter(totalPrice)}</strong>
       </FieldWrapper>
       <FormActionArea>
         <Button htmlType="submit" type="primary">

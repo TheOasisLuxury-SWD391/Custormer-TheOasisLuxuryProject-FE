@@ -25,7 +25,7 @@ import HeaderWrapper, {
   LogoArea,
 } from './Header.style';
 
-const avatarImg = `http://s3.amazonaws.com/redqteam.com/isomorphic-reloaded-image/profilepic.png`;
+const avatarImg = `https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=`;
 const LogoIcon = () => (
   <svg width="25" height="27.984" viewBox="0 0 25 27.984">
     <g transform="translate(0 0)">

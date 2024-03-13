@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Input, Button, DatePicker, Select, InputNumber, Row, Col, Typography } from 'antd';
+import { Input, Button, DatePicker, Select, InputNumber, Row, Col, Typography, message } from 'antd';
 import Container from 'components/UI/Container/Container';
 import Card from 'components/UI/Card/Card';
 import { AuthContext } from 'context/AuthProvider.js';
@@ -9,14 +9,17 @@ import Policy from './Policy/Policy';
 import { FormActionArea } from './Reservation/Reservation.style';
 import BackButton from 'components/UI/ButtonBACK';
 import Breadcrumbs from 'components/UI/Breadcrumbs';
-import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE } from 'settings/constant';
+import { BOOK_TIME_SHARE, HOME_PAGE, LISTING_POSTS_PAGE, LOGIN_PAGE } from 'settings/constant';
+
 
 
 const { Title, Text } = Typography;
+const formatter = value => `${value} VND`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
 
 // const { Option } = Select;
 
-const BookingTimeShareForm = () => {
+const BookingTimeShareForm = ({ value }) => {
     const { user, getUserInfo } = useContext(AuthContext);
     const [userInfo, setUserInfo] = useState({});
     const { villaDetails } = useContext(VillaContext);
@@ -24,6 +27,7 @@ const BookingTimeShareForm = () => {
     const idVilla = villaDetails && Object.keys(villaDetails)[0];
     const details = villaDetails[idVilla];
     console.log('details', details); 
+
 
 
     // Form state
@@ -103,16 +107,20 @@ const BookingTimeShareForm = () => {
             });
 
             if (!response.ok) {
-
+                document.getElementById("bottom").scrollIntoView({ behavior: "smooth" });
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const result = await response.json();
             const orderId = result.result.order; // result là phản hồi từ API
+            console.log('orderId của Book',orderId);
             // const contractId = result.result.contract; // result là phản hồi từ API
             const villaTimeshareId = result.result.villa_time_share; // result là phản hồi từ API
             navigate(`/orders/${orderId}/contract`, { state: { orderId, villaTimeshareId, idVilla, reservationDetails: reservationState } });
         } catch (error) {
+            message.error('Vui lòng Đăng nhập / Đăng ký để tiếp tục');
+            navigate({LOGIN_PAGE}); 
+            document.getElementById("bottom").scrollIntoView({ behavior: "smooth" });
             console.error('Error during the fetch operation:', error);
         }
     };
@@ -126,7 +134,7 @@ const BookingTimeShareForm = () => {
 
 
     return (
-        <div>
+        <div className='mt-10'>
             <Container>
                 <Row gutter={30} id="tourOverviewSection" style={{ marginTop: 30 }}>
                     <Col span={24} className='flex'>
@@ -227,12 +235,12 @@ const BookingTimeShareForm = () => {
                                 <Input.TextArea rows={4} id="description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Mô tả cho đơn hàng" />
                             </div>
                             <div className='flex text-xl font-bold text-center text-cyan-700'>
-                                <p className='mr-4'>Tổng tiền: </p> <p>${reservationState?.totalPrice || 'Default Price'}</p>
+                                <p className='mr-4'>Tổng tiền: </p> <p>{formatter(reservationState?.totalPrice || 'Default Price')}</p>
                             </div>
 
                             {/* Submit Button */}
                             {/* <div className="items-center justify-betwee w-full"> */}
-                            <FormActionArea>
+                            <FormActionArea id="bottom">
                                 <Button type="primary" htmlType="submit" className='w-full'>
                                     ĐẶT NGAY
                                 </Button>
