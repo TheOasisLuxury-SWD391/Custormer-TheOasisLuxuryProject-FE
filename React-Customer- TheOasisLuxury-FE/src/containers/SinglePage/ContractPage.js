@@ -191,24 +191,26 @@ const ContractPage = () => {
 
                 const responseData = await contractResponse.json();
                 console.log("Contract created successfully", responseData);
-
-                // Cập nhật thông tin người dùng sau khi lưu hợp đồng thành công
-                const userResponse = await fetch(`http://localhost:5000/api/v1/users/${user.user_id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(userInfoToUpdate),
-                });
-
-                if (!userResponse.ok) {
-                    throw new Error(`HTTP error! status: ${userResponse.status}`);
-                }
-
-                console.log("User info updated successfully");
-                toast.success("Contract and user info updated successfully");
-
+                // if(user){
+                //     console.log('user',user);
+                //     // Cập nhật thông tin người dùng sau khi lưu hợp đồng thành công
+                //     const userResponse = await fetch(`http://localhost:5000/api/v1/users/${user.user_id}`, {
+                //         method: 'PATCH',
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //             'Authorization': `Bearer ${token}`,
+                //         },
+                //         body: JSON.stringify(userInfoToUpdate),
+                //     });
+    
+                //     if (!userResponse.ok) {
+                //         throw new Error(`HTTP error! status: ${userResponse.status}`);
+                //     }
+    
+                //     console.log("User info updated successfully");
+                //     toast.success("Contract and user info updated successfully");
+    
+                // }
                 navigate(`/orders/${orderId}/payment`, { state: { orderId, idVilla } });
 
             } catch (error) {

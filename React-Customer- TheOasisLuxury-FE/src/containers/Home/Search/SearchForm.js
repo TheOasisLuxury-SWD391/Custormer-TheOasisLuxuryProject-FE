@@ -44,19 +44,42 @@ export default function SearchForm() {
   };
 
   const filterVillasByDateRange = (villas, startDate, endDate) => {
-    // Chuyển đối tượng Date thành chuỗi có định dạng ngày tháng năm
     const startOfDayUTCStr = new Date(Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())).toISOString().split('T')[0];
     const endOfDayUTCStr = new Date(Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())).toISOString().split('T')[0];
     
     return villas.filter(villa => {
-      if(villa?.timeShareDetails?.result){
-        const timeShareStartDate = new Date(villa.timeShareDetails.result.start_date).toISOString().split('T')[0];
-        const timeShareEndDate = new Date(villa.timeShareDetails.result.end_date).toISOString().split('T')[0];
-        return startOfDayUTCStr >= timeShareStartDate && endOfDayUTCStr <= timeShareEndDate;
-      }
-      return false;
+      if (!villa?.timeShareDetails?.result) return false;
+    
+      const timeShareStartDate = new Date(villa?.timeShareDetails?.result?.start_date).toISOString().split('T')[0];
+      const timeShareEndDate = new Date(villa?.timeShareDetails?.result?.end_date).toISOString().split('T')[0];
+      
+      // Kiểm tra xem ngày được chọn có nằm trong khoảng thời gian của cha không
+      const isWithinParentRange = startOfDayUTCStr >= timeShareStartDate && endOfDayUTCStr <= timeShareEndDate;
+      
+      if (!isWithinParentRange) return false;
+    
+      const timeShareChildren = villa?.timeShareDetails?.result?.time_share_child || [];
+      // Kiểm tra nếu timeshare cha không có child nào thì không áp dụng ràng buộc thêm
+      if (timeShareChildren.length === 0) return true;
+  
+      // Lọc các time_share_child hợp lệ (deflag === true)
+      const validTimeShares = timeShareChildren.filter(child => child.deflag === true);
+    
+      // Nếu không có time_share_child hợp lệ, trả về true để không vô hiệu hóa villa này
+      if (validTimeShares.length === 0) return true;
+  
+      // Kiểm tra xem có ít nhất một time_share_child hợp lệ nằm trong khoảng thời gian được chọn không
+      const isValidChildRange = validTimeShares.some(child => {
+        const childStartDate = new Date(child.start_date).toISOString().split('T')[0];
+        const childEndDate = new Date(child.end_date).toISOString().split('T')[0];
+        return startOfDayUTCStr <= childStartDate && endOfDayUTCStr >= childEndDate;
+      });
+    
+      return isValidChildRange;
     });
   };
+  
+  
 
 
   const [selectedProject, setSelectedProject] = useState(undefined);

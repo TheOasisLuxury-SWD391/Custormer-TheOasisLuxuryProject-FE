@@ -70,7 +70,7 @@ const Blog = () => {
         {groupedBlogPosts.map((group, index) => (
           <div key={index} className="!flex justify-around items-center p-5 ">
             {group.map((post) => (
-              <div key={post._id} className="text-center p-4 w-80 h-96 rounded-md transition-shadow duration-300 ease-in-out hover:shadow-2xl" onClick={() => handleClick(post._id)}>
+              <div key={post._id} className="text-center p-4 w-80  h-fit rounded-md transition-shadow duration-300 ease-in-out hover:shadow-2xl" onClick={() => handleClick(post._id)}>
                 <img src={post.url_image} alt={post.title} className="w-full rounded h-48 object-cover mx-auto" />
                 <h2 className="text-xl font-bold mt-2 cursor-pointer">{post.title}</h2>
                 <p className="text-gray-700 text-base">{post.description_detail}</p>

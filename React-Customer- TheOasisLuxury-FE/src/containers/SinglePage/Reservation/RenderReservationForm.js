@@ -44,11 +44,25 @@ const RenderReservationForm = ({ pricePerWeek, value }) => {
     detailsTimeShare ? moment(detailsTimeShare.end_date) : null,
   ]);
 
+  const disabledDates = detailsTimeShare?.time_share_child
+  ?.filter(child => child.deflag === true) // Lọc những child có deflag là true
+  ?.map(child => ({
+    start: child.start_date.split('T')[0], // Format ngày theo YYYY-MM-DD
+    end: child.end_date.split('T')[0],
+  }));
 
-  const disabledDate = (current) => {
-    // Vô hiệu hóa ngày nếu không nằm trong khoảng cho phép hoặc deflag là true
-    return detailsTimeShare?.deflag || (current && (current < moment(detailsTimeShare?.start_date) || current > moment(detailsTimeShare?.end_date)));
-  };
+const disabledDate = (current) => {
+  // Format ngày hiện tại để so sánh
+  const currentDateStr = current.format('YYYY-MM-DD');
+
+  // Kiểm tra nếu ngày hiện tại không nằm trong khoảng cho phép của parent
+  if (currentDateStr < detailsTimeShare?.start_date.split('T')[0] || currentDateStr > detailsTimeShare?.end_date.split('T')[0]) {
+    return true;
+  }
+
+  // Kiểm tra nếu ngày hiện tại nằm trong bất kỳ khoảng thời gian nào của child có deflag là true
+  return disabledDates?.some(({ start, end }) => currentDateStr >= start && currentDateStr <= end);
+};
 
   const [totalPrice, setTotalPrice] = useState(0);
 
