@@ -5,6 +5,7 @@ import LocationGrid from './Location/Location';
 import { LayoutContext } from 'context/LayoutProvider';
 import { Waypoint } from 'react-waypoint';
 import { SubdivisionProvider } from 'context/SubdivisionContext';
+import Blog from './Blog/Blog';
 
 const Home = () => {
   const [, dispatch] = useContext(LayoutContext);
@@ -19,6 +20,7 @@ const Home = () => {
         <LocationGrid />
       </SubdivisionProvider>
       <TopVillasGrid />
+      <Blog />
       {/* <LuxaryHotelsGrid /> */}
     </>
   );

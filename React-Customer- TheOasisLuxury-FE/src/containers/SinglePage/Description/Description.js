@@ -27,9 +27,6 @@ const Description = ({
           <Rating rating={rating} ratingCount={ratingCount} type="bulk" />
         </RatingMeta>
         <Text content={content} {...contentStyle} />
-        <TextButton>
-          <Button>Read more about the hotel</Button>
-        </TextButton>
       </DescriptionWrapper>
     </Element>
   );

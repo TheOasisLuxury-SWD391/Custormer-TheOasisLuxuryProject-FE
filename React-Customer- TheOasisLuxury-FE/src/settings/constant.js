@@ -30,6 +30,7 @@ export const PAYMENT_FORM = '/orders/:orderId/payment';
 export const INVOICE_PAGE = '/invoice/:id';
 export const CONTACT_PAGE = '/contact';
 export const POLICY_PAGE = '/policy';
+export const BLOG_DETAIL_PAGE = '/blog-detail';
 
 // Login / Registration Page
 export const LOGIN_PAGE = '/sign-in';

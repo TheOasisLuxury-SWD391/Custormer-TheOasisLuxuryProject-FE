@@ -22,6 +22,8 @@ function getOrderStatusStyle(status) {
     }
 }
 
+
+
 const InvoiceComponent = (status) => {
     const navigate = useNavigate();
     const location = useLocation();

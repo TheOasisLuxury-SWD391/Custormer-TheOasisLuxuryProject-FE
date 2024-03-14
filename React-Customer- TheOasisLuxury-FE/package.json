@@ -2,6 +2,7 @@
   "name": "@tripfinder/hotel-cra",
   "version": "5.0.1",
   "dependencies": {
+    "@ant-design/icons": "^5.3.1",
     "@glidejs/glide": "^3.6.0",
     "@react-google-maps/api": "^2.18.1",
     "@styled-system/theme-get": "^5.1.2",

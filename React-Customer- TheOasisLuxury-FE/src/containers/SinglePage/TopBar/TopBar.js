@@ -16,18 +16,18 @@ const topBarMenu = [
     name: 'Overview',
     target: 'overview',
   },
-  {
-    name: 'Amenities',
-    target: 'amenities',
-  },
-  {
-    name: 'Location',
-    target: 'location',
-  },
-  {
-    name: 'Reviews',
-    target: 'reviews',
-  },
+  // {
+  //   name: 'Amenities',
+  //   target: 'amenities',
+  // },
+  // {
+  //   name: 'Location',
+  //   target: 'location',
+  // },
+  // {
+  //   name: 'Reviews',
+  //   target: 'reviews',
+  // },
 ];
 
 const SideButtons = (props) => {

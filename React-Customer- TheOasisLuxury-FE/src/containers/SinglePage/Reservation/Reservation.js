@@ -33,7 +33,7 @@ export default function Reservation({ price }) {
       content={<TimeSharesProvider><RenderReservationForm pricePerWeek={price} /></TimeSharesProvider>}
       footer={
         <p>
-          Special offers available. <TextLink to="/#1" content="See details" />
+          Hãy lựa chọn thời gian bạn muốn mua kỳ nghỉ trong khoảng thời gian cho phép!
         </p>
       }
     />

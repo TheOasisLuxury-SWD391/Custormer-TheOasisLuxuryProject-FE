@@ -117,55 +117,7 @@ const SinglePage = () => {
         </Modal>
       </PostImage>
 
-      {/* <TopBar title={title} shareURL={href} author={author} media={gallery} />
-
-      <Container>
-        <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
-          <Col xl={16}>
-            <Description
-              content={content}
-              title={title}
-              location={location}
-              rating={rating}
-              ratingCount={ratingCount}
-            />
-            <Amenities amenities={amenities} />
-            <Location location={data[0]} />
-          </Col>
-          <Col xl={8}>
-            {width > 1200 ? (
-              <Sticky
-                innerZ={999}
-                activeClass="isSticky"
-                top={202}
-                bottomBoundary="#reviewSection"
-              >
-                <Reservation />
-              </Sticky>
-            ) : (
-              <BottomReservation
-                title={title}
-                price={price}
-                rating={rating}
-                ratingCount={ratingCount}
-              />
-            )}
-          </Col>
-        </Row>
-        <Row gutter={30}>
-          <Col xl={16}>
-            <Review
-              reviews={reviews}
-              ratingCount={ratingCount}
-              rating={rating}
-            />
-          </Col>
-          <Col xl={8} />
-        </Row>
-      </Container> */}
-
-     
-
+ 
       <Container>
         <Row gutter={30} id="reviewSection" style={{ marginTop: 30 }}>
           <Col xl={16}>

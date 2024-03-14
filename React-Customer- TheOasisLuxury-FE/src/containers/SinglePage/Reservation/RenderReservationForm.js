@@ -89,7 +89,7 @@ const RenderReservationForm = ({ pricePerWeek, value }) => {
   return (
     <ReservationFormWrapper onSubmit={handleSubmit}>
      <FieldWrapper>
-        <HtmlLabel htmlFor="dateRange" content="Choose your date range: " />
+        <HtmlLabel htmlFor="dateRange" content="Chọn Timeshare Villa: " />
         <RangePicker
           id="dateRange"
           format="YYYY-MM-DD"
@@ -98,7 +98,7 @@ const RenderReservationForm = ({ pricePerWeek, value }) => {
           value={dates}
           suffixIcon={null}
         />
-        <p style={{ margin: '0 0 10px' }}>Chú ý: Chúng tôi dựa theo số tuần để bạn chọn nếu bạn dư dưới 7 ngày của 1 tuần sẽ tính tiền cả 1 tuần đó.</p>
+        <p style={{ margin: '0 0 10px' }}><span className='text-rose-600 font-bold'> * </span> Chú ý: Chúng tôi dựa theo số tuần để bạn chọn nếu bạn dư dưới 7 ngày của 1 tuần sẽ tính tiền cả 1 tuần đó.</p>
       </FieldWrapper>
       <FieldWrapper>
         <HtmlLabel htmlFor="totalPrice" content="Total Price: " />
